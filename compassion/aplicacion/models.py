@@ -16,8 +16,8 @@ class Familias(models.Model):
     cantidad_hijos = models.IntegerField(
         null=True, verbose_name='cantidad Hijos')
 
-    class Meta:
-        db_table = 'familias'
+    def __str__(self):
+        return f'Familia {self.apellido_familia}'
 
 
 class Beneficiarios(models.Model):
@@ -35,8 +35,8 @@ class Beneficiarios(models.Model):
         max_length=100, null=True, verbose_name='observacion')
     id_familia = models.ForeignKey(Familias, on_delete=models.CASCADE)
 
-    class Meta:
-        db_table = 'Beneficiarios'
+    def __str__(self):
+        return f'Beneficiario {self.codigo_beneficiario}'
 
 
 class salidas(models.Model):
@@ -51,5 +51,5 @@ class salidas(models.Model):
     codigo_beneficiario = models.ForeignKey(
         Beneficiarios, on_delete=models.CASCADE)
 
-    class Meta:
-        db_table = 'salidas'
+    def __str__(self):
+        return f'Salida {self.id_salidas}'
