@@ -8,7 +8,7 @@ TEMPLATE_DIRS = (
 )
 
 
-def index(request):
+def inicio(request):
     return render(request, 'index.html')
 
 
@@ -55,3 +55,7 @@ def eliminar(request):
 
 def buscar(request):
     return render(request, 'crud-beneficiarios/buscar.html')
+
+
+def login(request):
+    return render(request, 'login.html')
