@@ -81,7 +81,7 @@ DATABASES = {
         "NAME": 'compassion',
         "USER": 'root',
         "PASSWORD": 'gu-400',
-        "HOST": '127.0.0.1',
+        "HOST": 'localhost',
         "PORT": '3306',
     }
 }

@@ -1,116 +1,141 @@
-{%extends '../index_master.html'%}
-
-
-{% block content %}
+{%extends '../index_master.html'%} {% block content %}
 
 <div class="right_col" role="main">
-<h1>Agregar Beneficiarios</h1>
+  <h1>Agregar Beneficiarios</h1>
 
-
-<form action="agregar" method="POST">
-  {% csrf_token %}
+  <form action="agregar" method="POST">
+    {% csrf_token %}
     <div class="form-group row">
-      <label for="codigo" class="col-4 col-form-label">Codigo</label> 
+      <label for="codigo" class="col-4 col-form-label">Codigo</label>
       <div class="col-8">
         <div class="input-group">
           <div class="input-group-prepend">
             <div class="input-group-text">
               <i class="fa fa-id-card"></i>
             </div>
-          </div> 
-          <input id="codigo" name="codigo" type="number" required="required" class="form-control">
+          </div>
+          <input
+            id="codigo"
+            name="codigo"
+            type="number"
+            required="required"
+            class="form-control"
+          />
         </div>
       </div>
     </div>
     <div class="form-group row">
-      <label for="nombre" class="col-4 col-form-label">Nombre</label> 
+      <label for="nombre" class="col-4 col-form-label">Nombre</label>
       <div class="col-8">
         <div class="input-group">
           <div class="input-group-prepend">
             <div class="input-group-text">
               <i class="fa fa-address-card"></i>
             </div>
-          </div> 
-          <input id="nombre" name="nombre" type="text" class="form-control" required="required">
+          </div>
+          <input
+            id="nombre"
+            name="nombre"
+            type="text"
+            class="form-control"
+            required="required"
+          />
         </div>
       </div>
     </div>
     <div class="form-group row">
-      <label for="apellido" class="col-4 col-form-label">Apellido</label> 
+      <label for="apellido" class="col-4 col-form-label">Apellido</label>
       <div class="col-8">
         <div class="input-group">
           <div class="input-group-prepend">
             <div class="input-group-text">
               <i class="fa fa-address-card-o"></i>
             </div>
-          </div> 
-          <input id="apellido" name="apellido" type="text" class="form-control" required="required">
+          </div>
+          <input
+            id="apellido"
+            name="apellido"
+            type="text"
+            class="form-control"
+            required="required"
+          />
         </div>
       </div>
     </div>
+
     <div class="form-group row">
-      <label for="nivel" class="col-4 col-form-label">Nivel</label> 
+      <label for="" class="col-4 col-form-label">Nivel</label>
       <div class="col-8">
-        <div class="input-group">
-          <div class="input-group-prepend">
-            <div class="input-group-text">
-              <i class="fa fa-check"></i>
-            </div>
-          </div> 
-          <input id="nivel" name="nivel" type="text" class="form-control" required="required">
-        </div>
-      </div>
-    </div>
-    <div class="form-group row">
-      <label for="fecha_nacimiento" class="col-4 col-form-label">Fecha de Nacimiento</label> 
-      <div class="col-8">
-        <div class="input-group">
-          <div class="input-group-prepend">
-            <div class="input-group-text">
-              <i class="fa fa-calendar"></i>
-            </div>
-          </div> 
-          <input id="fecha_nacimiento" name="fecha_nacimiento" type="date" class="form-control" required="required">
-        </div>
-      </div>
-    </div>
-    <div class="form-group row">
-      <label for="" class="col-4 col-form-label">Género</label> 
-      <div class="col-8">
-        <select id="" name="genero" required="required" class="custom-select">
-          <option value="femenino">Femenino</option>
-          <option value="masculino">Masculino</option>
-          <option value=""></option>
+        <select
+          id="nivel"
+          name="nivel"
+          required="required"
+          class="custom-select"
+        >
+          <option value="" disabled selected>Seleccione el nivel</option>
+          <option value="1">1</option>
+          <option value="2">2</option>
+          <option value="3">3</option>
+          <option value="4">4</option>
         </select>
       </div>
+    </div>
 
-    </div> 
     <div class="form-group row">
-      <label for="observacion" class="col-4 col-form-label">Observacion</label> 
+      <label for="" class="col-4 col-form-label">Género</label>
+      <div class="col-8">
+        <select
+          id="genero"
+          name="genero"
+          required="required"
+          class="custom-select"
+        >
+          <option value="" disabled selected>Seleccione el género</option>
+          <option value="femenino">Femenino</option>
+          <option value="masculino">Masculino</option>
+        </select>
+      </div>
+    </div>
+
+    <div class="form-group row">
+      <label for="observacion" class="col-4 col-form-label">Observacion</label>
       <div class="col-8">
         <div class="input-group">
           <div class="input-group-prepend">
             <div class="input-group-text">
               <i class="fa fa-align-justify"></i>
             </div>
-          </div> 
-          <input id="observacion" name="observacion" type="text" class="form-control" required="required">
+          </div>
+          <input
+            id="observacion"
+            name="observacion"
+            type="text"
+            class="form-control"
+            required="required"
+          />
         </div>
       </div>
-    </div> 
+    </div>
     <div class="form-group row">
-      <label for="nivel" class="col-4 col-form-label">ID familia</label> 
+      <label for="nivel" class="col-4 col-form-label">ID familia</label>
       <div class="col-8">
         <div class="input-group">
           <div class="input-group-prepend">
             <div class="input-group-text">
               <i class="fa fa-check"></i>
             </div>
-          </div> 
-          <select id="nivel" name="id_familia" class="form-control" required="required">
+          </div>
+          <select
+            id="nivel"
+            name="id_familia"
+            class="form-control"
+            required="required"
+          >
             <option value="">Seleccione una familia</option>
             {% for familia in familias %}
-              <option value="{{ familia.id }}">{{ familias.apellido_familia }}</option>
+            <option value="{{ familia.id }}">
+              {{ familias.apellido_familia }}
+            </option>
             {% endfor %}
           </select>
         </div>
@@ -119,11 +144,12 @@
 
     <div class="form-group row">
       <div class="offset-4 col-8">
-        <button name="submit" type="submit" class="btn btn-primary">Agregar Beneficiario</button>
+        <button name="submit" type="submit" class="btn btn-primary">
+          Agregar Beneficiario
+        </button>
       </div>
     </div>
   </form>
-
 </div>
 
 {% endblock %}
