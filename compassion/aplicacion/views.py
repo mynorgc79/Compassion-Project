@@ -1,5 +1,6 @@
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from django.http import HttpResponse
+from .models import Beneficiarios
 # Create your views here.
 
 TEMPLATE_DIRS = (
@@ -12,7 +13,32 @@ def index(request):
 
 
 def agregar(request):
-    return render(request, 'crud-beneficiarios/agregar.html')
+    if request.method == 'POST':
+        # agrego los datos
+        if request.POST.get('codigo') and request.POST.get('nombre') and request.POST.get('apellido') and request.POST.get('nivel') and request.POST.get('fecha_nacimiento') and request.POST.get('genero') and request.POST.get('observacion') and request.POST.get('id_familia'):
+            if request.POST.get('id_familia') and Beneficiarios.objects.filter(
+                    id_familia=request.POST.get('id_familia')).exists():
+                beneficiario = Beneficiarios()
+                # insertando valores obtenidos a los modelos
+                beneficiario.codigo = request.POST.get('codigo')
+                beneficiario.nombre = request.POST.get('nombre')
+                beneficiario.apellido = request.POST.get('apellido')
+                beneficiario.nivel = request.POST.get('nivel')
+                beneficiario.fecha_nacimiento = request.POST.get(
+                    'fecha_nacimiento')
+                beneficiario.genero = request.POST.get('genero')
+                beneficiario.observacion = request.POST.get('observacion')
+                beneficiario.id_familia = request.POST.get('id_familia')
+                beneficiario.save()
+
+                # Despues de ingresar los datos nos redirecciona a la lista de usuarios
+                return redirect('listar')
+            else:
+                return render(request, 'crud-beneficiarios/agregar.html', {
+                    'error': 'El ID de la familia no es valido.'
+                })
+    else:
+        return render(request, 'crud-beneficiarios/agregar.html')
 
 
 def listar(request):
