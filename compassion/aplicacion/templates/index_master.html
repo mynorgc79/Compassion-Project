@@ -95,10 +95,26 @@
                 <ul class="nav side-menu">
                   <li><a href="inicio"> Menú </a></li>
 
+                   <!--Plantilla para mostrar en la sidebar-->
+                   <li>
+                    <a
+                      ><i class="fa fa-users"></i> Familias
+                      <span class="fa fa-chevron-down"></span
+                    ></a>
+                    <ul class="nav child_menu">
+                      <li>
+                        <a href="agregar"
+                          ><i class="fa fa-user-plus"></i>Buscar</a
+                        >
+                      </li>
+                     
+                    </ul>
+                  </li>
+
                   <!--Plantilla para mostrar en la sidebar-->
                   <li>
                     <a
-                      ><i class="fa fa-users"></i> Beneficiarios
+                      ><i class="fa fa-address-book"></i> Beneficiarios
                       <span class="fa fa-chevron-down"></span
                     ></a>
                     <ul class="nav child_menu">
@@ -112,35 +128,70 @@
                       </li>
                       <li>
                         <a href="actualizar"
-                          ><i class="fas fa-user-edit"></i>Actualizar</a
+                          ><i class="fa fa-user-o"></i>Actualizar</a
                         >
                       </li>
 
-                      <li>
-                        <a href="eliminar"
-                          ><i class="fa fa-user-times"></i>Eliminar</a
-                        >
-                      </li>
+                      
                     </ul>
                   </li>
 
-                  <!-- FAMILIAS -->
-                  <li>
-                    <a
-                      ><i class="fa fa-users"></i> Familias
-                      <span class="fa fa-chevron-down"></span
-                    ></a>
-                    <ul class="nav child_menu">
+                     
+                      <!-- Salida beneficiarios -->
                       <li>
-                        <a href="agregar"
-                          ><i class="fa fa-user-plus"></i>Buscar</a
-                        >
+                        <a
+                          ><i class="fa fa-user-times"></i> Salida Beneficiarios
+                          <span class="fa fa-chevron-down"></span
+                        ></a>
+                        <ul class="nav child_menu">
+                          <li>
+                            <a href="agregar"
+                              ><i class="fa fa-user"></i>Planeadas</a
+                            >
+                          </li>
+                          <li>
+                            <a href="agregar"
+                              ><i class="fa fa-user-o"></i>No Planeadas</a
+                            >
+                          </li>
+                         
+                        </ul>
                       </li>
+                      <!-- usuarios -->
                       <li>
-                        <a href="listar"><i class="fa fa-user"></i>Listar</a>
+                        <a
+                          ><i class="fa fa-user-circle-o"></i>Usuarios
+                          <span class="fa fa-chevron-down"></span
+                        ></a>
+                        <ul class="nav child_menu">
+                          <li>
+                            <a href="agregar"
+                              ><i class="fa fa-user-plus"></i>Nuevo</a
+                            >
+                          </li>
+                          <li>
+                            <a href="agregar"
+                              ><i class="fa fa-user-plus"></i>Editar</a
+                            >
+                          </li>
+                         
+                        </ul>
                       </li>
+                    
                       <li>
-                </ul>
+                        <a
+                          ><i class="fa fa-money"></i>Inventario
+                          <span class="fa fa-chevron-down"></span
+                        ></a>
+                        <ul class="nav child_menu">
+                          <li>
+                            <a href="agregar"
+                              ><i class="fa fa-user-plus"></i>Ingreso</a
+                            >
+                          </li>
+                         
+                        </ul>
+                      </li>
               </div>
             </div>
             <!-- /sidebar menu -->
