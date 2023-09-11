@@ -23,3 +23,9 @@
   border-radius: 5px; /* Bordes redondeados para los campos */
   padding: 10px; /* Espacio interno */
 }
+
+.icono-pequeno {
+  width: 1px; /* Tamaño deseado para la imagen */
+  height: auto; /* Esto mantendrá la proporción original de la imagen */
+  margin-right: 1px; /* Espacio entre la imagen y el texto (ajusta según sea necesario) */
+}
