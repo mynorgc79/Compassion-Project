@@ -1,6 +1,7 @@
 from django.shortcuts import render, redirect
 from django.http import HttpResponse
 from .models import Beneficiarios
+
 # Create your views here.
 
 TEMPLATE_DIRS = (
@@ -59,3 +60,19 @@ def buscar(request):
 
 def login(request):
     return render(request, 'login.html')
+
+
+def registro_usuario(request):
+    return render(request, 'usuarios/registro_user.html')
+
+
+def editar_usuario(request):
+    return render(request, 'usuarios/editar_user.html')
+
+
+def buscar_familia(request):
+    return render(request, 'familias/buscar_familia.html')
+
+
+def ingresar_inventario(request):
+    return render(request, 'inventario/ingresar_inventario.html')

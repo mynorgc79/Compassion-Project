@@ -14,16 +14,11 @@ urlpatterns = [
     path('eliminar', views.eliminar, name='eliminar'),
     path('buscar', views.buscar, name='buscar'),
     path('login', views.login, name='login'),
-
-
-
-    # path('nosotros', views.nosotros, name='nosotros'),
-    # path('beneficiarios', views.beneficiarios, name='beneficiarios'),
-    # path('beneficiarios/crear', views.crearBeneficiario,
-    #    name='crearBeneficiario'),
-    # path('beneficiarios/editar', views.editarBeneficiario,
-    #    name='editarBeneficiario'),
-
+    path('registro_usuario', views.registro_usuario, name='registro_usuario'),
+    path('editar_usuario', views.editar_usuario, name='editar_usuario'),
+    path('buscar_familia', views.buscar_familia, name='buscar_familia'),
+    path('ingresar_inventario', views.ingresar_inventario,
+         name='ingresar_inventario'),
 
 
 ]
