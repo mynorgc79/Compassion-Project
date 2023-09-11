@@ -1,7 +1,110 @@
-{%extends '../index_master.html'%} {% block content %}
+{% extends '../index_master.html' %} {% block content %} {% load static %}
 
 <div class="right_col" role="main">
-  <h1>registro usuarios</h1>
+  <h1>Registrar Usuario</h1>
+
+  <link
+    href="{% static 'styles/style.css' %}"
+    rel="stylesheet"
+    type="text/css"
+  />
+
+  <div class="container">
+    <div class="row">
+      <div class="col-md-12">
+        <div class="well well-sm">
+          <form class="form-horizontal" method="post">
+            <fieldset>
+              <legend class="text-center header">Contact us</legend>
+
+              <div class="form-group">
+                <div class="col-md-1 text-center">
+                  <i class="fa fa-user bigicon"></i>
+                </div>
+                <div class="col-md-11">
+                  <input
+                    id="fname"
+                    name="name"
+                    type="text"
+                    placeholder="First Name"
+                    class="form-control"
+                  />
+                </div>
+              </div>
+
+              <div class="form-group">
+                <div class="col-md-1 text-center">
+                  <i class="fa fa-user bigicon"></i>
+                </div>
+                <div class="col-md-11">
+                  <input
+                    id="lname"
+                    name="name"
+                    type="text"
+                    placeholder="Last Name"
+                    class="form-control"
+                  />
+                </div>
+              </div>
+
+              <div class="form-group">
+                <div class="col-md-1 text-center">
+                  <i class="fa fa-envelope-o bigicon"></i>
+                </div>
+                <div class="col-md-11">
+                  <input
+                    id="email"
+                    name="email"
+                    type="text"
+                    placeholder="Email Address"
+                    class="form-control"
+                  />
+                </div>
+              </div>
+
+              <div class="form-group">
+                <div class="col-md-1 text-center">
+                  <i class="fa fa-phone-square bigicon"></i>
+                </div>
+                <div class="col-md-11">
+                  <input
+                    id="phone"
+                    name="phone"
+                    type="text"
+                    placeholder="Phone"
+                    class="form-control"
+                  />
+                </div>
+              </div>
+
+              <div class="form-group">
+                <div class="col-md-1 text-center">
+                  <i class="fa fa-pencil-square-o bigicon"></i>
+                </div>
+                <div class="col-md-11">
+                  <textarea
+                    class="form-control"
+                    id="message"
+                    name="message"
+                    placeholder="Enter your message for us here. We will get back to you within 2 business days."
+                    rows="7"
+                  ></textarea>
+                </div>
+              </div>
+
+              <div class="form-group">
+                <div class="col-md-12 text-center">
+                  <button type="submit" class="btn btn-primary btn-lg">
+                    Submit
+                  </button>
+                </div>
+              </div>
+            </fieldset>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
 </div>
 
 {% endblock %}
