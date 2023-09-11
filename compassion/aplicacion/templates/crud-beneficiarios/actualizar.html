@@ -1,10 +1,35 @@
-{%extends '../index_master.html'%}
+{%extends '../index_master.html'%} {% block content %}
 
+<div class="right_col" role="main">
+  <h1>Actualizar Beneficiarios</h1>
+  <div class="table-responsive">
+    <table class="table table-primary">
+      <thead>
+        <tr>
+          <th scope="col">Titulo1</th>
+          <th scope="col">Column 2</th>
+          <th scope="col">Column 3</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>imagen</td>
+          <td>libro</td>
+          <td>datos</td>
+          <!-- Acciones -->
+          <td>
+            <a name="" id="" class="btn btn-primary" href="#" role="button"
+              >Editar</a
+            >
 
-{% block content %}
-
-<div class="right_col" role="main" >
-<h1>Actualizar Beneficiarios</h1>
+            <a name="" id="" class="btn btn-danger" href="#" role="button"
+              >Borrar</a
+            >
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
 </div>
 
 {% endblock %}
