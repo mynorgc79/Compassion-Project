@@ -1,0 +1,25 @@
+.header {
+  color: #36a0ff;
+  font-size: 27px;
+  padding: 10px;
+}
+
+.bigicon {
+  font-size: 35px;
+  color: #36a0ff;
+}
+
+/* Estilos personalizados para el formulario */
+.form-group {
+  margin-bottom: 15px;
+  border-radius: 15px; /* Bordes redondeados */
+  padding: 20px; /* Espacio interno */
+  background-color: #f0f0f0; /* Color de fondo */
+}
+
+.form-control {
+  width: 100%;
+  border: none; /* Elimina el borde predeterminado */
+  border-radius: 5px; /* Bordes redondeados para los campos */
+  padding: 10px; /* Espacio interno */
+}
