@@ -8,13 +8,15 @@ from django.contrib.auth.models import User
 class Familias(models.Model):
     id_familia = models.AutoField(primary_key=True)
     apellido_familia = models.CharField(
-        max_length=50, null=False, verbose_name='apellido Familia')
+        max_length=50, null=False, verbose_name='apellido_familia')
     direccion = models.CharField(
         max_length=50, null=True, verbose_name='direccion')
     contacto = models.CharField(
         max_length=30, null=True, verbose_name='contacto')
-    cantidad_hijos = models.IntegerField(
-        null=True, verbose_name='cantidad Hijos')
+    nombre_padre = models.CharField(
+        max_length=40, null=True, verbose_name='nombre_padre')
+    nombre_madre = models.CharField(
+        max_length=40, null=True, verbose_name='nombre_madre')
 
     def __str__(self):
         return f'Familia {self.apellido_familia}'
@@ -22,17 +24,18 @@ class Familias(models.Model):
 
 class Beneficiarios(models.Model):
     codigo_beneficiario = models.IntegerField(
-        primary_key=True, verbose_name='Codigo')
-    nombre = models.CharField(max_length=25, null=False, verbose_name='Nombre')
+        primary_key=True, verbose_name='codigo')
+    nombre = models.CharField(max_length=40, null=False, verbose_name='nombre')
     apellido = models.CharField(
-        max_length=25, null=False, verbose_name='Apellido')
+        max_length=40, null=False, verbose_name='apellido')
     fecha_nacimiento = models.DateField(
-        null=False, verbose_name='Fecha de nacimiento')
-    edad = models.IntegerField(null=False, verbose_name='E   dad')
-    genero = models.CharField(max_length=25, null=False, verbose_name='Genero')
-    nivel = models.IntegerField(null=False, verbose_name='Nivel')
+        null=False, verbose_name='fecha_nacimiento')
+    edad = models.IntegerField(null=True, verbose_name='edad')
+    genero = models.CharField(max_length=25, null=False, verbose_name='genero')
+    nivel = models.IntegerField(null=False, verbose_name='nivel')
     observacion = models.CharField(
-        max_length=100, null=True, verbose_name='observacion')
+        max_length=150, null=True, verbose_name='observacion')
+    estado = models.BooleanField(default='True', verbose_name='estado')
     id_familia = models.ForeignKey(Familias, on_delete=models.CASCADE)
 
     def __str__(self):
