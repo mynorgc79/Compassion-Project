@@ -123,7 +123,9 @@ def agregar(request):
 
 
 def listar(request):
-    return render(request, 'crud-beneficiarios/listar.html')
+    beneficiarios = Beneficiarios.objects.all()
+    datos = {'beneficiarios': beneficiarios}
+    return render(request, 'crud-beneficiarios/listar.html', datos)
 
 
 def actualizar(request):

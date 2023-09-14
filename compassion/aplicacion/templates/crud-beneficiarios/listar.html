@@ -1,36 +1,36 @@
-{%extends '../index_master.html'%}
-
-
-{% block content %}
+{%extends '../index_master.html'%} {% block content %}
 
 <div class="right_col" role="main">
-<h1>listar Beneficiarios</h1>
+  <h1>listar Beneficiarios</h1>
 
-<table class="table  ">
-
-    <thead>
-      <tr>
-        <th scope="col">CÓDIGO</th>
-        <th scope="col">NOMBRE</th>
-        <th scope="col">APELLIDO</th>
-        <th scope="col">EDAD</th>
-        <th scope="col">NIVEL</th>
-        <th scope="col">...</th>
-      </tr>
-    </thead>
-
-    <tbody>
-      <tr>
-        <th scope="row">1</th>
-        <td>Sit</td>
-        <td>Amet</td>
-        <td>Consectetur</td>
-      </tr>
-     
-    </tbody>
-  
-  </table>
-
+  <div class="table-responsive">
+    <table class="table">
+      <thead>
+        <tr>
+          <th scope="col">CÓDIGO</th>
+          <th scope="col">NOMBRE</th>
+          <th scope="col">APELLIDO</th>
+          <th scope="col">EDAD</th>
+          <th scope="col">NIVEL</th>
+          <th scope="col">FECHA NACIMIENTO</th>
+          <th scope="col">OBSERVACIONES</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for b in beneficiarios %} {% if b.estado == 1 %}
+        <tr>
+          <th scope="row">{{ b.codigo_beneficiario }}</th>
+          <td>{{ b.nombre }}</td>
+          <td>{{ b.apellido }}</td>
+          <td>{{ b.edad }}</td>
+          <td>{{ b.nivel }}</td>
+          <td>{{ b.fecha_nacimiento }}</td>
+          <td>{{ b.observacion }}</td>
+        </tr>
+        {% endif %} {% endfor %}
+      </tbody>
+    </table>
+  </div>
 </div>
 
 {% endblock %}
