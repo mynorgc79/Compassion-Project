@@ -21,6 +21,25 @@ def inicio(request):
 # AGREGAR BENEFICIARIO
 
 
+def calcular_edad(fecha_nacimiento):
+    try:
+        # Convierte la cadena de fecha de nacimiento al formato ISO 8601
+        fecha_iso = datetime.strptime(
+            fecha_nacimiento, '%Y-%m-%d').strftime('%Y-%m-%d')
+
+        # Obtiene la fecha actual en formato ISO 8601
+        today = datetime.today().strftime('%Y-%m-%d')
+
+        # Calcula la diferencia de años entre la fecha actual y la fecha de nacimiento
+        edad = int(today[:4]) - int(fecha_iso[:4]) - \
+            (today[5:] < fecha_iso[5:])
+
+        return edad
+    except ValueError:
+        # Maneja el caso en el que la fecha de nacimiento no sea válida
+        return None
+
+
 def validar_familia(request):
     apellido_padre = request.POST.get('apellido_padre')
     apellido_madre = request.POST.get('apellido_madre')
@@ -41,8 +60,16 @@ def validar_familia(request):
         # La familia existe, devuelve su ID
         return familia.first().id_familia
     else:
-        # La familia no existe
-        return None
+        # La familia no existe, crea una nueva familia y luego devuelve su ID
+        nueva_familia = Familias(
+            apellido_familia=apellido_familia,
+            nombre_padre=nombre_padre,
+            nombre_madre=nombre_madre,
+            direccion=direccion,
+            contacto=contacto
+        )
+        nueva_familia.save()
+        return nueva_familia.id_familia
 
 
 def agregar(request):
@@ -57,7 +84,7 @@ def agregar(request):
         contacto = request.POST.get('contacto')
         apellido_familia = f"{apellido_padre} {apellido_madre}"
 
-# ---------OBTENIENDO DATOS DEL BENEFICIARIO
+        # ---------OBTENIENDO DATOS DEL BENEFICIARIO
         codigo_beneficiario = request.POST.get('codigo')
         nombre_beneficiario = request.POST.get('nombre_beneficiario')
         apellido_beneficiario = request.POST.get('apellido_beneficiario')
@@ -91,23 +118,6 @@ def agregar(request):
     else:
         return render(request, 'crud-beneficiarios/agregar.html')
 
-
-def calcular_edad(fecha_nacimiento):
-    try:
-        # Convierte la cadena de fecha de nacimiento en un objeto de fecha
-        fecha_nacimiento = datetime.strptime(fecha_nacimiento, '%Y-%m-%d')
-
-        # Obtiene la fecha actual
-        today = datetime.today()
-
-        # Calcula la diferencia de años entre la fecha actual y la fecha de nacimiento
-        edad = today.year - fecha_nacimiento.year - \
-            ((today.month, today.day) < (fecha_nacimiento.month, fecha_nacimiento.day))
-
-        return edad
-    except ValueError:
-        # Maneja el caso en el que la fecha de nacimiento no sea válida
-        return None
 
 # TERMINA AGREGAR BENEFICIARIO
 
