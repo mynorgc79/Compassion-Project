@@ -184,7 +184,7 @@ def listar_familias(request):
     familias = Familias.objects.annotate(
         cantidad_beneficiarios=Count(
             'beneficiarios', filter=Q(beneficiarios__estado=True))
-    ).filter(apellido_familia__icontains=apellido)
+    ).filter(apellido_familia__icontains=apellido, cantidad_beneficiarios__gt=0)
 
     datos = {'familias': familias}
     return render(request, 'familias/listar_familias.html', datos)
