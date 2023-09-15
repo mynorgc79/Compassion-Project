@@ -14,8 +14,10 @@
       <div class="col-md-12">
         <div class="well well-sm">
           <form class="form-horizontal" method="post">
+            {% csrf_token %}
+
             <fieldset>
-              <legend class="text-center header">Contact us</legend>
+              <legend class="text-center header">Registro de Usuario</legend>
 
               <div class="form-group">
                 <div class="col-md-1 text-center">
@@ -24,10 +26,11 @@
                 <div class="col-md-11">
                   <input
                     id="fname"
-                    name="name"
+                    name="first_name"
                     type="text"
-                    placeholder="First Name"
+                    placeholder="Nombres"
                     class="form-control"
+                    required
                   />
                 </div>
               </div>
@@ -39,68 +42,91 @@
                 <div class="col-md-11">
                   <input
                     id="lname"
-                    name="name"
+                    name="last_name"
                     type="text"
-                    placeholder="Last Name"
+                    placeholder="Apellidos"
                     class="form-control"
+                    required
                   />
                 </div>
               </div>
 
               <div class="form-group">
                 <div class="col-md-1 text-center">
-                  <i class="fa fa-envelope-o bigicon"></i>
+                  <i class="fa fa-user bigicon"></i>
                 </div>
                 <div class="col-md-11">
                   <input
-                    id="email"
-                    name="email"
+                    id="username"
+                    name="username"
                     type="text"
-                    placeholder="Email Address"
+                    placeholder="Usuario"
                     class="form-control"
+                    required
                   />
                 </div>
               </div>
 
               <div class="form-group">
                 <div class="col-md-1 text-center">
-                  <i class="fa fa-phone-square bigicon"></i>
+                  <i class="fa fa-lock bigicon"></i>
                 </div>
                 <div class="col-md-11">
                   <input
-                    id="phone"
-                    name="phone"
-                    type="text"
-                    placeholder="Phone"
+                    id="password"
+                    name="password"
+                    type="password"
+                    placeholder="Contraseña"
                     class="form-control"
+                    required
                   />
                 </div>
               </div>
 
               <div class="form-group">
                 <div class="col-md-1 text-center">
-                  <i class="fa fa-pencil-square-o bigicon"></i>
+                  <i class="fa fa-lock bigicon"></i>
                 </div>
                 <div class="col-md-11">
-                  <textarea
+                  <input
+                    id="confirm_password"
+                    name="confirm_password"
+                    type="password"
+                    placeholder="Confirmar Contraseña"
                     class="form-control"
-                    id="message"
-                    name="message"
-                    placeholder="Enter your message for us here. We will get back to you within 2 business days."
-                    rows="7"
-                  ></textarea>
+                    required
+                  />
+                </div>
+              </div>
+
+              <div class="form-group">
+                <div class="col-md-1 text-center">
+                  <i class="fa fa-users bigicon"></i>
+                </div>
+                <div class="col-md-11">
+                  <select id="role" name="role" class="form-control" required>
+                    <option value="" disabled selected>Seleccionar Rol</option>
+                    <option value="Admin">Administrador</option>
+                    <option value="Usuario">Usuario</option>
+                    <!-- Agrega más opciones de roles si es necesario -->
+                  </select>
                 </div>
               </div>
 
               <div class="form-group">
                 <div class="col-md-12 text-center">
-                  <button type="submit" class="btn btn-primary btn-lg">
-                    Submit
+                  <button
+                    type="submit"
+                    id="submit"
+                    class="btn btn-primary btn-lg"
+                  >
+                    Registrar
                   </button>
                 </div>
               </div>
             </fieldset>
           </form>
+          coc
         </div>
       </div>
     </div>

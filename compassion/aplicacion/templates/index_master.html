@@ -56,6 +56,13 @@
       href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css"
     />
   </head>
+  <header>{% if message %}
+    {% for message in message %}
+      <div class="notificación {{ message.tags}}">
+        {{ message }}
+      </div>
+    {% endfor%}
+  {% endif %}</header>
 
   <body class="nav-md">
     <div class="container body">
@@ -64,7 +71,7 @@
           <div class="left_col scroll-view">
             <div class="navbar nav_title" style="border: 0">
               <a href="http://localhost:8000/" class="site_title"
-                ><i class="fa fa-paw"></i> <span>GU-400</span></a
+                ><i class="fa fa"></i> <span>GU-400</span></a
               >
             </div>
 
@@ -102,6 +109,11 @@
                       <span class="fa fa-chevron-down"></span
                     ></a>
                     <ul class="nav child_menu">
+                      <li>
+                        <a href="listar_familias"
+                          ><i class="fa fa-user-plus"></i>Listar Familias</a
+                        >
+                      </li>
                       <li>
                         <a href="buscar_familia"
                           ><i class="fa fa-user-plus"></i>Buscar</a
@@ -310,6 +322,8 @@
         <!-- /top navigation -->
 
         <!-- ****************************************   -->
+
+        
 
         {% block content %} {% endblock %}
 

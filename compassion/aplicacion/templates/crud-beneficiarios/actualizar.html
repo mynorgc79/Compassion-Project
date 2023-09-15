@@ -1,31 +1,162 @@
 {%extends '../index_master.html'%} {% block content %}
 
 <div class="right_col" role="main">
-  <h1>Actualizar Beneficiarios</h1>
-  <div class="table-responsive">
-    <table class="table table-primary">
-      <thead>
-        <tr>
-          <th scope="col">Titulo1</th>
-          <th scope="col">Column 2</th>
-          <th scope="col">Column 3</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr>
-          <td>imagen</td>
-          <td>libro</td>
-          <td>datos</td>
-          <!-- Acciones -->
-          <td>
-            <a name="" id="" class="btn btn-primary" href="#" role="button"
-              >Editar</a
-            >
-          </td>
-        </tr>
-      </tbody>
-    </table>
-  </div>
+  <h1>Actualiza Usuario</h1>
+
+  <form action="actualizar" method="POST">
+    {% csrf_token %}
+
+    <div class="form-group row">
+      <label for="nombre" class="col-4 col-form-label"
+        >Codigo Beneficiario</label
+      >
+      <div class="col-8">
+        <div class="input-group">
+          <div class="input-group-addon">
+            <i class="fa fa-id-badge"></i>
+          </div>
+
+          <select id="codigo" name="codigo_beneficiario">
+            {% for b in beneficiarios %}
+            <option value="{{ b.codigo_beneficiario }}">
+              {{ b.codigo_beneficiario }}
+            </option>
+            {% endfor %}
+          </select>
+        </div>
+      </div>
+    </div>
+
+    <div class="form-group row">
+      <label for="nombre" class="col-4 col-form-label"
+        >Nombres y Apellidos</label
+      >
+      <div class="col-4">
+        <input
+          id="nombre_beneficiario"
+          name="nombre_beneficiario"
+          type="text"
+          class="form-control"
+          required="required"
+          placeholder="Nombres"
+        />
+      </div>
+
+      <div class="col-4">
+        <input
+          id="apellido_beneficiario"
+          name="apellido_beneficiario"
+          type="text"
+          class="form-control"
+          required="required"
+          placeholder="Apellidos"
+        />
+      </div>
+    </div>
+
+    <div class="form-group row">
+      <label for="fecha_nacimiento" class="col-4 col-form"
+        >Fecha de Nacimiento</label
+      >
+      <div class="col-8">
+        <div class="input-group">
+          <div class="input-group-prepend">
+            <div class="input-group-text">
+              <i class="fa fa-calendar"></i>
+            </div>
+          </div>
+          <input
+            type="date"
+            id="fecha_nacimiento"
+            name="fecha_nacimiento"
+            class="form-control"
+            required
+            placeholder="YYYY-MM-DD"
+          />
+        </div>
+      </div>
+    </div>
+
+    <div class="form-group row">
+      <label for="" class="col-4 col-form-label">Género</label>
+      <div class="col-8">
+        <select
+          id="genero"
+          name="genero"
+          required="required"
+          class="custom-select"
+        >
+          <option value="" disabled selected>Seleccione el género</option>
+          <option value="femenino">Femenino</option>
+          <option value="masculino">Masculino</option>
+        </select>
+      </div>
+    </div>
+
+    <div class="form-group row">
+      <label for="" class="col-4 col-form-label">Nivel</label>
+      <div class="col-8">
+        <select
+          id="nivel"
+          name="nivel"
+          required="required"
+          class="custom-select"
+        >
+          <option value="" disabled selected>Seleccione el nivel</option>
+          <option value="1">1</option>
+          <option value="2">2</option>
+          <option value="3">3</option>
+          <option value="4">4</option>
+        </select>
+      </div>
+    </div>
+
+    <div class="form-group row">
+      <label for="" class="col-4 col-form-label">Estado</label>
+      <div class="col-8">
+        <select
+          id="nivel"
+          name="nivel"
+          required="required"
+          class="custom-select"
+        >
+          <option value="" disabled selected>
+            Seleccione El estado del Beneficiario
+          </option>
+          <option value="1">Activo</option>
+          <option value="0">Inactivo</option>
+        </select>
+      </div>
+    </div>
+
+    <div class="form-group row">
+      <label for="observacion" class="col-4 col-form-label">Observacion</label>
+      <div class="col-8">
+        <div class="input-group">
+          <div class="input-group-prepend">
+            <div class="input-group-text">
+              <i class="fa fa-align-justify"></i>
+            </div>
+          </div>
+          <input
+            id="observacion"
+            name="observacion"
+            type="text"
+            class="form-control"
+            required="required"
+          />
+        </div>
+      </div>
+    </div>
+
+    <div class="form-group row">
+      <div class="offset-4 col-8">
+        <button name="submit" type="submit" class="btn btn-primary">
+          Agregar Beneficiario
+        </button>
+      </div>
+    </div>
+  </form>
 </div>
 
 {% endblock %}

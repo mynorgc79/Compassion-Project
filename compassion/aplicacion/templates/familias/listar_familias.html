@@ -1,0 +1,36 @@
+{%extends '../index_master.html'%} {% block content %}
+
+<div class="right_col" role="main">
+  <h1>Total familias en Proyecto = {{ familias|length }}</h1>
+
+  <div class="table-responsive">
+    <table class="table">
+      <thead>
+        <tr>
+          <th scope="col">#</th>
+          <th scope="col">Apellido Familia</th>
+          <th scope="col">Nombre Papá</th>
+          <th scope="col">Nombre Mamá</th>
+          <th scope="col">Dirección</th>
+          <th scope="col">Contacto</th>
+          <th scope="col">cantidad Hijos</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for f in familias%}
+        <tr>
+          <th scope="row">{{ f.id_familia }}</th>
+          <td>{{ f.apellido_familia }}</td>
+          <td>{{ f.nombre_padre }}</td>
+          <td>{{ f.nombre_madre }}</td>
+          <td>{{ f.direccion }}</td>
+          <td>{{ f.contacto }}</td>
+          <td>{{ f.cantidad_beneficiarios }}</td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</div>
+
+{% endblock %}

@@ -7,6 +7,10 @@ from django.http import HttpResponse
 from .models import Beneficiarios, Familias
 from datetime import date
 from datetime import datetime
+from django.contrib.auth.forms import UserCreationForm
+from django.contrib import messages
+from django.db.models import Count
+from django.db import models
 
 # Create your views here.
 
@@ -129,7 +133,9 @@ def listar(request):
 
 
 def actualizar(request):
-    return render(request, 'crud-beneficiarios/actualizar.html')
+    beneficiarios = Beneficiarios.objects.all()
+    datos = {'beneficiarios': beneficiarios}
+    return render(request, 'crud-beneficiarios/actualizar.html', datos)
 
 
 def eliminar(request):
@@ -143,9 +149,23 @@ def buscar(request):
 def login(request):
     return render(request, 'login.html')
 
+# REGISTRO DE USUARIO
+
 
 def registro_usuario(request):
+    if request.method == 'POST':
+        form = UserCreationForm(request.POST)
+        if form.is_valid():
+            username = form.cleaned_data['username']
+            messages.success(request, f'Usuario {username} creado')
+            return redirect('login')
+
+    else:
+        form = UserCreationForm()
+    context = {'form': form}
     return render(request, 'usuarios/registro_user.html')
+
+# END REGISTRAR USUARIO
 
 
 def editar_usuario(request):
@@ -156,9 +176,15 @@ def buscar_familia(request):
     return render(request, 'familias/buscar_familia.html')
 
 
+def listar_familias(request):
+    # Obtener la lista de familias con la cantidad de beneficiarios activos
+    familias = Familias.objects.annotate(
+        cantidad_beneficiarios=Count(
+            'beneficiarios', filter=models.Q(beneficiarios__estado=True))
+    )
+    datos = {'familias': familias}
+    return render(request, 'familias/listar_familias.html', datos)
+
+
 def ingresar_inventario(request):
     return render(request, 'inventario/ingresar_inventario.html')
-
-
-def hello(request):
-    return HttpResponse("holaMundo")
