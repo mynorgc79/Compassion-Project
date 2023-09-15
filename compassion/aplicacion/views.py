@@ -11,7 +11,7 @@ from django.contrib.auth.forms import UserCreationForm
 from django.contrib import messages
 from django.db.models import Count
 from django.db import models
-
+from django.db.models import Q
 # Create your views here.
 
 TEMPLATE_DIRS = (
@@ -177,11 +177,15 @@ def buscar_familia(request):
 
 
 def listar_familias(request):
-    # Obtener la lista de familias con la cantidad de beneficiarios activos
+    # Obtener el apellido de la solicitud GET
+    apellido = request.GET.get('apellido', '')
+
+    # Filtrar familias por apellido
     familias = Familias.objects.annotate(
         cantidad_beneficiarios=Count(
-            'beneficiarios', filter=models.Q(beneficiarios__estado=True))
-    )
+            'beneficiarios', filter=Q(beneficiarios__estado=True))
+    ).filter(apellido_familia__icontains=apellido)
+
     datos = {'familias': familias}
     return render(request, 'familias/listar_familias.html', datos)
 
