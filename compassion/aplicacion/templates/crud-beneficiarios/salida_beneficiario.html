@@ -1,0 +1,101 @@
+{% extends '../index_master.html' %} {% block content %}
+
+<div class="right_col" role="main">
+  <h1>Salida de Beneficiarios</h1>
+
+  <form action="{% url 'salida_beneficiario' %}" method="POST">
+    {% csrf_token %}
+
+    <div class="form-group row">
+      <label for="nombre" class="col-4 col-form-label"
+        >Codigo Beneficiario</label
+      >
+      <div class="col-8">
+        <div class="input-group">
+          <div class="input-group-addon">
+            <i class="fa fa-id-badge"></i>
+          </div>
+
+          <select id="codigo_beneficiario" name="codigo_beneficiario">
+            {% for b in beneficiarios %}
+            <option value="{{ b.codigo_beneficiario }}">
+              {{ b.codigo_beneficiario }}
+            </option>
+            {% endfor %}
+          </select>
+        </div>
+      </div>
+    </div>
+
+    <div class="form-group row">
+      <label for="fecha_nacimiento" class="col-4 col-form"
+        >Fecha de Salida</label
+      >
+      <div class="col-8">
+        <div class="input-group">
+          <div class="input-group-prepend">
+            <div class="input-group-text">
+              <i class="fa fa-calendar"></i>
+            </div>
+          </div>
+          <input
+            type="date"
+            id="fecha_salida"
+            name="fecha_salida"
+            class="form-control"
+            required
+            placeholder="YYYY-MM-DD"
+          />
+        </div>
+      </div>
+    </div>
+
+    <div class="form-group row">
+      <label for="" class="col-4 col-form-label">Tipo de salida</label>
+      <div class="col-8">
+        <select
+          id="tipo_salida"
+          name="tipo_salida"
+          required="required"
+          class="custom-select"
+        >
+          <option value="" disabled selected>
+            Seleccione el Tipo de salida
+          </option>
+          <option value="planeada">Planeada</option>
+          <option value="no_planeada">No planeada</option>
+        </select>
+      </div>
+    </div>
+
+    <div class="form-group row">
+      <label for="observacion" class="col-4 col-form-label">Motivo</label>
+      <div class="col-8">
+        <div class="input-group">
+          <div class="input-group-prepend">
+            <div class="input-group-text">
+              <i class="fa fa-align-justify"></i>
+            </div>
+          </div>
+          <input
+            id="motivo"
+            name="motivo"
+            type="text"
+            class="form-control"
+            required="required"
+          />
+        </div>
+      </div>
+    </div>
+
+    <div class="form-group row">
+      <div class="offset-4 col-8">
+        <button name="submit" type="submit" class="btn btn-primary">
+          Dar salida
+        </button>
+      </div>
+    </div>
+  </form>
+</div>
+
+{% endblock %}

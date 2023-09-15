@@ -4,7 +4,7 @@ from django.contrib.auth.models import User
 from django.http import JsonResponse
 from django.shortcuts import render, redirect
 from django.http import HttpResponse
-from .models import Beneficiarios, Familias
+from .models import Beneficiarios, Familias, Salidas
 from datetime import date
 from datetime import datetime
 from django.contrib.auth.forms import UserCreationForm
@@ -145,6 +145,49 @@ def eliminar(request):
 def buscar(request):
     return render(request, 'crud-beneficiarios/buscar.html')
 
+# --------Salida Beneficiarios
+
+
+def salida_beneficiario(request):
+    if request.method == 'POST':
+        codigo_beneficiario = request.POST.get('codigo_beneficiario')
+        fecha_salida = request.POST.get('fecha_salida')
+        tipo_salida = request.POST.get('tipo_salida')
+        motivo = request.POST.get('motivo')
+
+        try:
+            beneficiario = Beneficiarios.objects.get(
+                codigo_beneficiario=codigo_beneficiario)
+        except Beneficiarios.DoesNotExist:
+            beneficiario = None
+
+        if beneficiario:
+            beneficiario.estado = 0  # Cambia el estado del beneficiario a inactivo
+            beneficiario.save()
+
+            salida = Salidas(
+                codigo_beneficiario=beneficiario,
+                fecha_salida=fecha_salida,
+                tipo_salida=tipo_salida,
+                motivo=motivo
+            )
+            salida.save()
+
+            # Redirige a donde desees después de registrar la salida
+            return redirect('listar')
+        else:
+            # Maneja adecuadamente el caso en el que el beneficiario no existe
+            return render(request, 'crud-beneficiarios/salida_beneficiario.html')
+
+    beneficiarios = Beneficiarios.objects.all()
+    datos = {'beneficiarios': beneficiarios}
+    return render(request, 'crud-beneficiarios/salida_beneficiario.html', datos)
+
+
+# --------fin salida beneficiario
+def ingresar_inventario(request):
+    return render(request, 'inventario/ingresar_inventario.html')
+
 
 def login(request):
     return render(request, 'login.html')
@@ -170,10 +213,6 @@ def registro_usuario(request):
 
 def editar_usuario(request):
     return render(request, 'usuarios/editar_user.html')
-
-
-def buscar_familia(request):
-    return render(request, 'familias/buscar_familia.html')
 
 
 def listar_familias(request):

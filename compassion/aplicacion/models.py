@@ -42,7 +42,7 @@ class Beneficiarios(models.Model):
         return f'Beneficiario {self.codigo_beneficiario}'
 
 
-class salidas(models.Model):
+class Salidas(models.Model):
     id_salidas = models.AutoField(primary_key=True)
     tipo_salida = models.CharField(
         max_length=20, verbose_name='Tipo de Salida')
@@ -50,7 +50,6 @@ class salidas(models.Model):
         null=False, verbose_name='Fecha de salida')
     motivo = models.CharField(
         max_length=60, null='true', verbose_name='Motivo')
-    estado = models.BooleanField(default='True', verbose_name='Estado')
     codigo_beneficiario = models.ForeignKey(
         Beneficiarios, on_delete=models.CASCADE)
 
