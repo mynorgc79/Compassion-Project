@@ -1,0 +1,34 @@
+{% extends '../index_master.html' %} {% block content %}
+
+<div class="right_col" role="main">
+  <h1>Beneficiarios retirados</h1>
+
+  <div class="table-responsive">
+    <table class="table">
+      <thead>
+        <tr>
+          <th scope="col">CÓDIGO</th>
+          <th scope="col">NOMBRE</th>
+          <th scope="col">APELLIDO</th>
+          <th scope="col">FECHA SALIDA</th>
+          <th scope="col">TIPO SALIDA</th>
+          <th scope="col">MOTIVO</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for b in beneficiarios %}
+        <tr>
+          <th scope="row">{{ b.codigo_beneficiario }}</th>
+          <td>{{ b.nombre }}</td>
+          <td>{{ b.apellido }}</td>
+          <td>{{ b.fecha_salida }}</td>
+          <td>{{ b.tipo_salida }}</td>
+          <td>{{ b.motivo }}</td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</div>
+
+{% endblock %}

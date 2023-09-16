@@ -24,6 +24,9 @@ urlpatterns = [
     path('salida_beneficiario', views.salida_beneficiario,
          name='salida_beneficiario'),
 
+    path('beneficiarios_retirados', views.beneficiarios_retirados,
+         name='beneficiarios_retirados'),
+
 
 
 ]

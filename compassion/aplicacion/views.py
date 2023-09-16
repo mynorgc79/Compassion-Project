@@ -187,6 +187,45 @@ def salida_beneficiario(request):
 # --------fin salida beneficiario
 
 
+# -----------BENEFICIARIOS RETIRADOS --------
+def beneficiarios_retirados(request):
+
+    beneficiarios = Beneficiarios.objects.filter(estado=0).all()
+
+    # Obtener la fecha de salida de cada beneficiario y agregarla a la lista de beneficiarios
+    for beneficiario in beneficiarios:
+        salida = Salidas.objects.filter(
+            codigo_beneficiario=beneficiario).first()
+        if salida:
+            beneficiario.fecha_salida = salida.fecha_salida
+            beneficiario.tipo_salida = salida.tipo_salida
+            beneficiario.motivo = salida.motivo
+
+    return render(request, 'crud-beneficiarios/beneficiarios_retirados.html', {
+        'beneficiarios': beneficiarios
+    })
+
+
+# ------------FIN BENEFICIARIOS RETIRADOS --------------------------------
+
+
+# ---------listar familias --------
+def listar_familias(request):
+    # Obtener el apellido de la solicitud GET
+    apellido = request.GET.get('apellido', '')
+
+    # Filtrar familias por apellido
+    familias = Familias.objects.annotate(
+        cantidad_beneficiarios=Count(
+            'beneficiarios', filter=Q(beneficiarios__estado=True))
+    ).filter(apellido_familia__icontains=apellido, cantidad_beneficiarios__gt=0)
+
+    datos = {'familias': familias}
+    return render(request, 'familias/listar_familias.html', datos)
+
+# ------fin listar familias----------
+
+
 def ingresar_inventario(request):
     return render(request, 'inventario/ingresar_inventario.html')
 
@@ -215,20 +254,6 @@ def registro_usuario(request):
 
 def editar_usuario(request):
     return render(request, 'usuarios/editar_user.html')
-
-
-def listar_familias(request):
-    # Obtener el apellido de la solicitud GET
-    apellido = request.GET.get('apellido', '')
-
-    # Filtrar familias por apellido
-    familias = Familias.objects.annotate(
-        cantidad_beneficiarios=Count(
-            'beneficiarios', filter=Q(beneficiarios__estado=True))
-    ).filter(apellido_familia__icontains=apellido, cantidad_beneficiarios__gt=0)
-
-    datos = {'familias': familias}
-    return render(request, 'familias/listar_familias.html', datos)
 
 
 def ingresar_inventario(request):
