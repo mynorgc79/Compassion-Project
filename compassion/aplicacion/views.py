@@ -149,6 +149,7 @@ def buscar(request):
 
 
 def salida_beneficiario(request):
+
     if request.method == 'POST':
         codigo_beneficiario = request.POST.get('codigo_beneficiario')
         fecha_salida = request.POST.get('fecha_salida')
@@ -183,8 +184,9 @@ def salida_beneficiario(request):
     datos = {'beneficiarios': beneficiarios}
     return render(request, 'crud-beneficiarios/salida_beneficiario.html', datos)
 
-
 # --------fin salida beneficiario
+
+
 def ingresar_inventario(request):
     return render(request, 'inventario/ingresar_inventario.html')
 

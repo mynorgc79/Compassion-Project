@@ -17,11 +17,11 @@
           </div>
 
           <select id="codigo_beneficiario" name="codigo_beneficiario">
-            {% for b in beneficiarios %}
+            {% for b in beneficiarios %} {% if b.estado == 1 %}
             <option value="{{ b.codigo_beneficiario }}">
               {{ b.codigo_beneficiario }}
             </option>
-            {% endfor %}
+            {% endif %} {% endfor %}
           </select>
         </div>
       </div>
