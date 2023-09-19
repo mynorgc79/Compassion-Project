@@ -12,7 +12,7 @@ https://docs.djangoproject.com/en/4.2/ref/settings/
 
 import os
 from pathlib import Path
-
+from django.urls import reverse_lazy
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -105,6 +105,9 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
+# -------LE INDICAMOS A DJANGO QUE USE NUESTRO MODELO COMO AUTENTICACION
+AUTH_USER_MODEL = 'aplicacion.Usuario'
+
 
 # Internationalization
 # https://docs.djangoproject.com/en/4.2/topics/i18n/
@@ -116,6 +119,10 @@ TIME_ZONE = "UTC"
 USE_I18N = True
 
 USE_TZ = True
+
+# ------------Donde nos dirige
+
+LOGIN_REDIRECT_URL = reverse_lazy('index')
 
 
 # Static files (CSS, JavaScript, Images)

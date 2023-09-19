@@ -12,6 +12,7 @@ from django.contrib import messages
 from django.db.models import Count
 from django.db import models
 from django.db.models import Q
+from django.contrib.auth.views import LoginView
 # Create your views here.
 
 TEMPLATE_DIRS = (
@@ -231,7 +232,7 @@ def ingresar_inventario(request):
 
 
 def login(request):
-    return render(request, 'login.html')
+    return render(request, 'usuarios/login.html')
 
 # REGISTRO DE USUARIO
 

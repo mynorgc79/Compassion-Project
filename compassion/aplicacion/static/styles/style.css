@@ -29,3 +29,7 @@
   height: auto; /* Esto mantendrá la proporción original de la imagen */
   margin-right: 1px; /* Espacio entre la imagen y el texto (ajusta según sea necesario) */
 }
+
+.transition-fade {
+  transition: opacity 0.3s ease-in-out;
+}

@@ -1,6 +1,6 @@
 {%extends '../index_master.html'%} {% block content %}
 
-<div class="right_col" role="main">
+<div class="right_col transition-fade" role="main">
   <h1>Total familias en Proyecto = {{ familias|length }}</h1>
 
   <!-- Barra de búsqueda -->
@@ -26,7 +26,7 @@
 
   {% if familias %}
   <div class="table-responsive">
-    <table class="table">
+    <table class="table table-bordered table-striped">
       <thead>
         <tr>
           <th scope="col">#</th>

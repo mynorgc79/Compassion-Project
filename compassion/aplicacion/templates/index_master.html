@@ -55,6 +55,14 @@
       rel="stylesheet"
       href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css"
     />
+
+    <head>
+      <link
+        rel="stylesheet"
+        type="text/css"
+        href='{% static "styles/style.css" %}'
+      />
+    </head>
   </head>
   <header>{% if message %}
     {% for message in message %}
@@ -114,11 +122,7 @@
                           ><i class="fa fa-user-plus"></i>Listar Familias</a
                         >
                       </li>
-                      <li>
-                        <a href="buscar_familia"
-                          ><i class="fa fa-user-plus"></i>Buscar</a
-                        >
-                      </li>
+                   
                      
                     </ul>
                   </li>

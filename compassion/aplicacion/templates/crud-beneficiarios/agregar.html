@@ -1,10 +1,12 @@
-{%extends '../index_master.html'%} {% block content %}
+{%extends '../index_master.html'%} {% block content %} {% load static%}
 
 <div class="right_col" role="main">
   <form action="agregar" method="POST">
     {% csrf_token %}
 
-    <h1>Datos Familiares</h1>
+    <h1 style="font-family: 'Arial', sans-serif; font-size: 24px; color: #333">
+      Datos Familiares
+    </h1>
 
     <div class="form-group row">
       <label for="nombre" class="col-4 col-form-label">Datos del Padre</label>
