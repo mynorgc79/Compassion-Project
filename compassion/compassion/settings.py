@@ -13,6 +13,8 @@ https://docs.djangoproject.com/en/4.2/ref/settings/
 import os
 from pathlib import Path
 from django.urls import reverse_lazy
+
+
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -38,7 +40,10 @@ INSTALLED_APPS = [
     "django.contrib.sessions",
     "django.contrib.messages",
     "django.contrib.staticfiles",
-    "aplicacion"
+    "aplicacion",
+    "import_export",
+
+
 ]
 
 MIDDLEWARE = [
@@ -106,7 +111,7 @@ AUTH_PASSWORD_VALIDATORS = [
 ]
 
 # -------LE INDICAMOS A DJANGO QUE USE NUESTRO MODELO COMO AUTENTICACION
-AUTH_USER_MODEL = 'aplicacion.Usuario'
+# AUTH_USER_MODEL = 'usuario.Usuario'
 
 
 # Internationalization

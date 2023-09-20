@@ -53,6 +53,9 @@
       </tbody>
     </table>
   </div>
+
+  <!-- Agregar un botón para exportar a PDF -->
+  <a href="{% url 'exportar_pdf' %}" class="btn btn-primary">Exportar a PDF</a>
   {% else %}
   <p>No se encontró ninguna familia con esos apellidos.</p>
   {% endif %}

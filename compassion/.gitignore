@@ -1,2 +1,72 @@
 #ignorando archivos compilados
 *.pyc
+
+# Archivos de configuración locales (por ejemplo, settings.py para entornos locales)
+*.pyc
+*.pyo
+__pycache__/
+
+# Directorio virtualenv
+venv/
+
+# Directorio de registros y archivos de registro generados por Django
+logs/
+*.log
+
+# Archivo de base de datos SQLite
+db.sqlite3
+
+# Archivo de configuración local de desarrollo
+local_settings.py
+
+# Archivos de configuración de IDE (por ejemplo, para Visual Studio Code)
+.vscode/
+
+# Archivos de caché de IDE (por ejemplo, para PyCharm)
+.idea/
+
+# Archivos de caché de Python
+__pycache__/
+
+# Archivos de migración de Django
+*/migrations/*.py
+*/migrations/*.pyc
+
+# Archivo de sesiones de Django
+session_key
+
+# Entorno de producción estático (en lugar de esto, usa un servicio de archivos estáticos)
+staticfiles/
+
+
+# Archivos binarios
+*.pyc
+*.egg-info
+*.dist-info
+__pycache__/
+
+# Archivos de datos
+*.csv
+*.json
+*.xlsx
+*.xlsm
+*.xls
+*.pdf
+*.txt
+*.ini
+*.conf
+*.log
+*.sqlite3
+*.db
+*.sqlite3-journal
+*.media
+
+# Archivos temporales
+.pytest_cache/
+.coverage/
+.mypy_cache/
+.venv/
+
+# Otros archivos y directorios
+docs/
+tests/
