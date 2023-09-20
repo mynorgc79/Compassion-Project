@@ -16,7 +16,7 @@
           value="{{ request.GET.nombre }}"
         />
         <div class="input-group-append">
-          <button type="submit" id="search-button" class="btn btn-primary">
+          <button type="submit" id="search-button" class="btn btn-success">
             Buscar
           </button>
         </div>
@@ -54,8 +54,24 @@
     </table>
   </div>
 
+  <script>
+    document
+      .getElementById("imprimir-button")
+      .addEventListener("click", function () {
+        window.print(); // Abre el cuadro de diálogo de impresión del navegador
+      });
+  </script>
+
   <!-- Agregar un botón para exportar a PDF -->
   <a href="{% url 'exportar_pdf' %}" class="btn btn-primary">Exportar a PDF</a>
+  <button id="imprimir-button" class="btn btn-info">Imprimir</button>
+  <script>
+    document
+      .getElementById("imprimir-button")
+      .addEventListener("click", function () {
+        window.print(); // Abre el cuadro de diálogo de impresión del navegador
+      });
+  </script>
   {% else %}
   <p>No se encontró ninguna familia con esos apellidos.</p>
   {% endif %}
