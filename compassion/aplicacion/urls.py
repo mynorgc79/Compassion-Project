@@ -32,6 +32,7 @@ urlpatterns = [
     path('beneficiarios_retirados', views.beneficiarios_retirados,
          name='beneficiarios_retirados'),
 
+    path('exportar-pdf/', views.exportar_pdf, name='exportar_pdf'),
 
 
 ]

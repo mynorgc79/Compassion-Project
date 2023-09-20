@@ -1,3 +1,6 @@
+from reportlab.lib import colors
+from reportlab.platypus import SimpleDocTemplate, Table, TableStyle
+from reportlab.lib.pagesizes import letter, landscape
 from .models import Familias, Beneficiarios
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
@@ -13,6 +16,10 @@ from django.db.models import Count
 from django.db import models
 from django.db.models import Q
 from django.contrib.auth.views import LoginView
+from django.http import FileResponse
+from django.shortcuts import render
+from reportlab.pdfgen import canvas
+from io import BytesIO
 # Create your views here.
 
 TEMPLATE_DIRS = (
@@ -128,7 +135,15 @@ def agregar(request):
 
 
 def listar(request):
-    beneficiarios = Beneficiarios.objects.all()
+    # Obtener el nombre de la solicitud GET
+    nombre_query = request.GET.get('nombre', '')
+
+    # Filtrar beneficiarios por nombre
+    beneficiarios = Beneficiarios.objects.filter(
+        Q(nombre__icontains=nombre_query) | Q(
+            apellido__icontains=nombre_query),
+        estado=True
+    )
     datos = {'beneficiarios': beneficiarios}
     return render(request, 'crud-beneficiarios/listar.html', datos)
 
@@ -259,3 +274,58 @@ def editar_usuario(request):
 
 def ingresar_inventario(request):
     return render(request, 'inventario/ingresar_inventario.html')
+
+
+# --------------reporteria EXPORTAR PDF
+
+
+def exportar_pdf(request):
+    # Crear un objeto BytesIO para guardar el PDF en memoria
+    buffer = BytesIO()
+
+    # Crear un objeto PDF con orientación horizontal (landscape)
+    doc = SimpleDocTemplate(buffer, pagesize=landscape(letter))
+
+    # Crear una lista para almacenar los datos de la tabla
+    data = [["CÓDIGO", "NOMBRE", "APELLIDO", "EDAD",
+             "NIVEL", "FECHA NACIMIENTO", "OBSERVACIONES"]]
+
+    # Agregar datos a la lista desde tu modelo (asegúrate de importar Beneficiarios)
+    beneficiarios = Beneficiarios.objects.all()
+    for beneficiario in beneficiarios:
+        data.append([
+            beneficiario.codigo_beneficiario,
+            beneficiario.nombre,
+            beneficiario.apellido,
+            beneficiario.edad,
+            beneficiario.nivel,
+            beneficiario.fecha_nacimiento,
+            beneficiario.observacion,
+        ])
+
+    # Crear una tabla y definir su estilo
+    table = Table(data)
+    table.setStyle(TableStyle([
+        ('BACKGROUND', (0, 0), (-1, 0), colors.grey),
+        ('TEXTCOLOR', (0, 0), (-1, 0), colors.whitesmoke),
+        ('ALIGN', (0, 0), (-1, -1), 'CENTER'),
+        ('FONTNAME', (0, 0), (-1, 0), 'Helvetica-Bold'),
+        ('BOTTOMPADDING', (0, 0), (-1, 0), 12),
+        ('BACKGROUND', (0, 1), (-1, -1), colors.beige),
+        ('GRID', (0, 0), (-1, -1), 1, colors.black),
+    ]))
+
+    # Crear el PDF y agregar la tabla
+    elements = [table]
+    doc.build(elements)
+
+    # Configurar el objeto BytesIO para la lectura desde el principio
+    buffer.seek(0)
+
+    # Devolver el PDF como una respuesta de archivo
+    response = FileResponse(buffer, as_attachment=True,
+                            filename='lista_beneficiarios.pdf')
+    return response
+
+
+# ---------------------------
