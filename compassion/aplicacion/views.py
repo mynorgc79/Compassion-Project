@@ -30,7 +30,7 @@ TEMPLATE_DIRS = (
 def inicio(request):
     return render(request, 'index.html')
 
-# AGREGAR BENEFICIARIO
+# --------------------AGREGAR BENEFICIARIO------------------------------------------------
 
 
 def calcular_edad(fecha_nacimiento):
@@ -131,9 +131,10 @@ def agregar(request):
         return render(request, 'crud-beneficiarios/agregar.html')
 
 
-# TERMINA AGREGAR BENEFICIARIO
+# --------------------------------TERMINA AGREGAR BENEFICIARIO------------------------------------
 
 
+# ----------------------------------LISTAR BENEFICIARIO--------------------------------
 def listar(request):
     # Obtener el nombre de la solicitud GET
     nombre_query = request.GET.get('nombre', '')
@@ -147,23 +148,19 @@ def listar(request):
     datos = {'beneficiarios': beneficiarios}
     return render(request, 'crud-beneficiarios/listar.html', datos)
 
+# --------------------------------TERMINA LISTAR BENEFICIARIO-------------------------------
 
+
+# --------------------------------ACTUALIZAR BENEFICIARIO-------------------------------
 def actualizar(request):
     beneficiarios = Beneficiarios.objects.all()
     datos = {'beneficiarios': beneficiarios}
     return render(request, 'crud-beneficiarios/actualizar.html', datos)
 
-
-def eliminar(request):
-    return render(request, 'crud-beneficiarios/eliminar.html')
+# --------------------------------TERMINA ACTUALIZAR BENEFICIARIO-------------------------------
 
 
-def buscar(request):
-    return render(request, 'crud-beneficiarios/buscar.html')
-
-# --------Salida Beneficiarios
-
-
+# --------------------------------DAR SALIDA A  BENEFICIARIO-------------------------------
 def salida_beneficiario(request):
 
     if request.method == 'POST':
@@ -200,7 +197,7 @@ def salida_beneficiario(request):
     datos = {'beneficiarios': beneficiarios}
     return render(request, 'crud-beneficiarios/salida_beneficiario.html', datos)
 
-# --------fin salida beneficiario
+# -----------------------------TERMINA DAR SALIDA BENEFICIARIO-------------------------------
 
 
 # -----------BENEFICIARIOS RETIRADOS --------
@@ -225,7 +222,7 @@ def beneficiarios_retirados(request):
 # ------------FIN BENEFICIARIOS RETIRADOS --------------------------------
 
 
-# ---------listar familias --------
+# -----------------listar familias --------
 def listar_familias(request):
     # Obtener el apellido de la solicitud GET
     apellido = request.GET.get('apellido', '')
@@ -239,11 +236,42 @@ def listar_familias(request):
     datos = {'familias': familias}
     return render(request, 'familias/listar_familias.html', datos)
 
-# ------fin listar familias----------
+# --------------------TERMINA LISTAR FAMILIAS-------------------------------
 
 
-def ingresar_inventario(request):
-    return render(request, 'inventario/ingresar_inventario.html')
+# ----------------------- INVENTARIO-------------------------------
+def registrar_articulo(request):
+    return render(request, 'inventario/registrar_articulo.html')
+
+
+def crear_area(request):
+    return render(request, 'inventario/crear_area.html')
+
+
+def listar_articulos(request):
+    return render(request, 'inventario/listar_articulos.html')
+
+
+def buscar_area(request):
+    return render(request, 'inventario/buscar_area.html')
+
+
+def editar_articulo(request):
+    return render(request, 'inventario/editar_articulo.html')
+
+
+def listar_bajas(request):
+    return render(request, 'inventario/listar_bajas.html')
+
+
+def listar_bajas(request):
+    return render(request, 'inventario/listar_bajas.html')
+
+
+def baja_articulo(request):
+    return render(request, 'inventario/baja_articulo.html')
+
+# -------------------------TERMINA  INVENTARIO-------------------------------
 
 
 def login(request):
@@ -272,11 +300,7 @@ def editar_usuario(request):
     return render(request, 'usuarios/editar_user.html')
 
 
-def ingresar_inventario(request):
-    return render(request, 'inventario/ingresar_inventario.html')
-
-
-# --------------reporteria EXPORTAR PDF
+# --------------reporteria EXPORTAR PDF-------------
 
 
 def exportar_pdf(request):

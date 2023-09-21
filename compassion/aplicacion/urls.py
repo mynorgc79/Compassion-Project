@@ -16,21 +16,24 @@ urlpatterns = [
     path('agregar', views.agregar, name='agregar'),
     path('listar', views.listar, name='listar'),
     path('actualizar', views.actualizar, name='actualizar'),
-    path('eliminar', views.eliminar, name='eliminar'),
-    path('buscar', views.buscar, name='buscar'),
-
-
-    path('editar_usuario', views.editar_usuario, name='editar_usuario'),
-
-    path('listar_familias', views.listar_familias, name='listar_familias'),
-    path('ingresar_inventario', views.ingresar_inventario,
-         name='ingresar_inventario'),
-
     path('salida_beneficiario', views.salida_beneficiario,
          name='salida_beneficiario'),
 
     path('beneficiarios_retirados', views.beneficiarios_retirados,
          name='beneficiarios_retirados'),
+
+    path('listar_familias', views.listar_familias, name='listar_familias'),
+
+    path('editar_usuario', views.editar_usuario, name='editar_usuario'),
+
+
+    path('registrar_articulo', views.registrar_articulo, name='registrar_articulo'),
+    path('crear_area', views.crear_area, name='crear_area'),
+    path('listar_articulos', views.listar_articulos, name='listar_articulos'),
+    path('buscar_area', views.buscar_area, name='buscar_area'),
+    path('editar_articulo', views.editar_articulo, name='editar_articulo'),
+    path('listar_bajas', views.listar_bajas, name='listar_bajas'),
+    path('baja_articulo', views.baja_articulo, name='baja_articulo'),
 
     path('exportar-pdf/', views.exportar_pdf, name='exportar_pdf'),
 
