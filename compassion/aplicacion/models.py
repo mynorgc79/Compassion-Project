@@ -4,8 +4,9 @@ from django.contrib.auth.models import AbstractBaseUser, BaseUserManager
 from django.contrib.auth.models import UserManager
 # Create your models here.
 
-
 # -----------f, username):-DEFINIENDO MODELO FAMILIAS
+
+
 class Familias(models.Model):
     id_familia = models.AutoField(primary_key=True)
     apellido_familia = models.CharField(
@@ -56,3 +57,40 @@ class Salidas(models.Model):
 
     def __str__(self):
         return f'Salida {self.id_salidas}'
+
+# ----------------------MODELOS PARA EL INVENTARIO
+
+
+class Area(models.Model):
+    nombre_area = models.CharField(max_length=75)
+    ubicación = models.CharField(max_length=60)
+    descripcion = models.TextField(blank=True, null=True)
+
+
+class ItemInventario(models.Model):
+    id_inventario = models.AutoField(primary_key=True)
+    cantidad = models.PositiveIntegerField()
+    descripcion_articulo = models.TextField()
+    fecha_compra = models.DateField()
+    donacion = models.DecimalField(max_digits=10, decimal_places=2)
+    numero_cheque = models.CharField(max_length=50, blank=True, null=True)
+    numero_factura = models.CharField(max_length=50, blank=True, null=True)
+    proveedor = models.CharField(max_length=75)
+    encargado = models.CharField(max_length=100)
+    valor_compra = models.DecimalField(max_digits=10, decimal_places=2)
+    numero_acta = models.CharField(max_length=20, blank=True, null=True)
+    estado = models.BooleanField(default='True', verbose_name='estado')
+    auditado = models.BooleanField(default=False)
+    area = models.ForeignKey(
+        Area, on_delete=models.SET_NULL, blank=True, null=True)
+
+
+class Movimientos(models.Model):
+    id_movimiento = models.AutoField(primary_key=True)
+    tipo_movimiento = models.CharField(
+        max_length=20, verbose_name='Tipo de Salida')
+    fecha_movimiento = models.DateField(
+        null=False, verbose_name='Fecha de salida')
+    descripcion = models.TextField()
+    inventario_id = models.ForeignKey(
+        ItemInventario, on_delete=models.CASCADE)
