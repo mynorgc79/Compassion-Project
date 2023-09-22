@@ -40,8 +40,9 @@ INSTALLED_APPS = [
     "django.contrib.sessions",
     "django.contrib.messages",
     "django.contrib.staticfiles",
-    "aplicacion",
-    "import_export",
+    "usuario",
+    "aplicacion"
+
 
 
 ]
@@ -111,7 +112,7 @@ AUTH_PASSWORD_VALIDATORS = [
 ]
 
 # -------LE INDICAMOS A DJANGO QUE USE NUESTRO MODELO COMO AUTENTICACION
-# AUTH_USER_MODEL = 'usuario.Usuario'
+AUTH_USER_MODEL = 'usuario.Usuario'
 
 
 # Internationalization
