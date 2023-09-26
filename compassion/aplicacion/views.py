@@ -7,7 +7,7 @@ from django.contrib.auth.models import User
 from django.http import JsonResponse
 from django.shortcuts import render, redirect
 from django.http import HttpResponse
-from .models import Beneficiarios, Familias, Salidas
+from .models import Beneficiarios, Familias, Salidas, Area, ItemInventario, ItemInventario, Movimientos
 from datetime import date
 from datetime import datetime
 from django.contrib.auth.forms import UserCreationForm
@@ -20,6 +20,8 @@ from django.http import FileResponse
 from django.shortcuts import render
 from reportlab.pdfgen import canvas
 from io import BytesIO
+from django.views.generic import TemplateView
+from pynotifier import Notification
 # Create your views here.
 
 TEMPLATE_DIRS = (
@@ -27,8 +29,13 @@ TEMPLATE_DIRS = (
 )
 
 
-def inicio(request):
+class Inicio(TemplateView):
+    template_name = 'index.html'
+
+
+def index(request):
     return render(request, 'index.html')
+
 
 # --------------------AGREGAR BENEFICIARIO------------------------------------------------
 
@@ -243,9 +250,34 @@ def listar_familias(request):
 def registrar_articulo(request):
     return render(request, 'inventario/registrar_articulo.html')
 
+# ------------------------------------------------------
+
 
 def crear_area(request):
+    if request.method == 'POST':
+
+        nombre_area = request.POST.get('nombre_area')
+        ubicacion = request.POST.get('ubicacion')
+        descripcion = request.POST.get('descripcion')
+
+        # Elimina el campo `id_area`
+        nueva_area = Area(
+            nombre_area=nombre_area,
+            ubicacion=ubicacion,
+            descripcion=descripcion,
+        )
+
+        nueva_area.save()
+
+        # Agrega un mensaje de éxito
+
+        # Redirige al usuario a la página de inicio
+        return redirect('listar')
+
     return render(request, 'inventario/crear_area.html')
+
+
+# ----------------------------------------------------------------
 
 
 def listar_articulos(request):
