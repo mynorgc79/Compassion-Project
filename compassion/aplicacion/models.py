@@ -58,10 +58,9 @@ class Salidas(models.Model):
     def __str__(self):
         return f'Salida {self.id_salidas}'
 
-# ----------------------MODELOS PARA EL INVENTARIO
-
 
 class Area(models.Model):
+    id_area = models.AutoField(primary_key=True)
     nombre_area = models.CharField(max_length=75)
     ubicación = models.CharField(max_length=60)
     descripcion = models.TextField(blank=True, null=True)
@@ -81,7 +80,7 @@ class ItemInventario(models.Model):
     numero_acta = models.CharField(max_length=20, blank=True, null=True)
     estado = models.BooleanField(default='True', verbose_name='estado')
     auditado = models.BooleanField(default=False)
-    area = models.ForeignKey(
+    area_id = models.ForeignKey(
         Area, on_delete=models.SET_NULL, blank=True, null=True)
 
 
@@ -94,3 +93,5 @@ class Movimientos(models.Model):
     descripcion = models.TextField()
     inventario_id = models.ForeignKey(
         ItemInventario, on_delete=models.CASCADE)
+
+# ----------------------MODELOS PARA EL INVENTARIO
