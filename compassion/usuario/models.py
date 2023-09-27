@@ -6,12 +6,12 @@ from django.contrib.auth.models import AbstractBaseUser, BaseUserManager
 
 
 class UsuarioManager(BaseUserManager):
-    def create_user(self, email, username, nombres, apellidos, password=None):
+    def create_user(self,  username, nombres, apellidos, password=None):
         if not email:
             raise ValueError('El usuario debe tener correo electrónico')
         usuario = self.model(
             username=username,
-            email=self.normalize_email(email),
+            # email=self.normalize_email(email),
             nombres=nombres,
             apellidos=apellidos
         )
@@ -21,9 +21,9 @@ class UsuarioManager(BaseUserManager):
         usuario.save()
         return usuario
 
-    def create_superuser(self, username, email, nombres, apellidos, password):
+    def create_superuser(self, username, nombres, apellidos, password):
         usuario = self.create_user(
-            email,
+            # email,
             username=username,
             nombres=nombres,
             apellidos=apellidos,
@@ -47,7 +47,7 @@ class Usuario(AbstractBaseUser):
     objects = UsuarioManager()
 
     USERNAME_FIELD = 'username'
-    REQUIRED_FIELDS = ['email', 'nombres', 'apellidos']
+    REQUIRED_FIELDS = ['nombres', 'apellidos']
 
     def __str__(self):
         return f'{self.nombres}, {self.apellidos}'
