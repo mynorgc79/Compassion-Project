@@ -62,7 +62,7 @@ class Salidas(models.Model):
 class Area(models.Model):
     id_area = models.AutoField(primary_key=True)
     nombre_area = models.CharField(max_length=75)
-    ubicación = models.CharField(max_length=60)
+    ubicacion = models.CharField(max_length=60)
     descripcion = models.TextField(blank=True, null=True)
 
 
@@ -71,7 +71,8 @@ class ItemInventario(models.Model):
     cantidad = models.PositiveIntegerField()
     descripcion_articulo = models.TextField()
     fecha_compra = models.DateField()
-    donacion = models.DecimalField(max_digits=10, decimal_places=2)
+    donacion = models.DecimalField(
+        max_digits=10, decimal_places=2, blank=True, null=True)
     numero_cheque = models.CharField(max_length=50, blank=True, null=True)
     numero_factura = models.CharField(max_length=50, blank=True, null=True)
     proveedor = models.CharField(max_length=75)
@@ -80,8 +81,7 @@ class ItemInventario(models.Model):
     numero_acta = models.CharField(max_length=20, blank=True, null=True)
     estado = models.BooleanField(default='True', verbose_name='estado')
     auditado = models.BooleanField(default=False)
-    area_id = models.ForeignKey(
-        Area, on_delete=models.SET_NULL, blank=True, null=True)
+    area_id = models.ForeignKey(Area, on_delete=models.CASCADE)
 
 
 class Movimientos(models.Model):

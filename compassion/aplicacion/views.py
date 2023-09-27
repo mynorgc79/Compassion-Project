@@ -22,6 +22,9 @@ from reportlab.pdfgen import canvas
 from io import BytesIO
 from django.views.generic import TemplateView
 from pynotifier import Notification
+from django.contrib import messages
+
+
 # Create your views here.
 
 TEMPLATE_DIRS = (
@@ -248,7 +251,52 @@ def listar_familias(request):
 
 # ----------------------- INVENTARIO-------------------------------
 def registrar_articulo(request):
-    return render(request, 'inventario/registrar_articulo.html')
+    # areas = Area.objects.all()
+
+    if request.method == 'POST':
+        # Capturar los datos del formulario
+        cantidad = request.POST.get('cantidad')
+        descripcion_articulo = request.POST.get('descripcion_articulo')
+        fecha_compra = request.POST.get('fecha_compra')
+        area_id = request.POST.get('area')
+        donacion = request.POST.get('donacion')
+        numero_cheque = request.POST.get('numero_cheque')
+        numero_factura = request.POST.get('numero_factura')
+        proveedor = request.POST.get('proveedor')
+        encargado = request.POST.get('encargado')
+        valor_compra = request.POST.get('valor_compra')
+        numero_acta = request.POST.get('numero_acta')
+
+        # Obtener la instancia del modelo Area correspondiente al valor de la variable id_area
+        area = Area.objects.get(id_area=area_id)
+
+        # Crear una instancia del modelo con los datos
+        nuevo_articulo = ItemInventario(
+            cantidad=cantidad,
+            descripcion_articulo=descripcion_articulo,
+            fecha_compra=fecha_compra,
+            area_id=area,  # Asignar el objeto Area, no su ID
+            donacion=donacion,
+            numero_cheque=numero_cheque,
+            numero_factura=numero_factura,
+            proveedor=proveedor,
+            encargado=encargado,
+            valor_compra=valor_compra,
+            numero_acta=numero_acta,
+            estado=True,
+            auditado=False
+        )
+
+        # Guardar en la base de datos
+
+        nuevo_articulo.save()
+
+        # Redirigir a la página de éxito o a donde desees
+        return redirect('listar')
+    areas = Area.objects.all()
+    datos = {'areas': areas}
+    return render(request, 'inventario/registrar_articulo.html', datos)
+
 
 # ------------------------------------------------------
 

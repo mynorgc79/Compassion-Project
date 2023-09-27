@@ -1,7 +1,172 @@
-{%extends '../index_master.html'%} {% block content %}
-
+{% extends '../index_master.html' %} {% block content %}
 <div class="right_col" role="main">
-  <h1>Registrar Articulo</h1>
-</div>
+  <div class="container mt-5">
+    <h1 class="mb-4">Registro de Artículo</h1>
 
+    <!-- Formulario de Registro -->
+    <form method="post" class="row">
+      {% csrf_token %}
+
+      <!-- Primera Columna -->
+      <div class="col-md-6">
+        <!-- Campo de Cantidad -->
+        <div class="form-group">
+          <label for="cantidad">Cantidad:</label>
+          <input
+            type="number"
+            class="form-control"
+            id="cantidad"
+            name="cantidad"
+            required
+          />
+        </div>
+
+        <!-- Campo de Descripción -->
+        <div class="form-group">
+          <label for="descripcion_articulo">Descripción del Artículo:</label>
+          <textarea
+            class="form-control"
+            id="descripcion_articulo"
+            name="descripcion_articulo"
+            rows="3"
+            required
+          ></textarea>
+        </div>
+
+        <!-- Campo de Fecha de Compra -->
+        <div class="form-group">
+          <label for="fecha_compra">Fecha de Compra:</label>
+          <input
+            type="date"
+            class="form-control"
+            id="fecha_compra"
+            name="fecha_compra"
+            required
+          />
+        </div>
+
+        <!-- Campo de Área -->
+
+        <div class="form-group">
+          <label for="area">Área:</label>
+          <select class="form-control" id="area" name="area">
+              <option value="" selected disabled>Selecciona un Área</option>
+              <!-- Itera sobre las áreas y crea una opción para cada una -->
+              {% for a in areas %}
+              <option value="{{ a.id_area }}">{{ a.nombre_area }}</option>
+              {% endfor %}
+          </select>
+      </div>
+      
+      
+      
+      
+      
+      
+        
+
+        <!-- Campo de Donación -->
+        <div class="form-group">
+          <label for="donacion">Donación:</label>
+          <input
+            type="number"
+            
+            class="form-control"
+            id="donacion"
+            name="donacion"
+            
+          />
+        </div>
+
+        <!-- Campo de Número de Cheque -->
+        <div class="form-group">
+          <label for="numero_cheque">Número de Cheque:</label>
+          <input
+            type="text"
+            class="form-control"
+            id="numero_cheque"
+            name="numero_cheque"
+          />
+        </div>
+      </div>
+
+      <!-- Segunda Columna -->
+      <div class="col-md-6">
+        <!-- Resto de los campos aquí -->
+
+        <!-- Campo de Número de Factura -->
+        <div class="form-group">
+          <label for="numero_factura">Número de Factura:</label>
+          <input
+            type="text"
+            class="form-control"
+            id="numero_factura"
+            name="numero_factura"
+          />
+        </div>
+
+        <!-- Campo de Proveedor -->
+        <div class="form-group">
+          <label for="proveedor">Proveedor:</label>
+          <input
+            type="text"
+            class="form-control"
+            id="proveedor"
+            name="proveedor"
+            required
+          />
+        </div>
+
+        <!-- Campo de Encargado -->
+        <div class="form-group">
+          <label for="encargado">Encargado:</label>
+          <input
+            type="text"
+            class="form-control"
+            id="encargado"
+            name="encargado"
+            required
+          />
+        </div>
+
+        <!-- Campo de Valor de Compra -->
+        <div class="form-group">
+          <label for="valor_compra">Valor de Compra:</label>
+          <input
+            type="number"
+            step="0.01"
+            class="form-control"
+            id="valor_compra"
+            name="valor_compra"
+            required
+          />
+        </div>
+
+        <!-- Campo de Número de Acta -->
+        <div class="form-group">
+          <label for="numero_acta">Número de Acta:</label>
+          <input
+            type="text"
+            class="form-control"
+            id="numero_acta"
+            name="numero_acta"
+          />
+        </div>
+        <!-- Botón de Envío -->
+        <div class="col-md-12 text-center">
+          <button type="submit" class="btn btn-primary">
+            Registrar Artículo
+          </button>
+        </div>
+      </div>
+
+      <!-- Resto del formulario aquí -->
+
+      
+
+  <!-- Incluye los scripts de Bootstrap (asegúrate de que tengas Bootstrap instalado) -->
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</div>
 {% endblock %}
