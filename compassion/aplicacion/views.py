@@ -329,7 +329,20 @@ def crear_area(request):
 
 
 def listar_articulos(request):
-    return render(request, 'inventario/listar_articulos.html')
+    # Obtener el nombre de la solicitud GET
+    descripcion = request.GET.get('descripcion', '')
+
+    # Filtrar beneficiarios por nombre
+    inventario = ItemInventario.objects.filter(
+        Q(descripcion_articulo__icontains=descripcion),
+        estado=True
+    )
+    datos = {'inventario': inventario}
+
+    return render(request, 'inventario/listar_articulos.html', datos)
+
+
+# ----------------------------------------------------------------
 
 
 def buscar_area(request):

@@ -1,7 +1,87 @@
-{%extends '../index_master.html'%} {% block content %}
-
+{% extends '../index_master.html' %} {% block content %}
 <div class="right_col" role="main">
-  <h1>Listar Articulos Compassion</h1>
-</div>
+  <h1>Lista de Artículos</h1>
 
+  <!-- Barra de búsqueda -->
+  <div class="search-bar">
+    <form method="get">
+      <div class="input-group">
+        <input
+          type="text"
+          id="search-input"
+          name="descripcion"
+          class="form-control"
+          placeholder="Buscar artículo por nombre"
+          value="{{ request.GET.descripcion }}"
+        />
+        <div class="input-group-append">
+          <button type="submit" id="search-button" class="btn btn-success">
+            Buscar
+          </button>
+        </div>
+      </div>
+    </form>
+  </div>
+
+  {% if inventario %}
+  <div class="table-responsive">
+    <table class="table table-bordered table-striped">
+      <thead>
+        <tr>
+          <th scope="col">CÓDIGO</th>
+          <th scope="col">CANTIDAD</th>
+          <th scope="col">DESCRIPCIÓN</th>
+          <th scope="col">FECHA DE COMPRA</th>
+          <th scope="col">ÁREA</th>
+          <th scope="col">No. CHEQUE</th>
+          <th scope="col">No. FACTURA</th>
+          <th scope="col">PROVEEDOR</th>
+          <th scope="col">ENCARGADO</th>
+          <th scope="col">VALOR DE COMPRA</th>
+          <th scope="col">NÚMERO DE ACTA</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for a in inventario %}
+        <tr>
+          <th scope="row">{{ a.id_inventario }}</th>
+          <td>{{ a.cantidad }}</td>
+          <td>{{ a.descripcion_articulo }}</td>
+          <td>{{ a.fecha_compra }}</td>
+          <td>{{ a.nombre_area }}</td>
+          <!-- Añadir esta línea -->
+          <td>{{ a.numero_cheque }}</td>
+          <td>{{ a.numero_factura }}</td>
+          <td>{{ a.proveedor }}</td>
+          <td>{{ a.encargado }}</td>
+          <td>{{ a.valor_compra }}</td>
+          <td>{{ a.numero_acta }}</td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+
+  <script>
+    document
+      .getElementById("imprimir-button")
+      .addEventListener("click", function () {
+        window.print(); // Abre el cuadro de diálogo de impresión del navegador
+      });
+  </script>
+
+  <!-- Agregar un botón para exportar a PDF -->
+  <a href="{% url 'exportar_pdf' %}" class="btn btn-primary">Exportar a PDF</a>
+  <button id="imprimir-button" class="btn btn-info">Imprimir</button>
+  <script>
+    document
+      .getElementById("imprimir-button")
+      .addEventListener("click", function () {
+        window.print(); // Abre el cuadro de diálogo de impresión del navegador
+      });
+  </script>
+  {% else %}
+  <p>No se encontró ninguna familia con esos apellidos.</p>
+  {% endif %}
+</div>
 {% endblock %}
