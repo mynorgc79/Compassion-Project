@@ -25,6 +25,7 @@ from pynotifier import Notification
 from django.contrib import messages
 
 
+
 # Create your views here.
 
 TEMPLATE_DIRS = (
@@ -346,8 +347,23 @@ def listar_articulos(request):
 
 
 def buscar_area(request):
-    return render(request, 'inventario/buscar_area.html')
+    areas = Area.objects.all()
+    articulos = ItemInventario.objects.filter(estado=True)
 
+    if request.method == 'GET':
+        # Obtener el ID del área seleccionada desde la solicitud GET
+        area_id = request.GET.get('area_id')
+
+        # Filtrar los artículos por área
+        if area_id:
+            articulos = articulos.filter(area_id=area_id)
+
+    return render(request, 'inventario/buscar_area.html', {
+        'areas': areas,
+        'articulos': articulos
+    })
+
+#----------------------------------------------------------------
 
 def editar_articulo(request):
     return render(request, 'inventario/editar_articulo.html')

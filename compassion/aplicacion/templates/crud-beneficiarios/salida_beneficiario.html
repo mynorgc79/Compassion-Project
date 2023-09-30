@@ -19,7 +19,7 @@
           <select id="codigo_beneficiario" name="codigo_beneficiario">
             {% for b in beneficiarios %} {% if b.estado == 1 %}
             <option value="{{ b.codigo_beneficiario }}">
-              {{ b.codigo_beneficiario }}
+              {{ b.codigo_beneficiario }}{{' -- '}}{{ b.nombre }}
             </option>
             {% endif %} {% endfor %}
           </select>

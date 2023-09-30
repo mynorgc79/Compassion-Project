@@ -1,7 +1,62 @@
-{%extends '../index_master.html'%} {% block content %}
+{% extends '../index_master.html' %} {% block content %}
 
 <div class="right_col" role="main">
-  <h1>Buscar por Area</h1>
+  <h1>Buscar por Área</h1>
+  <form method="get" id="search-form">
+    <!-- Agrega un ID al formulario -->
+    <div class="form-group">
+      <label for="area_id">Selecciona un Área:</label>
+      <select class="form-control" name="area_id" id="area_id">
+        <option value="">Todas las Áreas</option>
+        {% for area in areas %}
+        <option value="{{ area.id_area }}">{{ area.nombre_area }}</option>
+        {% endfor %}
+      </select>
+    </div>
+  </form>
+
+  <table class="table table-striped">
+    <thead>
+      <tr>
+        <th scope="col">CÓDIGO</th>
+        <th scope="col">CANTIDAD</th>
+        <th scope="col">DESCRIPCIÓN</th>
+        <th scope="col">FECHA DE COMPRA</th>
+        <th scope="col">ÁREA</th>
+        <th scope="col">No. CHEQUE</th>
+        <th scope="col">No. FACTURA</th>
+        <th scope="col">PROVEEDOR</th>
+        <th scope="col">ENCARGADO</th>
+        <th scope="col">VALOR DE COMPRA</th>
+        <th scope="col">NÚMERO DE ACTA</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for articulo in articulos %}
+      <tr>
+        <td>{{ articulo.id_inventario }}</td>
+        <td>{{ articulo.cantidad }}</td>
+        <td>{{ articulo.descripcion_articulo }}</td>
+        <td>{{ articulo.fecha_compra }}</td>
+        <td>{{ articulo.area_id.nombre_area }}</td>
+        <!-- Accede al nombre del área -->
+        <td>{{ articulo.numero_cheque }}</td>
+        <td>{{ articulo.numero_factura }}</td>
+        <td>{{ articulo.proveedor }}</td>
+        <td>{{ articulo.encargado }}</td>
+        <td>{{ articulo.valor_compra }}</td>
+        <td>{{ articulo.numero_acta }}</td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
 </div>
+
+<script>
+  // Agrega un controlador de eventos onchange al elemento select
+  document.getElementById("area_id").addEventListener("change", function () {
+    document.getElementById("search-form").submit(); // Envía el formulario cuando cambia la selección
+  });
+</script>
 
 {% endblock %}
