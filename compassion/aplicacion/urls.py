@@ -10,9 +10,10 @@ urlpatterns = [
 
     path('login/', views.login, name='login'),
     path('registro_usuario', views.registro_usuario, name='registro_usuario'),
+    path('index/', views.index, name='index'),
 
 
-    path('inicio', views.inicio, name='inicio'),
+
     path('agregar', views.agregar, name='agregar'),
     path('listar', views.listar, name='listar'),
     path('actualizar', views.actualizar, name='actualizar'),
