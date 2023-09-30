@@ -28,7 +28,9 @@ SECRET_KEY = "django-insecure-(%rg12pmpthiy3-&w1suhg6!1r)pm95t#aufcse^_(8!+a4*@d
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = [#'requests-glucose-helena-cashiers.trycloudflare.com'
+
+]
 
 
 # Application definition
@@ -128,8 +130,6 @@ USE_TZ = True
 
 # ------------Donde nos dirige
 
-LOGIN_REDIRECT_URL = reverse_lazy('index')
-
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/4.2/howto/static-files/
@@ -144,3 +144,5 @@ STATICFILES_DIRS = [
 # https://docs.djangoproject.com/en/4.2/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
+LOGIN_REDIRECT_URL = 'index'
+LOGOUT_REDIRECT_URL = 'login'
