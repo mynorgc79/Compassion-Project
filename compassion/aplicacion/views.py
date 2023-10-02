@@ -23,6 +23,8 @@ from io import BytesIO
 from django.views.generic import TemplateView
 from pynotifier import Notification
 from django.contrib import messages
+import re
+
 
 
 
@@ -304,12 +306,16 @@ def registrar_articulo(request):
 
 def crear_area(request):
     if request.method == 'POST':
-
         nombre_area = request.POST.get('nombre_area')
         ubicacion = request.POST.get('ubicacion')
         descripcion = request.POST.get('descripcion')
 
-        # Elimina el campo `id_area`
+        # Validar que `nombre_area` solo contenga letras
+        if not re.match("^[A-Za-z ]+$", nombre_area):
+            # Si no contiene solo letras, puedes mostrar un mensaje de error o tomar otra acción
+            error_message = "El nombre del área debe contener solo letras y espacios."
+            return render(request, 'inventario/crear_area.html', {'error_message': error_message})
+
         nueva_area = Area(
             nombre_area=nombre_area,
             ubicacion=ubicacion,
@@ -324,7 +330,6 @@ def crear_area(request):
         return redirect('listar')
 
     return render(request, 'inventario/crear_area.html')
-
 
 # ----------------------------------------------------------------
 

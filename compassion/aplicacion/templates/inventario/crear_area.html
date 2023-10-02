@@ -1,25 +1,19 @@
-{%extends '../index_master.html'%} {% block content %}{% load static %}
-
+{% extends '../index_master.html' %} {% load static %} {% block content %}
 <div class="right_col" role="main">
   <h1>Crear Área</h1>
-
-  
   <link
     href="{% static 'styles/style.css' %}"
     rel="stylesheet"
     type="text/css"
   />
-
   <div class="container">
     <div class="row">
       <div class="col-md-12">
         <div class="well well-sm">
           <form class="form-horizontal" method="post">
             {% csrf_token %}
-
             <fieldset>
               <legend class="text-center header">Crear Área</legend>
-
               <div class="form-group">
                 <div class="col-md-1 text-center">
                   <i class="fa fa-plus bigicon"></i>
@@ -32,10 +26,11 @@
                     placeholder="Ingrese Área"
                     class="form-control"
                     required
+                    oninput="validateLetters(this)"
                   />
+                  <span id="lettersError" style="color: red"></span>
                 </div>
               </div>
-
               <div class="form-group">
                 <div class="col-md-1 text-center">
                   <i class="fa fa-map-pin bigicon"></i>
@@ -51,7 +46,6 @@
                   />
                 </div>
               </div>
-
               <div class="form-group">
                 <div class="col-md-1 text-center">
                   <i class="fa fa-pencil bigicon"></i>
@@ -67,30 +61,11 @@
                   />
                 </div>
               </div>
-
-              <!-- <div class="form-group">
-                <div class="col-md-1 text-center">
-                  <i class="fa fa-pencil bigicon"></i>
-                </div>
-                <div class="col-md-11">
-                  <input
-                    id="id_area"
-                    name="id_area"
-                    type="text"
-                    placeholder="id"
-                    class="form-control"
-                    required
-                  />
-                </div>
-              </div> -->
-
-             
-              
-
               <div class="form-group">
                 <div class="col-md-12 text-center">
                   <button
-                  name="submit" type="submit" 
+                    name="submit"
+                    type="submit"
                     class="btn btn-primary btn-lg"
                   >
                     Crear
@@ -99,12 +74,22 @@
               </div>
             </fieldset>
           </form>
-          
         </div>
       </div>
     </div>
   </div>
 </div>
-
-  {% endblock %}
-</div>
+<script>
+  function validateLetters(input) {
+    var lettersRegex = /^[a-zA-Z\s]*$/; // Expresión regular para letras y espacios
+    if (!input.value.match(lettersRegex)) {
+      document.getElementById("lettersError").innerHTML =
+        "Solo se permiten letras y espacios en blanco.";
+      input.setCustomValidity("Solo se permiten letras y espacios en blanco.");
+    } else {
+      document.getElementById("lettersError").innerHTML = "";
+      input.setCustomValidity("");
+    }
+  }
+</script>
+{% endblock %}
