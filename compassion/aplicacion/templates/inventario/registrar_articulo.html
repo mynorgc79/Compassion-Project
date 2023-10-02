@@ -1,7 +1,14 @@
-{% extends '../index_master.html' %} {% block content %}
+{% extends '../index_master.html' %} {% block content %}{% load static %}
+
+
+
+
 <div class="right_col" role="main">
   <div class="container mt-5">
     <h1 class="mb-4">Registro de Artículo</h1>
+
+   
+
 
     <!-- Formulario de Registro -->
     <form method="post" class="row">
@@ -17,6 +24,7 @@
             class="form-control"
             id="cantidad"
             name="cantidad"
+            min="0"
             required
           />
         </div>
@@ -74,6 +82,7 @@
             class="form-control"
             id="donacion"
             name="donacion"
+            min="0"
             
           />
         </div>
@@ -82,10 +91,11 @@
         <div class="form-group">
           <label for="numero_cheque">Número de Cheque:</label>
           <input
-            type="text"
+            type="number"
             class="form-control"
             id="numero_cheque"
             name="numero_cheque"
+            min="0"
           />
         </div>
       </div>
@@ -98,15 +108,23 @@
         <div class="form-group">
           <label for="numero_factura">Número de Factura:</label>
           <input
-            type="text"
+            type="number"
             class="form-control"
             id="numero_factura"
             name="numero_factura"
+            min="0"
+            oninput="validateNumbers(this, 'numero-factura-error')"
           />
+        <span id="numero-factura-error" style="color: red"></span>
+
         </div>
+
+      
 
         <!-- Campo de Proveedor -->
         <div class="form-group">
+         
+
           <label for="proveedor">Proveedor:</label>
           <input
             type="text"
@@ -114,7 +132,7 @@
             id="proveedor"
             name="proveedor"
             required
-          />
+            />
         </div>
 
         <!-- Campo de Encargado -->
@@ -126,7 +144,10 @@
             id="encargado"
             name="encargado"
             required
-          />
+            oninput="validateLetters(this, 'encargado-error')"
+            
+            />
+            <span id="encargado-error" style="color: red"></span>
         </div>
 
         <!-- Campo de Valor de Compra -->
@@ -134,12 +155,18 @@
           <label for="valor_compra">Valor de Compra:</label>
           <input
             type="number"
-            step="0.01"
+            
             class="form-control"
             id="valor_compra"
             name="valor_compra"
             required
+            min="0"
+           
+            oninput="validateNumbers(this, 'compra-error')"
+            
           />
+          <span id="compra-error" style="color: red"></span>
+           
         </div>
 
         <!-- Campo de Número de Acta -->
@@ -150,7 +177,10 @@
             class="form-control"
             id="numero_acta"
             name="numero_acta"
-          />
+            oninput="validateNumbers(this, 'numero-acta-error')"
+            
+            />
+            <span id="numero-acta-error" style="color: red"></span>
         </div>
         <!-- Botón de Envío -->
         <div class="col-md-12 text-center">
@@ -159,10 +189,43 @@
           </button>
         </div>
       </div>
-
-      <!-- Resto del formulario aquí -->
+  
 
       
+      <!-- Resto del formulario aquí -->
+<!-- Importa la función de validación -->
+<script>
+function validateLetters(input, errorId) {
+  var lettersRegex = /^[a-zA-Z\s]*$/; // Expresión regular para letras y espacios
+  var errorMessageElement = document.getElementById(errorId);
+
+  if (!input.value.match(lettersRegex)) {
+    errorMessageElement.innerHTML =
+      "Solo se permiten letras y espacios en blanco.";
+    input.setCustomValidity("Solo se permiten letras y espacios en blanco.");
+  } else {
+    errorMessageElement.innerHTML = "";
+    input.setCustomValidity("");
+  }
+}
+
+//VALIDAR NUMEROS
+function validateNumbers(input, errorId) {
+  var numbersRegex = /^[0-9]*$/; // Expresión regular para números
+  var errorMessageElement = document.getElementById(errorId);
+
+  if (!input.value.match(numbersRegex)) {
+    errorMessageElement.innerHTML = "Solo se permiten números.";
+    input.setCustomValidity("Solo se permiten números.");
+  } else {
+    errorMessageElement.innerHTML = "";
+    input.setCustomValidity("");
+  }
+}
+
+
+
+</script>
 
   <!-- Incluye los scripts de Bootstrap (asegúrate de que tengas Bootstrap instalado) -->
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>

@@ -1,4 +1,5 @@
-{% extends '../index_master.html' %} {% block content %}
+{% extends '../index_master.html' %} {% block content %}{% load humanize %}
+
 <div class="right_col" role="main">
   <h1>Lista de Artículos</h1>
 
@@ -31,13 +32,14 @@
           <th scope="col">CÓDIGO</th>
           <th scope="col">CANTIDAD</th>
           <th scope="col">DESCRIPCIÓN</th>
-          <th scope="col">FECHA DE COMPRA</th>
+          <th scope="col">FECHA COMPRA</th>
           <th scope="col">ÁREA</th>
+          <th scope="col">DONACION</th>
           <th scope="col">No. CHEQUE</th>
           <th scope="col">No. FACTURA</th>
           <th scope="col">PROVEEDOR</th>
           <th scope="col">ENCARGADO</th>
-          <th scope="col">VALOR DE COMPRA</th>
+          <th scope="col">VALOR COMPRA</th>
           <th scope="col">NÚMERO DE ACTA</th>
         </tr>
       </thead>
@@ -49,17 +51,24 @@
           <td>{{ a.descripcion_articulo }}</td>
           <td>{{ a.fecha_compra }}</td>
           <td>{{ a.area_id.nombre_area }}</td>
-          <!-- Añadir esta línea -->
+          <td>{{ a.donacion }}</td>
           <td>{{ a.numero_cheque }}</td>
           <td>{{ a.numero_factura }}</td>
           <td>{{ a.proveedor }}</td>
           <td>{{ a.encargado }}</td>
-          <td>{{ a.valor_compra }}</td>
+          <td>{{ a.valor_compra|intcomma }}</td>
           <td>{{ a.numero_acta }}</td>
         </tr>
         {% endfor %}
       </tbody>
     </table>
+    {% if total_gastado %}
+    <p style="color: green">
+      Total gastado en esta área: Q.{{ total_gastado|intcomma }}
+    </p>
+    {% endif %}
+
+    <!-- Muestra el total de dinero gastado -->
   </div>
 
   <script>

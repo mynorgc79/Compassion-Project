@@ -24,6 +24,7 @@ from django.views.generic import TemplateView
 from pynotifier import Notification
 from django.contrib import messages
 import re
+from django.db.models import Sum
 
 
 
@@ -254,51 +255,55 @@ def listar_familias(request):
 
 # ----------------------- INVENTARIO-------------------------------
 def registrar_articulo(request):
-    # areas = Area.objects.all()
-
     if request.method == 'POST':
-        # Capturar los datos del formulario
-        cantidad = request.POST.get('cantidad')
-        descripcion_articulo = request.POST.get('descripcion_articulo')
-        fecha_compra = request.POST.get('fecha_compra')
-        area_id = request.POST.get('area')
-        donacion = request.POST.get('donacion')
-        numero_cheque = request.POST.get('numero_cheque')
-        numero_factura = request.POST.get('numero_factura')
-        proveedor = request.POST.get('proveedor')
-        encargado = request.POST.get('encargado')
-        valor_compra = request.POST.get('valor_compra')
-        numero_acta = request.POST.get('numero_acta')
+        try:
+            # Capturar los datos del formulario
+            cantidad = request.POST.get('cantidad')
+            descripcion_articulo = request.POST.get('descripcion_articulo')
+            fecha_compra = request.POST.get('fecha_compra')
+            area_id = request.POST.get('area')
+            donacion = request.POST.get('donacion')
+            numero_cheque = request.POST.get('numero_cheque')
+            numero_factura = request.POST.get('numero_factura')
+            proveedor = request.POST.get('proveedor')
+            encargado = request.POST.get('encargado')
+            valor_compra = request.POST.get('valor_compra')
+            numero_acta = request.POST.get('numero_acta')
 
-        # Obtener la instancia del modelo Area correspondiente al valor de la variable id_area
-        area = Area.objects.get(id_area=area_id)
+            # Obtener la instancia del modelo Area correspondiente al valor de la variable id_area
+            area = Area.objects.get(id_area=area_id)
 
-        # Crear una instancia del modelo con los datos
-        nuevo_articulo = ItemInventario(
-            cantidad=cantidad,
-            descripcion_articulo=descripcion_articulo,
-            fecha_compra=fecha_compra,
-            area_id=area,  # Asignar el objeto Area, no su ID
-            donacion=donacion,
-            numero_cheque=numero_cheque,
-            numero_factura=numero_factura,
-            proveedor=proveedor,
-            encargado=encargado,
-            valor_compra=valor_compra,
-            numero_acta=numero_acta,
-            estado=True,
-            auditado=False
-        )
+            # Crear una instancia del modelo con los datos
+            nuevo_articulo = ItemInventario(
+                cantidad=cantidad,
+                descripcion_articulo=descripcion_articulo,
+                fecha_compra=fecha_compra,
+                area_id=area,  # Asignar el objeto Area, no su ID
+                donacion=donacion,
+                numero_cheque=numero_cheque,
+                numero_factura=numero_factura,
+                proveedor=proveedor,
+                encargado=encargado,
+                valor_compra=valor_compra,
+                numero_acta=numero_acta,
+                estado=True,
+                auditado=False
+            )
 
-        # Guardar en la base de datos
+            # Guardar en la base de datos
+            nuevo_articulo.save()
 
-        nuevo_articulo.save()
+            # Redirigir a la página de éxito o a donde desees
+            return redirect('listar')
 
-        # Redirigir a la página de éxito o a donde desees
-        return redirect('listar')
+        except Exception as e:
+            # Captura la excepción y muestra una alerta al usuario
+            messages.error(request, f"Se produjo un error: {str(e)}")
+
     areas = Area.objects.all()
     datos = {'areas': areas}
     return render(request, 'inventario/registrar_articulo.html', datos)
+
 
 
 # ------------------------------------------------------
@@ -343,13 +348,18 @@ def listar_articulos(request):
         Q(descripcion_articulo__icontains=descripcion),
         estado=True
     )
-    datos = {'inventario': inventario}
+    
+    # Calcular la suma de los valores de compra
+    total_gastado = inventario.aggregate(Sum('valor_compra'))['valor_compra__sum']
+    
+    datos = {'inventario': inventario, 'total_gastado': total_gastado}
 
     return render(request, 'inventario/listar_articulos.html', datos)
 
-
 # ----------------------------------------------------------------
 
+
+from django.db.models import Sum
 
 def buscar_area(request):
     areas = Area.objects.all()
@@ -363,9 +373,13 @@ def buscar_area(request):
         if area_id:
             articulos = articulos.filter(area_id=area_id)
 
+    # Calcular la suma de los valores de compra para los artículos filtrados
+    total_gastado = articulos.aggregate(Sum('valor_compra'))['valor_compra__sum']
+
     return render(request, 'inventario/buscar_area.html', {
         'areas': areas,
-        'articulos': articulos
+        'articulos': articulos,
+        'total_gastado': total_gastado
     })
 
 #----------------------------------------------------------------
