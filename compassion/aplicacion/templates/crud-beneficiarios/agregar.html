@@ -1,4 +1,4 @@
-{%extends '../index_master.html'%} {% block content %} {% load static%}
+{% extends '../index_master.html' %} {% block content %} {% load static %}
 
 <div class="right_col" role="main">
   <form action="agregar" method="POST">
@@ -17,7 +17,9 @@
           type="text"
           class="form-control"
           placeholder="Nombres"
+          oninput="validateLetters(this, 'nombre-padre-error')"
         />
+        <span id="nombre-padre-error" style="color: red"></span>
       </div>
 
       <div class="col-4">
@@ -27,7 +29,9 @@
           type="text"
           class="form-control"
           placeholder="Apellidos"
+          oninput="validateLetters(this, 'apellido-padre-error')"
         />
+        <span id="apellido-padre-error" style="color: red"></span>
       </div>
     </div>
 
@@ -40,7 +44,9 @@
           type="text"
           class="form-control"
           placeholder="Nombres"
+          oninput="validateLetters(this, 'nombre-madre-error')"
         />
+        <span id="nombre-madre-error" style="color: red"></span>
       </div>
 
       <div class="col-4">
@@ -50,7 +56,9 @@
           type="text"
           class="form-control"
           placeholder="Apellidos"
+          oninput="validateLetters(this, 'apellido-madre-error')"
         />
+        <span id="apellido-madre-error" style="color: red"></span>
       </div>
     </div>
 
@@ -86,15 +94,19 @@
           <input
             id="contacto"
             name="contacto"
-            type="text"
+            type="number"
             class="form-control"
             required="required"
+            pattern="[0-9]{8}"
+            maxlength="8"
+            oninput="validarLongitud(this, 8, 'contacto-error')"
           />
+          <span id="contacto-error" style="color: red"></span>
         </div>
       </div>
     </div>
 
-    <!--INGRESANDO LOS DATOS DEL BENEFICIARIO-->
+    <!-- INGRESANDO LOS DATOS DEL BENEFICIARIO -->
 
     <h1>Datos del Beneficiari@</h1>
 
@@ -114,6 +126,7 @@
             required="required"
             class="form-control"
           />
+          <span id="codigo-error" class="error" style="color: red"></span>
         </div>
       </div>
     </div>
@@ -130,7 +143,9 @@
           class="form-control"
           required="required"
           placeholder="Nombres"
+          oninput="validateLetters(this, 'nombre-beneficiario-error')"
         />
+        <span id="nombre-beneficiario-error" style="color: red"></span>
       </div>
 
       <div class="col-4">
@@ -141,7 +156,9 @@
           class="form-control"
           required="required"
           placeholder="Apellidos"
+          oninput="validateLetters(this, 'apellido-beneficiario-error')"
         />
+        <span id="apellido-beneficiario-error" style="color: red"></span>
       </div>
     </div>
 
@@ -230,6 +247,55 @@
       </div>
     </div>
   </form>
+
+  <script>
+    // Función para validar que el valor solo contenga letras
+    function validateLetters(input, errorId) {
+      var lettersRegex = /^[a-zA-Z\s]*$/; // Expresión regular para letras y espacios
+      var errorMessageElement = document.getElementById(errorId);
+
+      if (!input.value.match(lettersRegex)) {
+        errorMessageElement.innerHTML =
+          "Solo se permiten letras y espacios en blanco.";
+        input.setCustomValidity(
+          "Solo se permiten letras y espacios en blanco."
+        );
+      } else {
+        errorMessageElement.innerHTML = "";
+        input.setCustomValidity("");
+      }
+    }
+    //validar longitud de numero telefonico.
+    function validarLongitud(input, maxLength, errorId) {
+      const valor = input.value.trim();
+      const errorElement = document.getElementById(errorId);
+
+      if (valor.length > maxLength) {
+        errorElement.textContent = "Solo se permiten 8 dígitos.";
+        input.setCustomValidity("Solo se permiten 8 dígitos.");
+        input.value = valor.substring(0, maxLength); // Recortar a 8 dígitos
+      } else {
+        errorElement.textContent = "";
+        input.setCustomValidity("");
+      }
+    }
+
+    // Función para validar que el valor solo contenga números
+    // Validación para el campo "codigo" (aceptar solo números)
+    const codigoInput = document.getElementById("codigo");
+    const codigoError = document.getElementById("codigo-error");
+
+    codigoInput.addEventListener("input", function (e) {
+      const codigoValue = e.target.value;
+      if (!/^\d+$/.test(codigoValue)) {
+        codigoError.textContent = "Solo se permiten números.";
+        codigoInput.setCustomValidity("Solo se permiten números.");
+      } else {
+        codigoError.textContent = "";
+        codigoInput.setCustomValidity("");
+      }
+    });
+  </script>
 </div>
 
 {% endblock %}
