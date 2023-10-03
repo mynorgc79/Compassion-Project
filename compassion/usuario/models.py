@@ -37,14 +37,15 @@ class UsuarioManager(BaseUserManager):
 class Usuario(AbstractBaseUser):
     username = models.CharField(
         'Nombre de usuario', unique=True, max_length=80)
-    email = models.EmailField(
-        'correo Electrónico', unique=True, max_length=200)
+    
     nombres = models.CharField(
         'nombres', blank=True, null=True, max_length=100)
     apellidos = models.CharField(
         'Apellidos', blank=True, null=True, max_length=100)
     usuario_activo = models.BooleanField(default=True)
     usuario_administrador = models.BooleanField(default=False)
+    rol = models.CharField(
+        'rol', blank=True, null=True, max_length=100)
     objects = UsuarioManager()
 
     USERNAME_FIELD = 'username'

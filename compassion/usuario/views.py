@@ -1,6 +1,10 @@
 from django.shortcuts import render, redirect
 from django.contrib.auth import authenticate, login
 from django.contrib.auth.models import User
+from usuario.models import Usuario
+from django.contrib.auth import get_user_model
+
+
 # Create your views here.
 
 
@@ -28,3 +32,50 @@ def login_view(request):
     # Si la solicitud es GET, simplemente muestra el formulario de inicio de sesión
     return render(request, 'usuarios/login.html')
 
+
+def logout_view(request):
+    
+    return redirect('login')  
+
+
+from django.contrib.auth import get_user_model
+
+def registrar_usuario(request):
+    if request.method == 'POST':
+        # Obtén los datos del formulario
+        username = request.POST['username']
+        first_name = request.POST['first_name']
+        last_name = request.POST['last_name']
+        password = request.POST['password']
+        confirm_password = request.POST['confirm_password']
+        role = request.POST['role']
+
+        # Verifica que las contraseñas coincidan
+        if password != confirm_password:
+            return render(request, 'usuarios/registro_usuario.html', {'error_message': 'Las contraseñas no coinciden'})
+
+        # Crea el usuario
+        user = get_user_model().objects.create_user(
+            username=username,
+            password=password,
+            nombres=first_name,
+            apellidos=last_name,
+            #role=role,
+        )
+
+        # Asigna el valor de usuario_administrador
+        if role == 'Administrador':
+            user.usuario_administrador = 1
+        else:
+            user.usuario_administrador = 0
+
+        user.save()
+
+        # Inicia sesión al usuario recién registrado
+        login(request, user)
+
+        # Redirige a donde desees después del registro exitoso
+        return redirect('inicio')
+
+    return render(request, 'usuarios/registro_usuario.html')
+# END REGISTRAR USUARIO

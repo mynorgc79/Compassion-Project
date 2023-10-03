@@ -404,24 +404,6 @@ def baja_articulo(request):
 # REGISTRO DE USUARIO
 
 
-def registro_usuario(request):
-    if request.method == 'POST':
-        form = UserCreationForm(request.POST)
-        if form.is_valid():
-            username = form.cleaned_data['username']
-            messages.success(request, f'Usuario {username} creado')
-            return redirect('login')
-
-    else:
-        form = UserCreationForm()
-    context = {'form': form}
-    return render(request, 'usuarios/registro_user.html')
-
-# END REGISTRAR USUARIO
-
-
-def editar_usuario(request):
-    return render(request, 'usuarios/editar_user.html')
 
 
 # --------------reporteria EXPORTAR PDF-------------

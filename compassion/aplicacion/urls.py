@@ -25,7 +25,7 @@ urlpatterns = [
 
     path('listar_familias', views.listar_familias, name='listar_familias'),
 
-    path('editar_usuario', views.editar_usuario, name='editar_usuario'),
+   # path('editar_usuario', views.editar_usuario, name='editar_usuario'),
 
 
     path('registrar_articulo', views.registrar_articulo, name='registrar_articulo'),
