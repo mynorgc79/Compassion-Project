@@ -6,11 +6,11 @@ from .import views
 
 # importamos desde views
 urlpatterns = [
-    # path('', views.inicio, name='index'),
+    path('inicio', views.inicio, name='inicio'),
 
-    path('login/', views.login, name='login'),
-    path('registro_usuario', views.registro_usuario, name='registro_usuario'),
-    path('index/', views.index, name='index'),
+#    path('login/', views.login, name='login'),
+ #   path('registro_usuario', views.registro_usuario, name='registro_usuario'),
+    #path('index/', views.index, name='index'),
 
 
 

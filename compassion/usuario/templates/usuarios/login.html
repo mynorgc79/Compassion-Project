@@ -33,17 +33,20 @@
         <div class="separator"></div>
         <p class="welcome-message">Ingrese sus datos</p>
 
-        <form class="login-form">
+        <form class="login-form" method="post">
+          {% csrf_token %}
+          <!-- Agrega el token CSRF si no lo has hecho -->
+
           <div class="form-control">
-            <input type="text" placeholder="Usuario" />
+            <input type="text" name="usuario" placeholder="Usuario" />
             <i class="fas fa-user"></i>
           </div>
           <div class="form-control">
-            <input type="password" placeholder="Contraseña" />
+            <input type="password" name="contraseña" placeholder="Contraseña" />
             <i class="fas fa-lock"></i>
           </div>
 
-          <button class="submit">Ingresar</button>
+          <button type="submit" class="submit">Ingresar</button>
         </form>
       </div>
     </section>

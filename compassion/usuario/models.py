@@ -7,8 +7,9 @@ from django.contrib.auth.models import AbstractBaseUser, BaseUserManager
 
 class UsuarioManager(BaseUserManager):
     def create_user(self,  username, nombres, apellidos, password=None):
-        if not email:
-            raise ValueError('El usuario debe tener correo electrónico')
+        if not username:
+             raise ValueError('El usuario debe tener un nombre de usuario')
+
         usuario = self.model(
             username=username,
             # email=self.normalize_email(email),

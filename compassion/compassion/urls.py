@@ -18,14 +18,15 @@ from django.contrib import admin
 from django.urls import path
 from django.urls import include
 from django.contrib.auth.views import LoginView
-from aplicacion.views import Inicio
+#from aplicacion.views import Inicio
 # from auth.views import login, logout_then_login
 
 
 urlpatterns = [
     path("admin/", admin.site.urls),
     path('', include('aplicacion.urls'),),
-    # path('inicio', Inicio.as_view, name='index'),
+    path('', include('usuario.urls'),),
+    #path('inicio', Inicio.as_view, name='index'),
     # path('', login, {'template_name': 'login.html'}, name='login')
     # path('', LoginView.as_view(template_name='usuarios/login.html'), name='login'),
 ]

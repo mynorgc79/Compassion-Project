@@ -36,11 +36,9 @@ TEMPLATE_DIRS = (
 )
 
 
-class Inicio(TemplateView):
-    template_name = 'index.html'
 
 
-def index(request):
+def inicio(request):
     return render(request, 'index.html')
 
 
@@ -392,8 +390,7 @@ def listar_bajas(request):
     return render(request, 'inventario/listar_bajas.html')
 
 
-def listar_bajas(request):
-    return render(request, 'inventario/listar_bajas.html')
+
 
 
 def baja_articulo(request):
@@ -402,8 +399,7 @@ def baja_articulo(request):
 # -------------------------TERMINA  INVENTARIO-------------------------------
 
 
-def login(request):
-    return render(request, 'usuarios/login.html')
+
 
 # REGISTRO DE USUARIO
 
