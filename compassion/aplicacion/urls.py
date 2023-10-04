@@ -2,12 +2,15 @@ from django.contrib import admin
 from django.urls import path
 from django import views
 from .import views
+from django.contrib.auth.decorators import login_required
 
 
 # importamos desde views
 urlpatterns = [
-    path('inicio', views.inicio, name='inicio'),
 
+     path('inicio', views.inicio, name="inicio"),
+     path('', views.vista_raiz,name="vista_raiz"),
+     
 #    path('login/', views.login, name='login'),
  #   path('registro_usuario', views.registro_usuario, name='registro_usuario'),
     #path('index/', views.index, name='index'),
@@ -15,7 +18,8 @@ urlpatterns = [
 
 
     path('agregar', views.agregar, name='agregar'),
-    path('listar', views.listar, name='listar'),
+   path('listar', views.listar, name='listar'),
+
     path('actualizar', views.actualizar, name='actualizar'),
     path('salida_beneficiario', views.salida_beneficiario,
          name='salida_beneficiario'),

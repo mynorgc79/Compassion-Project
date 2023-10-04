@@ -26,6 +26,10 @@ from django.contrib import messages
 import re
 from django.db.models import Sum
 
+from django.contrib.auth.decorators import login_required
+
+
+
 
 
 
@@ -37,10 +41,12 @@ TEMPLATE_DIRS = (
 
 
 
-
+@login_required
 def inicio(request):
     return render(request, 'index.html')
-
+@login_required
+def vista_raiz(request):
+    return render(request, 'index.html')
 
 # --------------------AGREGAR BENEFICIARIO------------------------------------------------
 
@@ -95,7 +101,7 @@ def validar_familia(request):
         nueva_familia.save()
         return nueva_familia.id_familia
 
-
+@login_required
 def agregar(request):
     if request.method == 'POST':
         # Obtener datos del formulario
@@ -147,6 +153,7 @@ def agregar(request):
 
 
 # ----------------------------------LISTAR BENEFICIARIO--------------------------------
+@login_required
 def listar(request):
     # Obtener el nombre de la solicitud GET
     nombre_query = request.GET.get('nombre', '')
@@ -164,6 +171,7 @@ def listar(request):
 
 
 # --------------------------------ACTUALIZAR BENEFICIARIO-------------------------------
+@login_required
 def actualizar(request):
     beneficiarios = Beneficiarios.objects.all()
     datos = {'beneficiarios': beneficiarios}
@@ -173,6 +181,7 @@ def actualizar(request):
 
 
 # --------------------------------DAR SALIDA A  BENEFICIARIO-------------------------------
+@login_required
 def salida_beneficiario(request):
 
     if request.method == 'POST':
@@ -213,6 +222,7 @@ def salida_beneficiario(request):
 
 
 # -----------BENEFICIARIOS RETIRADOS --------
+@login_required
 def beneficiarios_retirados(request):
 
     beneficiarios = Beneficiarios.objects.filter(estado=0).all()
@@ -252,6 +262,7 @@ def listar_familias(request):
 
 
 # ----------------------- INVENTARIO-------------------------------
+@login_required
 def registrar_articulo(request):
     if request.method == 'POST':
         try:
@@ -306,7 +317,7 @@ def registrar_articulo(request):
 
 # ------------------------------------------------------
 
-
+@login_required
 def crear_area(request):
     if request.method == 'POST':
         nombre_area = request.POST.get('nombre_area')
@@ -336,7 +347,7 @@ def crear_area(request):
 
 # ----------------------------------------------------------------
 
-
+@login_required
 def listar_articulos(request):
     # Obtener el nombre de la solicitud GET
     descripcion = request.GET.get('descripcion', '')
@@ -357,7 +368,7 @@ def listar_articulos(request):
 # ----------------------------------------------------------------
 
 
-from django.db.models import Sum
+
 
 def buscar_area(request):
     areas = Area.objects.all()

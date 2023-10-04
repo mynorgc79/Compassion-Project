@@ -3,6 +3,8 @@ from django.contrib.auth import authenticate, login
 from django.contrib.auth.models import User
 from usuario.models import Usuario
 from django.contrib.auth import get_user_model
+from django.contrib.auth import logout
+
 
 
 # Create your views here.
@@ -33,9 +35,9 @@ def login_view(request):
     return render(request, 'usuarios/login.html')
 
 
-def logout_view(request):
-    
-    return redirect('login')  
+def _logout(request):
+    logout(request)
+    return redirect('login')
 
 
 from django.contrib.auth import get_user_model
