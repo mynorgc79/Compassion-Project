@@ -1,5 +1,7 @@
 from reportlab.lib import colors
-from reportlab.platypus import SimpleDocTemplate, Table, TableStyle
+from reportlab.platypus import SimpleDocTemplate, Table, TableStyle, PageTemplate
+from reportlab.platypus import Paragraph
+from reportlab.lib.styles import getSampleStyleSheet
 from reportlab.lib.pagesizes import letter, landscape
 from .models import Familias, Beneficiarios
 from django.contrib.auth.decorators import login_required
@@ -25,8 +27,9 @@ from pynotifier import Notification
 from django.contrib import messages
 import re
 from django.db.models import Sum
-
 from django.contrib.auth.decorators import login_required
+
+
 
 
 
@@ -417,7 +420,11 @@ def baja_articulo(request):
 
 
 
+
 # --------------reporteria EXPORTAR PDF-------------
+
+
+
 
 
 def exportar_pdf(request):
@@ -431,8 +438,8 @@ def exportar_pdf(request):
     data = [["CÓDIGO", "NOMBRE", "APELLIDO", "EDAD",
              "NIVEL", "FECHA NACIMIENTO", "OBSERVACIONES"]]
 
-    # Agregar datos a la lista desde tu modelo (asegúrate de importar Beneficiarios)
-    beneficiarios = Beneficiarios.objects.all()
+    # Filtrar beneficiarios por estado activo y agregarlos a la lista
+    beneficiarios = Beneficiarios.objects.filter(estado=True)
     for beneficiario in beneficiarios:
         data.append([
             beneficiario.codigo_beneficiario,
@@ -447,17 +454,23 @@ def exportar_pdf(request):
     # Crear una tabla y definir su estilo
     table = Table(data)
     table.setStyle(TableStyle([
-        ('BACKGROUND', (0, 0), (-1, 0), colors.grey),
-        ('TEXTCOLOR', (0, 0), (-1, 0), colors.whitesmoke),
+       ('BACKGROUND', (0, 0), (-1, 0), (0.8, 0.8, 0.8)),
+   #     ('TEXTCOLOR', (0, 0), (-1, 0), (1, 1, 1)),
         ('ALIGN', (0, 0), (-1, -1), 'CENTER'),
         ('FONTNAME', (0, 0), (-1, 0), 'Helvetica-Bold'),
         ('BOTTOMPADDING', (0, 0), (-1, 0), 12),
-        ('BACKGROUND', (0, 1), (-1, -1), colors.beige),
-        ('GRID', (0, 0), (-1, -1), 1, colors.black),
+       # ('BACKGROUND', (0, 1), (-1, -1), (0.9, 0.9, 0.9)),
+        ('GRID', (0, 0), (-1, -1), 1, (0, 0, 0)),
     ]))
 
     # Crear el PDF y agregar la tabla
-    elements = [table]
+    elements = []
+    # Establecer el título del documento
+    styles = getSampleStyleSheet()
+    title_style = styles['Title']
+    elements.append(Paragraph("Lista de Beneficiarios Activos", title_style))
+    elements.append(table)
+
     doc.build(elements)
 
     # Configurar el objeto BytesIO para la lectura desde el principio
@@ -465,8 +478,6 @@ def exportar_pdf(request):
 
     # Devolver el PDF como una respuesta de archivo
     response = FileResponse(buffer, as_attachment=True,
-                            filename='lista_beneficiarios.pdf')
+                            filename='lista_beneficiarios_activos.pdf')
     return response
-
-
 # ---------------------------
