@@ -4,7 +4,7 @@ from django.contrib.auth.models import User
 from usuario.models import Usuario
 from django.contrib.auth import get_user_model
 from django.contrib.auth import logout
-
+from django.contrib import messages
 
 
 # Create your views here.
@@ -12,6 +12,7 @@ from django.contrib.auth import logout
 
 # def inicio(request):
  #   return render(request, 'index.html')
+
 
 def login_view(request):
     if request.method == 'POST':
@@ -29,7 +30,8 @@ def login_view(request):
         else:
             # Si la autenticación falla, muestra un mensaje de error
             error_message = "Credenciales inválidas. Inténtalo de nuevo."
-            return render(request, 'usuarios/login.html', {'error_message': error_message})
+            messages.error(request, error_message)
+            return render(request, 'usuarios/login.html')
 
     # Si la solicitud es GET, simplemente muestra el formulario de inicio de sesión
     return render(request, 'usuarios/login.html')

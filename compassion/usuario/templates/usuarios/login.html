@@ -48,6 +48,13 @@
 
           <button type="submit" class="submit">Ingresar</button>
         </form>
+
+        <!-- Agrega aquí la sección para mostrar mensajes de error -->
+        {% if messages %}
+        <div class="error-message" style="color: red">
+          {% for message in messages %} {{ message }} {% endfor %}
+        </div>
+        {% endif %}
       </div>
     </section>
   </body>
