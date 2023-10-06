@@ -40,7 +40,7 @@ def _logout(request):
     return redirect('login')
 
 
-from django.contrib.auth import get_user_model
+
 
 def registrar_usuario(request):
     if request.method == 'POST':
@@ -62,7 +62,8 @@ def registrar_usuario(request):
             password=password,
             nombres=first_name,
             apellidos=last_name,
-            #role=role,
+            rol=role
+            
         )
 
         # Asigna el valor de usuario_administrador
@@ -70,6 +71,7 @@ def registrar_usuario(request):
             user.usuario_administrador = 1
         else:
             user.usuario_administrador = 0
+           
 
         user.save()
 

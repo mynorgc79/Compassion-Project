@@ -6,7 +6,7 @@ from django.contrib.auth.models import AbstractBaseUser, BaseUserManager
 
 
 class UsuarioManager(BaseUserManager):
-    def create_user(self,  username, nombres, apellidos, password=None):
+    def create_user(self,  username, nombres, apellidos, password=None,rol=None):
         if not username:
              raise ValueError('El usuario debe tener un nombre de usuario')
 
@@ -14,7 +14,8 @@ class UsuarioManager(BaseUserManager):
             username=username,
             # email=self.normalize_email(email),
             nombres=nombres,
-            apellidos=apellidos
+            apellidos=apellidos,
+            rol=rol
         )
 
         # Encripta la contraseña correctamente
