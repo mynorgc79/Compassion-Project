@@ -5,6 +5,8 @@ from usuario.models import Usuario
 from django.contrib.auth import get_user_model
 from django.contrib.auth import logout
 from django.contrib import messages
+from django.contrib.auth.decorators import login_required
+from django.contrib.auth.decorators import user_passes_test
 
 
 # Create your views here.
@@ -26,6 +28,7 @@ def login_view(request):
         if user is not None:
             # Si el usuario es autenticado con éxito, inicia la sesión
             login(request, user)
+            request.session['user_name'] = user.get_full_name()
             return redirect('inicio')  # Cambia a la página principal después del inicio de sesión
         else:
             # Si la autenticación falla, muestra un mensaje de error
@@ -43,7 +46,7 @@ def _logout(request):
 
 
 
-
+@login_required
 def registrar_usuario(request):
     if request.method == 'POST':
         # Obtén los datos del formulario
@@ -85,3 +88,5 @@ def registrar_usuario(request):
 
     return render(request, 'usuarios/registro_usuario.html')
 # END REGISTRAR USUARIO
+
+

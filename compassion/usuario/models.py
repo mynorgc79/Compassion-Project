@@ -52,6 +52,10 @@ class Usuario(AbstractBaseUser):
     USERNAME_FIELD = 'username'
     REQUIRED_FIELDS = ['nombres', 'apellidos']
 
+    def get_full_name(self):
+        # Devuelve el nombre completo del usuario
+        return f'{self.nombres} {self.apellidos}'
+
     def __str__(self):
         return f'{self.nombres}, {self.apellidos}'
 

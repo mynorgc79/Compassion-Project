@@ -28,6 +28,8 @@ from django.contrib import messages
 import re
 from django.db.models import Sum
 from django.contrib.auth.decorators import login_required
+from django.contrib.auth.decorators import user_passes_test
+
 
 
 
@@ -51,7 +53,15 @@ def inicio(request):
 def vista_raiz(request):
     return render(request, 'index.html')
 
+#-------------------DECORADORES DE PERMISOS----------
+
+
+def es_usuario_beneficiario(user):
+    return user.is_authenticated and user.rol == 'usuario_beneficiario'
+#------------------END DECORADORES DE PERMISOS------
+
 # --------------------AGREGAR BENEFICIARIO------------------------------------------------
+
 
 
 def calcular_edad(fecha_nacimiento):
@@ -157,6 +167,7 @@ def agregar(request):
 
 # ----------------------------------LISTAR BENEFICIARIO--------------------------------
 @login_required
+@user_passes_test(es_usuario_beneficiario)
 def listar(request):
     # Obtener el nombre de la solicitud GET
     nombre_query = request.GET.get('nombre', '')
@@ -481,3 +492,7 @@ def exportar_pdf(request):
                             filename='lista_beneficiarios_activos.pdf')
     return response
 # ---------------------------
+
+
+#--------------------------------
+#restriccion de acceso

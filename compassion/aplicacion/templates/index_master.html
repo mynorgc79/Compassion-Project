@@ -4,6 +4,7 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
     <!-- Meta, title, CSS, favicons, etc. -->
+   
     <meta charset="utf-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -105,6 +106,13 @@
               class="main_menu_side hidden-print main_menu"
             >
               <div class="menu_section">
+                <h4 class="username" style="background-color:#64CCC5; font-size: 1.5em; border-radius: 10px 0 0 10px;">
+                  <i class="fa fa-user-circle-o" style="margin-right: 10px;"></i>
+                  {{ request.session.user_name }}
+                </h4>
+                
+
+                <br>
                 <h3>General</h3>
 
                 <ul class="nav side-menu">
@@ -241,10 +249,10 @@
                         </ul>
                       </li>
 
-                      <form action="{% url 'logout' %}" method="post">
+                      <!-- <form action="{% url 'logout' %}" method="post">
                         {% csrf_token %}
-                        <button type="submit" class="btn btn-danger">Cerrar Sesión</button>
-                    </form>
+                        <button class="glyphicon glyphicon-off" aria-hidden="true" type="submit" style="background-color:#DE9791">Cerrar Sesión</button>
+                    </form> -->
                     
                     
               </div>
@@ -252,8 +260,8 @@
             <!-- /sidebar menu -->
 
             <!-- /menu footer buttons -->
-            <!-- <div class="sidebar-footer hidden-small">
-              <a data-toggle="tooltip" data-placement="top" title="Settings">
+            <div class="sidebar-footer hidden-small">
+              <!-- <a data-toggle="tooltip" data-placement="top" title="Settings">
                 <span class="glyphicon glyphicon-cog" aria-hidden="true"></span>
               </a>
               <a data-toggle="tooltip" data-placement="top" title="FullScreen">
@@ -261,11 +269,15 @@
               </a>
               <a data-toggle="tooltip" data-placement="top" title="Lock">
                 <span class="glyphicon glyphicon-eye-close" aria-hidden="true"></span>
-              </a>
-              <a data-toggle="tooltip" data-placement="top" title="Logout" href="login.html">
-                <span class="glyphicon glyphicon-off" aria-hidden="true"></span>
-              </a>
-            </div> -->
+              </a> -->
+              {% csrf_token %}
+              <div class="text-center">
+                <a class="btn btn-danger btn-lg" data-toggle="tooltip" data-placement="top" title="Logout" href="{% url 'logout' %}">
+                    <span class="glyphicon glyphicon-off" aria-hidden="true"></span>
+                </a>
+              </div>
+  
+            </div>
             <!-- /menu footer buttons -->
           </div>
         </div>

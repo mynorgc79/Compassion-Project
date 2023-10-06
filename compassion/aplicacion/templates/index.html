@@ -1,7 +1,8 @@
-{% extends 'index_master.html' %} {% block content %} {% load static%}
+{% extends 'index_master.html' %} {% block content %} {% load static %}
 <!-- Hereda de Index Maste: Muestra contenido -->
 <div class="right_col" role="main">
-  <h1>BIENVENIDO</h1>
+  <h1>BIENVENIDO, {{ request.session.user_name }}</h1>
+
   <img
     src='{% static "imagenes/logo.png" %}'
     alt=""

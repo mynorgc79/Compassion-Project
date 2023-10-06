@@ -24,7 +24,7 @@
     </form>
   </div>
 
-  {% if beneficiarios %}
+  {% if user|has_perm:'perm_name_here' %} {% if beneficiarios %}
   <div class="table-responsive">
     <table class="table table-bordered table-striped">
       <thead>
@@ -74,6 +74,11 @@
   </script>
   {% else %}
   <p>No se encontró ninguna familia con esos apellidos.</p>
+  {% endif %} {% else %}
+  <!-- Mostrar un mensaje de acceso denegado si el usuario no tiene el permiso -->
+  <div class="mensaje-acceso-denegado">
+    No tienes permisos para acceder a esta página.
+  </div>
   {% endif %}
 </div>
 
