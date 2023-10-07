@@ -17,8 +17,9 @@ urlpatterns = [
     #path('index/', views.index, name='index'),
 
 
-
-    path('agregar', views.agregar, name='agregar'),
+   path('verificar_codigo/', views.verificar_codigo, name='verificar_codigo'), 
+   path('agregar', views.agregar, name='agregar'),
+   path('agregar_existente', views.agregar_existente, name='agregar_existente'),
    path('listar', views.listar, name='listar'),
 
     path('actualizar', views.actualizar, name='actualizar'),

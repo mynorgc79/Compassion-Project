@@ -1,5 +1,4 @@
-{%extends '../index_master.html'%} {% block content %}
-
+{% extends '../index_master.html' %} {% block content %}
 <div class="right_col transition-fade" role="main">
   <h1>Total familias en Proyecto = {{ familias|length }}</h1>
 
@@ -35,11 +34,13 @@
           <th scope="col">Nombre Mamá</th>
           <th scope="col">Dirección</th>
           <th scope="col">Contacto</th>
-          <th scope="col">cantidad Hijos</th>
+          <th scope="col">Cantidad Hijos</th>
+          <th scope="col">Beneficiario</th>
+          <!-- Agregamos una nueva columna para las acciones -->
         </tr>
       </thead>
       <tbody>
-        {% for f in familias%}
+        {% for f in familias %}
         <tr>
           <th scope="row">{{ f.id_familia }}</th>
           <td>{{ f.apellido_familia }}</td>
@@ -48,6 +49,18 @@
           <td>{{ f.direccion }}</td>
           <td>{{ f.contacto }}</td>
           <td>{{ f.cantidad_beneficiarios }}</td>
+          <td>
+            <!-- Agregamos un botón que abre una ventana modal para agregar beneficiario -->
+            <button
+              type="button"
+              class="btn btn-primary agregar-beneficiario"
+              data-toggle="modal"
+              data-target="#agregarBeneficiarioModal"
+              data-familia-id="{{ f.id_familia }}"
+            >
+              +
+            </button>
+          </td>
         </tr>
         {% endfor %}
       </tbody>
@@ -57,4 +70,192 @@
   <p>No se encontró ninguna familia con esos apellidos.</p>
   {% endif %}
 </div>
+
+<!-- Modal para agregar beneficiario -->
+<div
+  class="modal fade"
+  id="agregarBeneficiarioModal"
+  tabindex="-1"
+  role="dialog"
+  aria-labelledby="agregarBeneficiarioModalLabel"
+  aria-hidden="true"
+>
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <!-- Aquí puedes agregar el formulario para agregar un beneficiario -->
+      <form method="post" action="{% url 'agregar_existente' %}">
+        {% csrf_token %}
+        <input type="hidden" id="familia_id" name="familia_id" value="" />
+        <div class="modal-header">
+          <h5 class="modal-title" id="agregarBeneficiarioModalLabel">
+            Agregar Beneficiario
+          </h5>
+          <button
+            type="button"
+            class="close"
+            data-dismiss="modal"
+            aria-label="Cerrar"
+          >
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <!-- Tu formulario para agregar beneficiario -->
+
+          <div class="form-group row">
+            <label for="codigo" class="col-4 col-form-label">Codigo</label>
+            <div class="col-8">
+              <div class="input-group">
+                <div class="input-group-prepend">
+                  <div class="input-group-text">
+                    <i class="fa fa-id-card"></i>
+                  </div>
+                </div>
+                <input
+                  id="codigo"
+                  name="codigo"
+                  type="number"
+                  required="required"
+                  class="form-control"
+                />
+                <span id="codigo-error" class="error" style="color: red"></span>
+              </div>
+            </div>
+          </div>
+
+          <div class="form-group row">
+            <label for="nombre" class="col-4 col-form-label"
+              >Nombres y Apellidos</label
+            >
+            <div class="col-4">
+              <input
+                id="nombre_beneficiario"
+                name="nombre_beneficiario"
+                type="text"
+                class="form-control"
+                required="required"
+                placeholder="Nombres"
+                oninput="validateLetters(this, 'nombre-beneficiario-error')"
+              />
+              <span id="nombre-beneficiario-error" style="color: red"></span>
+            </div>
+
+            <div class="col-4">
+              <input
+                id="apellido_beneficiario"
+                name="apellido_beneficiario"
+                type="text"
+                class="form-control"
+                required="required"
+                placeholder="Apellidos"
+                oninput="validateLetters(this, 'apellido-beneficiario-error')"
+              />
+              <span id="apellido-beneficiario-error" style="color: red"></span>
+            </div>
+          </div>
+
+          <div class="form-group row">
+            <label for="fecha_nacimiento" class="col-4 col-form"
+              >Fecha de Nacimiento</label
+            >
+            <div class="col-8">
+              <div class="input-group">
+                <div class="input-group-prepend">
+                  <div class="input-group-text">
+                    <i class="fa fa-calendar"></i>
+                  </div>
+                </div>
+                <input
+                  type="date"
+                  id="fecha_nacimiento"
+                  name="fecha_nacimiento"
+                  class="form-control"
+                  required
+                  placeholder="YYYY-MM-DD"
+                />
+              </div>
+            </div>
+          </div>
+
+          <div class="form-group row">
+            <label for="" class="col-4 col-form-label">Género</label>
+            <div class="col-8">
+              <select
+                id="genero"
+                name="genero"
+                required="required"
+                class="custom-select"
+              >
+                <option value="" disabled selected>Seleccione el género</option>
+                <option value="femenino">Femenino</option>
+                <option value="masculino">Masculino</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="form-group row">
+            <label for="" class="col-4 col-form-label">Nivel</label>
+            <div class="col-8">
+              <select
+                id="nivel"
+                name="nivel"
+                required="required"
+                class="custom-select"
+              >
+                <option value="" disabled selected>Seleccione el nivel</option>
+                <option value="1">1</option>
+                <option value="2">2</option>
+                <option value="3">3</option>
+                <option value="4">4</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="form-group row">
+            <label for="observacion" class="col-4 col-form-label"
+              >Observacion</label
+            >
+            <div class="col-8">
+              <div class="input-group">
+                <div class="input-group-prepend">
+                  <div class="input-group-text">
+                    <i class="fa fa-align-justify"></i>
+                  </div>
+                </div>
+                <input
+                  id="observacion"
+                  name="observacion"
+                  type="text"
+                  class="form-control"
+                  required="required"
+                />
+              </div>
+            </div>
+          </div>
+
+          <!-- ... Resto del formulario ... -->
+        </div>
+
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-dismiss="modal">
+            Cerrar
+          </button>
+          <button name="submit" type="submit" class="btn btn-primary">
+            Guardar Beneficiario
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+<script>
+  // Agrega un evento click al botón para capturar el ID de la familia
+  document.querySelectorAll(".agregar-beneficiario").forEach(function (button) {
+    button.addEventListener("click", function () {
+      var familiaId = button.getAttribute("data-familia-id");
+      document.getElementById("familia_id").value = familiaId;
+    });
+  });
+</script>
 {% endblock %}

@@ -2,6 +2,9 @@
 
 <div class="right_col" role="main">
   <form action="agregar" method="POST">
+    <head>
+      <script src="{% static 'js/verificar_codigo.js' %}"></script>
+    </head>
     {% csrf_token %}
 
     <h1 style="font-family: 'Arial', sans-serif; font-size: 24px; color: #333">
@@ -108,7 +111,7 @@
 
     <!-- INGRESANDO LOS DATOS DEL BENEFICIARIO -->
 
-    <h1>Datos del Beneficiari@</h1>
+    <h1>Datos del Beneficiario</h1>
 
     <div class="form-group row">
       <label for="codigo" class="col-4 col-form-label">Codigo</label>
@@ -125,8 +128,10 @@
             type="number"
             required="required"
             class="form-control"
+            oninput="checkCodigoAvailability(this)"
           />
           <span id="codigo-error" class="error" style="color: red"></span>
+          <span id="codigo-availability" style="color: red"></span>
         </div>
       </div>
     </div>
@@ -238,6 +243,10 @@
         </div>
       </div>
     </div>
+
+    {% if error_message %}
+    <p style="color: red">{{ error_message }}</p>
+    {% endif %}
 
     <div class="form-group row">
       <div class="offset-4 col-8">

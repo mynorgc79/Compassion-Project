@@ -57,7 +57,7 @@ def vista_raiz(request):
 
 
 def es_usuario_beneficiario(user):
-    return user.is_authenticated and user.rol == 'usuario_beneficiario'
+    return user.is_authenticated and user.rol == 'usuariobeneficiario'
 #------------------END DECORADORES DE PERMISOS------
 
 # --------------------AGREGAR BENEFICIARIO------------------------------------------------
@@ -136,11 +136,15 @@ def agregar(request):
         nivel = request.POST.get('nivel')
         observacion = request.POST.get('observacion')
 
-        # Obtener el ID de la familia
-        familia_id = validar_familia(request)
+        # Verificar si el código ya existe en la base de datos
+        if Beneficiarios.objects.filter(codigo_beneficiario=codigo_beneficiario).exists():
+            error_message = "El código de beneficiario ya existe."
+        else:
+            # Obtener el ID de la familia
+            familia_id = validar_familia(request)
 
-        # Asignar el ID de la familia al beneficiario
-        beneficiario = Beneficiarios(
+            # Asignar el ID de la familia al beneficiario
+            beneficiario = Beneficiarios(
             codigo_beneficiario=codigo_beneficiario,
             nombre=nombre_beneficiario,
             apellido=apellido_beneficiario,
@@ -164,10 +168,72 @@ def agregar(request):
 
 # --------------------------------TERMINA AGREGAR BENEFICIARIO------------------------------------
 
+#-----------------------VERIFICAR CODIGO-----
+
+
+def verificar_codigo(request):
+    try:
+        codigo = request.GET.get('codigo', '')
+        
+        # Realiza la verificación de código aquí
+
+        return JsonResponse({'exists': exists})
+    except Exception as e:
+        # Registra la excepción para diagnóstico
+        print(e)
+        return JsonResponse({'exists': False})
+
+
+#-------------------END VERIFICAR CODIGO-------
+
+
+
+#--------------------AGREGAR A FAMILIA EISTENTE
+def agregar_existente(request):
+    if request.method == 'POST':
+        # Obtener el ID de la familia desde el formulario
+        familia_id = request.POST.get('familia_id')
+        # ---------OBTENIENDO DATOS DEL BENEFICIARIO
+        codigo_beneficiario = request.POST.get('codigo')
+        nombre_beneficiario = request.POST.get('nombre_beneficiario')
+        apellido_beneficiario = request.POST.get('apellido_beneficiario')
+        fecha_nacimiento = request.POST.get('fecha_nacimiento')
+        genero = request.POST.get('genero')
+        nivel = request.POST.get('nivel')
+        observacion = request.POST.get('observacion')
+        # Resto de tu código para obtener los datos del beneficiario
+
+        # Asignar el ID de la familia al beneficiario
+        beneficiario = Beneficiarios(
+            codigo_beneficiario=codigo_beneficiario,
+            nombre=nombre_beneficiario,
+            apellido=apellido_beneficiario,
+            fecha_nacimiento=fecha_nacimiento,
+            genero=genero,
+            nivel=nivel,
+            observacion=observacion,
+            edad=calcular_edad(fecha_nacimiento),
+            estado=True,
+            id_familia_id=familia_id
+        )
+
+        # Guardar el beneficiario en la base de datos
+        beneficiario.save()
+
+        # Redirigir a la lista de beneficiarios u otra vista apropiada
+        return redirect('listar_familias')
+    else:
+        return render(request, 'familias/listar_familias.html')
+
+
+#-------------------END AGREGAR A FAMILIA EXISTENTE
+
+
+
 
 # ----------------------------------LISTAR BENEFICIARIO--------------------------------
 @login_required
-@user_passes_test(es_usuario_beneficiario)
+#@user_passes_test(es_usuario_beneficiario)
 def listar(request):
     # Obtener el nombre de la solicitud GET
     nombre_query = request.GET.get('nombre', '')

@@ -1,7 +1,7 @@
 {%extends '../index_master.html'%} {% block content %}
 
 <div class="right_col" role="main">
-  <h1>lista Beneficiarios</h1>
+  <h1>lista Beneficiarios = {{ beneficiarios|length }}</h1>
 
   <!-- Barra de búsqueda -->
   <div class="search-bar">
@@ -24,7 +24,7 @@
     </form>
   </div>
 
-  {% if user|has_perm:'perm_name_here' %} {% if beneficiarios %}
+  {% if beneficiarios %}
   <div class="table-responsive">
     <table class="table table-bordered table-striped">
       <thead>
@@ -74,12 +74,11 @@
   </script>
   {% else %}
   <p>No se encontró ninguna familia con esos apellidos.</p>
-  {% endif %} {% else %}
+  {% endif %}
   <!-- Mostrar un mensaje de acceso denegado si el usuario no tiene el permiso -->
   <div class="mensaje-acceso-denegado">
     No tienes permisos para acceder a esta página.
   </div>
-  {% endif %}
 </div>
 
 {% endblock %}

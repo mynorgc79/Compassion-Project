@@ -8,7 +8,7 @@ from django.contrib.auth.models import AbstractBaseUser, BaseUserManager
 class UsuarioManager(BaseUserManager):
     def create_user(self,  username, nombres, apellidos, password=None,rol=None):
         if not username:
-             raise ValueError('El usuario debe tener un nombre de usuario')
+             raise ValueError('Debe tener un nombre de usuario')
 
         usuario = self.model(
             username=username,
