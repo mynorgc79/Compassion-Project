@@ -30,6 +30,8 @@ from django.db.models import Sum
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.decorators import user_passes_test
 
+from django.utils import timezone
+
 
 
 
@@ -474,6 +476,7 @@ def buscar_area(request):
         'articulos': articulos,
         'total_gastado': total_gastado
     })
+
 #----------------------------------------------------------------
 
 def editar_articulo(request):
@@ -484,49 +487,54 @@ def listar_bajas(request):
     return render(request, 'inventario/listar_bajas.html')
 
 
+#---------------BAJA ARTICULO------
+
+def convertir_fecha(fecha_dd_mm_aaaa):
+    # Convierte la fecha de "dd/mm/aaaa" a "aaaa-mm-dd"
+    fecha_obj = datetime.strptime(fecha_dd_mm_aaaa, '%d/%m/%Y')
+    return fecha_obj.strftime('%Y-%m-%d')
+
+
 
 def baja_articulo(request):
     if request.method == 'POST':
-        id_inventario = request.POST.get('id_articulo')
+        id_inventario = request.POST.get('id_inventario')
         fecha_movimiento = request.POST.get('fecha_movimiento')
         tipo_movimiento = request.POST.get('tipo_movimiento')
         descripcion = request.POST.get('descripcion')
-
-        # Valida el valor del campo `fecha_movimiento`
+        #fecha_movimiento = convertir_fecha(fecha_movimiento_dd_mm_aaaa)
+      
         try:
-            fecha_movimiento = datetime.datetime.strptime(
-                fecha_movimiento, '%Y-%m-%d'
-            )
-        except ValueError:
-            # El valor del campo `fecha_movimiento` no está en el formato correcto
-            return render(
-                request, 'inventario/listar_bajas.html', {'error': 'El valor del campo `fecha_movimiento` no está en el formato correcto.'}
-            )
+            inventario = ItemInventario.objects.get(id_inventario=id_inventario)
 
-        # Obtén el artículo
-        articulo = ItemInventario.objects.get(id_inventario=id_inventario)
+        except Inventario.DoesNotExist:
+            inventario = None
 
-        # Cambia el estado del artículo a inactivo
-        articulo.estado = False
-        articulo.save()
-
-        # Registra un movimiento de salida
-        movimiento = Movimientos(
-            tipo_movimiento='S',
+        if inventario:
+            inventario.estado = 0  # Cambia el estado del beneficiario a inactivo
+            inventario.save()
+             # Crea un objeto de la clase "Movimientos"
+            movimiento = Movimientos(
+            inventario_id=inventario,
+            tipo_movimiento=tipo_movimiento,
             fecha_movimiento=fecha_movimiento,
             descripcion=descripcion,
-            inventario_id=articulo
-        )
-        movimiento.save()
+            
+             )
+            # Guarda el objeto de "Movimientos" en la base de datos
+            movimiento.save()
+            return redirect('listar')
+        else:
+            # Maneja adecuadamente el caso en el que el beneficiario no existe
+            return render(request, 'crud-beneficiarios/salida_beneficiario.html')
 
-        # Redirige a donde desees después de dar de baja el artículo
-        return redirect('listar_articulos')
+    inventario = ItemInventario.objects.all()
+    datos = {'inventario': inventario}
+   
+    return render(request, 'crud-beneficiarios/salida_beneficiario.html', datos)
 
 
-
-
-
-
+      
 # -------------------------TERMINA  INVENTARIO-------------------------------
 
 

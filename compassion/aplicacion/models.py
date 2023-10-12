@@ -51,7 +51,7 @@ class Salidas(models.Model):
     fecha_salida = models.DateField(
         null=False, verbose_name='Fecha de salida')
     motivo = models.CharField(
-        max_length=60, null='true', verbose_name='Motivo')
+        max_length=200, null='true', verbose_name='Motivo')
     codigo_beneficiario = models.ForeignKey(
         Beneficiarios, on_delete=models.CASCADE)
 
@@ -90,8 +90,11 @@ class Movimientos(models.Model):
         max_length=20, verbose_name='Tipo de Salida')
     fecha_movimiento = models.DateField(
         null=False, verbose_name='Fecha de salida')
-    descripcion = models.TextField()
+    descripcion = models.CharField(
+        max_length=200, null='true', verbose_name='Descripcion')
     inventario_id = models.ForeignKey(
         ItemInventario, on_delete=models.CASCADE)
+    def __str__(self):
+        return f'Salida {self.id_movimiento}'
 
 # ----------------------MODELOS PARA EL INVENTARIO
