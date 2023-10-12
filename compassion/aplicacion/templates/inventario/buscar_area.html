@@ -7,16 +7,15 @@
     <div class="form-group">
       <label for="area_id">Selecciona un Área:</label>
       <select class="form-control" name="area_id" id="area_id">
-          <option value="">Todas las Áreas</option>
-          {% for area in areas %}
+             <option value="">Todas las Áreas</option>
+              {% for area in areas %}
               <option value="{{ area.id_area }}" {% if area.id_area == area_seleccionada %} selected {% endif %}>{{ area.nombre_area }}</option>
           {% endfor %}
       </select>
-  </div>
-  
-  
-  
+   </div>
   </form>
+
+
 <div class="table-responsive">
   <table class="table table-striped">
     <thead>
@@ -40,14 +39,14 @@
         <td>{{ articulo.id_inventario }}</td>
         <td>{{ articulo.cantidad }}</td>
         <td>{{ articulo.descripcion_articulo }}</td>
-        <td>{{ articulo.fecha_compra }}</td>
+        <td>{{ articulo.fecha_compra|date:"d/m/y" }}</td>
         <td>{{ articulo.area_id.nombre_area }}</td>
         <!-- Accede al nombre del área -->
         <td>{{ articulo.numero_cheque }}</td>
         <td>{{ articulo.numero_factura }}</td>
         <td>{{ articulo.proveedor }}</td>
         <td>{{ articulo.encargado }}</td>
-        <td>{{ articulo.valor_compra|intcomma }}</td>
+        <td>Q.{{ articulo.valor_compra|intcomma }}</td>
         <td>{{ articulo.numero_acta }}</td>
       </tr>
       {% endfor %}

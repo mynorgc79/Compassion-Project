@@ -1,28 +1,39 @@
-{% extends '../index_master.html' %} {% block content %}{% load humanize %}
+
+{% extends '../index_master.html' %} 
+{% block content %}
+{% load humanize %}
 
 <div class="right_col" role="main">
+  <script src="js/modal.js"></script>
   <h1>Lista de Artículos</h1>
 
-  <!-- Barra de búsqueda -->
   <div class="search-bar">
     <form method="get">
-      <div class="input-group">
-        <input
-          type="text"
-          id="search-input"
-          name="descripcion"
-          class="form-control"
-          placeholder="Buscar artículo por nombre"
-          value="{{ request.GET.descripcion }}"
-        />
-        <div class="input-group-append">
-          <button type="submit" id="search-button" class="btn btn-success">
-            Buscar
-          </button>
+        <div class="input-group">
+            <input
+                type="text"
+                id="search-input"
+                name="descripcion"
+                class="form-control"
+                placeholder="Buscar artículo por nombre"
+                value="{{ request.GET.descripcion }}"
+            />
+            <input
+                type="text"
+                id="valor-compra-input"
+                name="valor_compra"
+                class="form-control"
+                placeholder="Buscar por valor de compra"
+                value="{{ request.GET.valor_compra }}"
+            />
+            <div class="input-group-append">
+                <button type="submit" id="search-button" class="btn btn-success">
+                    Buscar
+                </button>
+            </div>
         </div>
-      </div>
     </form>
-  </div>
+</div>
 
   {% if inventario %}
   <div class="table-responsive">
@@ -41,6 +52,7 @@
           <th scope="col">ENCARGADO</th>
           <th scope="col">VALOR COMPRA</th>
           <th scope="col">NÚMERO DE ACTA</th>
+          <th scope="col">Dar de baja</th>
         </tr>
       </thead>
       <tbody>
@@ -49,28 +61,164 @@
           <th scope="row">{{ a.id_inventario }}</th>
           <td>{{ a.cantidad }}</td>
           <td>{{ a.descripcion_articulo }}</td>
-          <td>{{ a.fecha_compra }}</td>
+          <td>{{ a.fecha_compra|date:"d/m/y" }}</td>
           <td>{{ a.area_id.nombre_area }}</td>
-          <td>{{ a.donacion }}</td>
+          <td>Q.{{ a.donacion }}</td>
           <td>{{ a.numero_cheque }}</td>
           <td>{{ a.numero_factura }}</td>
           <td>{{ a.proveedor }}</td>
           <td>{{ a.encargado }}</td>
-          <td>{{ a.valor_compra|intcomma }}</td>
+          <td>Q.{{ a.valor_compra|intcomma }}</td>
           <td>{{ a.numero_acta }}</td>
+          <td>
+            <button
+              type="button"
+              class="btn btn-danger"
+              data-toggle="modal"
+              data-target="#modalDarDeBaja{{ a.id_inventario }}"
+              data-id-articulo="{{ a.id_inventario }}"
+            >
+              -
+            </button>
+          </td>
         </tr>
         {% endfor %}
       </tbody>
     </table>
     {% if total_gastado %}
-    <p style="color: green">
-      Total gastado en esta área: Q.{{ total_gastado|intcomma }}
-    </p>
+    <p style="color: green">Total : Q.{{ total_gastado|intcomma }}</p>
     {% endif %}
-
-    <!-- Muestra el total de dinero gastado -->
   </div>
 
+  <form method="post" action="{% url 'baja_articulo' %}">
+    {% csrf_token %}
+    {% for a in inventario %}
+    <div
+      class="modal fade"
+      id="modalDarDeBaja{{ a.id_inventario }}"
+      tabindex="-1"
+      role="dialog"
+      aria-labelledby="modalDarDeBajaLabel{{ a.id_inventario }}"
+      aria-hidden="true"
+    >
+      <div class="modal-dialog" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="modalDarDeBajaLabel{{ a.id_inventario }}">
+              Dar de Baja Artículo {{ a.id_inventario }}
+            </h5>
+            <button
+              type="button"
+              class="close"
+              data-dismiss="modal"
+              aria-label="Cerrar"
+            >
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <div class="modal-body">
+            <!-- Contenido del modal: aquí puedes agregar un formulario o información adicional -->
+            <p>
+              ¿Estás seguro de que deseas dar de baja el
+              artículo "{{a.descripcion_articulo }}"?
+            </p>
+            <!-- Puedes agregar un formulario aquí para realizar la acción de dar de baja -->
+
+            <div class="form-group row">
+              <label for="fecha_movimiento" class="col-4 col-form"
+                >Fecha de baja</label
+              >
+              <div class="col-8">
+                <div class="input-group">
+                  <div class="input-group-prepend">
+                    <div class="input-group-text">
+                      <i class="fa fa-calendar"></i>
+                    </div>
+                  </div>
+                  <input
+                    type="date"
+                    id="fecha_movimiento"
+                    name="fecha_movimiento"
+                    class="form-control"
+                    required
+                    placeholder="YYYY-MM-DD"
+                    
+                  />
+                </div>
+              </div>
+            </div>
+
+            <div class="form-group row">
+              <label for="" class="col-4 col-form-label">Tipo de salida</label>
+              <div class="col-8">
+                <select
+                  id="tipo_movimiento"
+                  name="tipo_movimiento"
+                  required="required"
+                  class="custom-select"
+                >
+                  <option value="" disabled selected>
+                    Seleccione el Tipo de baja
+                  </option>
+                  <option value="perdida">Perdida</option>
+                  <option value="estado">Estado</option>
+                </select>
+              </div>
+            </div>
+
+            <div class="form-group row">
+              <label for="observacion" class="col-4 col-form-label"
+                >Descripcion</label
+              >
+              <div class="col-8">
+                <div class="input-group">
+                  <div class="input-group-prepend">
+                    <div class="input-group-text">
+                      <i class="fa fa-align-justify"></i>
+                    </div>
+                  </div>
+                  <input
+                    id="descripcion"
+                    name="descripcion"
+                    type="text"
+                    class="form-control"
+                    required="required"
+                  />
+                </div>
+              </div>
+            </div>
+            <input type="hidden" name="id_inventario" value="{{ a.id_inventario }}">
+          </div>
+          <div class="modal-footer">
+            <button
+              type="button"
+              class="btn btn-secondary"
+              data-dismiss="modal"
+            >
+              Cerrar
+            </button>
+            <!-- Agrega un botón para confirmar la acción de dar de baja -->
+            <button type="submit" class="btn btn-danger">Dar de Baja</button>
+          </div>
+        </div>
+      </div>
+    </div>
+    {% endfor %}
+  </form>
+
+  <script>
+    // Agregar un manejador de eventos al botón "Dar de Baja"
+    document.querySelectorAll(".btn.btn-danger").forEach(function(button) {
+      button.addEventListener("click", function() {
+        // Encontrar el formulario más cercano al botón que se hizo clic
+        const form = button.closest("form");
+        if (form) {
+          form.submit(); // Enviar el formulario
+        }
+      });
+    });
+  </script>
+
   <script>
     document
       .getElementById("imprimir-button")
@@ -79,18 +227,32 @@
       });
   </script>
 
-  <!-- Agregar un botón para exportar a PDF -->
-  <a href="{% url 'exportar_pdf' %}" class="btn btn-primary">Exportar a PDF</a>
-  <button id="imprimir-button" class="btn btn-info">Imprimir</button>
-  <script>
-    document
-      .getElementById("imprimir-button")
-      .addEventListener("click", function () {
-        window.print(); // Abre el cuadro de diálogo de impresión del navegador
-      });
-  </script>
-  {% else %}
-  <p>No se encontró ninguna familia con esos apellidos.</p>
-  {% endif %}
+  <!-- Agregar un botón para exportar a PDF
+
+
+    <script>
+      document
+        .getElementById("imprimir-button")
+        .addEventListener("click", function () {
+          window.print(); // Abre el cuadro de diálogo de impresión del navegador
+        });
+    </script>
+
+    <!- Agregar un botón para exportar a PDF -->
+    <a href="{% url 'exportar_pdf' %}" class="btn btn-primary"
+      >Exportar a PDF</a
+    >
+    <button id="imprimir-button" class="btn btn-info">Imprimir</button>
+    <script>
+      document
+        .getElementById("imprimir-button")
+        .addEventListener("click", function () {
+          window.print(); // Abre el cuadro de diálogo de impresión del navegador
+        });
+    </script>
+    {% else %}
+    <p>No se encontró ninguna familia con esos apellidos.</p>
+    {% endif %}
+  </div>
+  {% endblock %}
 </div>
-{% endblock %}

@@ -431,16 +431,20 @@ def crear_area(request):
 def listar_articulos(request):
     # Obtener el nombre de la solicitud GET
     descripcion = request.GET.get('descripcion', '')
+    valor_compra = request.GET.get('valor_compra', '')
 
-    # Filtrar beneficiarios por nombre
+
+    # Filtrar articulo por nombre
     inventario = ItemInventario.objects.filter(
         Q(descripcion_articulo__icontains=descripcion),
         estado=True
     )
-    
     # Calcular la suma de los valores de compra
     total_gastado = inventario.aggregate(Sum('valor_compra'))['valor_compra__sum']
-    
+     # Filtrar artículos por valor de compra
+    if valor_compra:
+        inventario = inventario.filter(Q(valor_compra__icontains=valor_compra))
+
     datos = {'inventario': inventario, 'total_gastado': total_gastado}
 
     return render(request, 'inventario/listar_articulos.html', datos)
@@ -470,7 +474,6 @@ def buscar_area(request):
         'articulos': articulos,
         'total_gastado': total_gastado
     })
-
 #----------------------------------------------------------------
 
 def editar_articulo(request):
@@ -482,10 +485,47 @@ def listar_bajas(request):
 
 
 
-
-
 def baja_articulo(request):
-    return render(request, 'inventario/baja_articulo.html')
+    if request.method == 'POST':
+        id_inventario = request.POST.get('id_articulo')
+        fecha_movimiento = request.POST.get('fecha_movimiento')
+        tipo_movimiento = request.POST.get('tipo_movimiento')
+        descripcion = request.POST.get('descripcion')
+
+        # Valida el valor del campo `fecha_movimiento`
+        try:
+            fecha_movimiento = datetime.datetime.strptime(
+                fecha_movimiento, '%Y-%m-%d'
+            )
+        except ValueError:
+            # El valor del campo `fecha_movimiento` no está en el formato correcto
+            return render(
+                request, 'inventario/listar_bajas.html', {'error': 'El valor del campo `fecha_movimiento` no está en el formato correcto.'}
+            )
+
+        # Obtén el artículo
+        articulo = ItemInventario.objects.get(id_inventario=id_inventario)
+
+        # Cambia el estado del artículo a inactivo
+        articulo.estado = False
+        articulo.save()
+
+        # Registra un movimiento de salida
+        movimiento = Movimientos(
+            tipo_movimiento='S',
+            fecha_movimiento=fecha_movimiento,
+            descripcion=descripcion,
+            inventario_id=articulo
+        )
+        movimiento.save()
+
+        # Redirige a donde desees después de dar de baja el artículo
+        return redirect('listar_articulos')
+
+
+
+
+
 
 # -------------------------TERMINA  INVENTARIO-------------------------------
 
