@@ -3,23 +3,26 @@
 <div class="right_col" role="main">
   <h1>Editar usuarios</h1>
 
-  <form method="post" action="{% url 'guardar_estado_usuarios' %}">
+  <form method="post" action="{% url 'actualizar_usuario' %}">
     {% csrf_token %}
 
     <div class="table-responsive">
       <table class="table table-bordered table-striped">
         <thead class="thead-dark">
           <tr>
+            <th>ID</th>
             <th>USERNAME</th>
             <th>NOMBRES</th>
             <th>APELLIDOS</th>
             <th>ROL</th>
             <th>ESTADO</th>
+            <th>CAMBIAR CONTRASEÑA</th> <!-- Nueva columna para el botón -->
           </tr>
         </thead>
         <tbody>
           {% for usuario in usuarios %}
           <tr>
+            <td>{{ usuario.id }}</td>
             <td>{{ usuario.username }}</td>
             <td>{{ usuario.nombres }}</td>
             <td>{{ usuario.apellidos }}</td>
@@ -32,13 +35,23 @@
                   id="estado{{ usuario.id }}"
                   name="estado_{{ usuario.id }}"
                   {% if usuario.usuario_activo %}checked{% endif %}
-                  
                 />
                 <label
                   class="custom-control-label"
                   for="estado{{ usuario.id }}"
                 ></label>
               </div>
+            </td>
+            <td>
+              <!-- Agregar un botón que despliega la ventana emergente para cambiar la contraseña -->
+              <button
+                type="button"
+                class="btn btn-primary"
+                data-toggle="modal"
+                data-target="#cambiarContrasenaModal{{ usuario.id }}"
+              >
+                Cambiar Contraseña
+              </button>
             </td>
           </tr>
           {% endfor %}
@@ -49,26 +62,56 @@
     <button type="submit" class="btn btn-primary">Guardar cambios</button>
   </form>
 
+ <!-- Ventana emergente para cambiar la contraseña -->
+{% for usuario in usuarios %}
+<div class="modal fade" id="cambiarContrasenaModal{{ usuario.id }}" tabindex="-1" role="dialog" aria-labelledby="cambiarContrasenaModalLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="cambiarContrasenaModalLabel">Cambiar Contraseña</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <!-- Formulario para cambiar la contraseña -->
+        <form method="post" action="">
+          {% csrf_token %}
+          <input type="hidden" name="usuario_id" value="{{ usuario.id }}">
+          <div class="form-group">
+            <label for="nuevaContrasena">Nueva Contraseña</label>
+            <input type="password" class="form-control" id="nuevaContrasena" name="nueva_contrasena" required>
+          </div>
+          <div class="form-group">
+            <label for="confirmarContrasena">Confirmar Contraseña</label>
+            <input type="password" class="form-control" id="confirmarContrasena" name="confirmar_contrasena" required>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
+          <button type="submit" class="btn btn-primary">Guardar Contraseña</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+{% endfor %}
+
+
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
   <script>
-    function cambiarEstado(usuarioId, nuevoEstado) {
-      // En lugar de enviar la solicitud AJAX a la vista 'guardar_estado_usuarios',
-      // envíala a una vista diferente, por ejemplo, 'actualizar_estado_usuario'
-      $.ajax({
-        url: "{% url 'guardar_estado_usuarios' %}",
-        type: "POST",
-        data: {
-          usuario_id: usuarioId,
-          estado: nuevoEstado,
-          csrfmiddlewaretoken: "{{ csrf_token }}",
-        },
-        success: function (response) {
-          console.log("Estado actualizado exitosamente");
-        },
-        error: function (error) {
-          console.error("Error al actualizar el estado");
-        },
+    // JavaScript para manejar eventos de cambio de estado y apertura de la ventana emergente
+    $(document).ready(function() {
+      $('.custom-control-input').change(function() {
+        // Agregar el código para cambiar el estado del usuario aquí
+        // Puedes utilizar la función cambiarEstado() que proporcionaste anteriormente
+
+        // También, abrir la ventana emergente correspondiente
+        var usuarioId = $(this).data('usuario-id');
+        $('#cambiarContrasenaModal' + usuarioId).modal('show');
       });
-    }
+    });
   </script>
 </div>
 {% endblock %}

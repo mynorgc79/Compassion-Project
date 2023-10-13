@@ -10,7 +10,8 @@ urlpatterns = [
     path('logout/', views._logout, name='logout'),
     path('registro_usuario', views.registrar_usuario, name='registro_usuario'),
     path('editar_usuario', views.editar_usuario, name='editar_usuario'),
-    path('guardar-estado-usuarios/', views.guardar_estado_usuarios, name='guardar_estado_usuarios'),
+    path('actualizar_usuario/', views.actualizar_usuario, name='actualizar_usuario'),
+    
 ]
 
   #  path('inicio', views.inicio, name='inicio'),# Agrega la barra diagonal al final

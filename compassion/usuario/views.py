@@ -7,6 +7,8 @@ from django.contrib.auth import logout
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.decorators import user_passes_test
+from django.core.exceptions import ObjectDoesNotExist
+from django.http import JsonResponse
 
 
 # Create your views here.
@@ -99,23 +101,23 @@ def editar_usuario(request):
 
 
 #--------------GUARDAR ESTADO---------
-def guardar_estado_usuarios(request):
+def actualizar_usuario(request):
     if request.method == 'POST':
         # Obtén los datos del formulario
         for usuario in Usuario.objects.all():
             estado_key = f'estado_{usuario.id}'
             nuevo_estado = request.POST.get(estado_key)
-            
+
             # El campo de checkbox devolverá "on" si está marcado o será None si no está marcado
-            if nuevo_estado == 'True':
+            if nuevo_estado == 'on':
                 usuario.is_active = True
             else:
                 usuario.is_active = False
-            
+
             usuario.save()
-        
+
         # Agrega un mensaje de éxito
         messages.success(request, 'Los estados de los usuarios se han actualizado correctamente.')
-    
+
     # Redirige a la página de lista de usuarios (o la que desees)
-    return redirect('registro_usuario') 
+    return redirect('registro_usuario')
