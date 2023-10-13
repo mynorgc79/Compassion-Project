@@ -90,3 +90,32 @@ def registrar_usuario(request):
 # END REGISTRAR USUARIO
 
 
+
+
+def editar_usuario(request):
+     usuarios = Usuario.objects.all()
+     return render(request, 'usuarios/editar_usuario.html', {'usuarios': usuarios})
+
+
+
+#--------------GUARDAR ESTADO---------
+def guardar_estado_usuarios(request):
+    if request.method == 'POST':
+        # Obtén los datos del formulario
+        for usuario in Usuario.objects.all():
+            estado_key = f'estado_{usuario.id}'
+            nuevo_estado = request.POST.get(estado_key)
+            
+            # El campo de checkbox devolverá "on" si está marcado o será None si no está marcado
+            if nuevo_estado == 'True':
+                usuario.is_active = True
+            else:
+                usuario.is_active = False
+            
+            usuario.save()
+        
+        # Agrega un mensaje de éxito
+        messages.success(request, 'Los estados de los usuarios se han actualizado correctamente.')
+    
+    # Redirige a la página de lista de usuarios (o la que desees)
+    return redirect('registro_usuario') 

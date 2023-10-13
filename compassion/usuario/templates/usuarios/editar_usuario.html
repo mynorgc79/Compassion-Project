@@ -1,7 +1,74 @@
-{%extends '../index_master.html'%} {% block content %}
-
+{% extends '../index_master.html' %}
+{% block content %}
 <div class="right_col" role="main">
-  <h1>Editar usuario</h1>
-</div>
+  <h1>Editar usuarios</h1>
 
+  <form method="post" action="{% url 'guardar_estado_usuarios' %}">
+    {% csrf_token %}
+
+    <div class="table-responsive">
+      <table class="table table-bordered table-striped">
+        <thead class="thead-dark">
+          <tr>
+            <th>USERNAME</th>
+            <th>NOMBRES</th>
+            <th>APELLIDOS</th>
+            <th>ROL</th>
+            <th>ESTADO</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for usuario in usuarios %}
+          <tr>
+            <td>{{ usuario.username }}</td>
+            <td>{{ usuario.nombres }}</td>
+            <td>{{ usuario.apellidos }}</td>
+            <td>{{ usuario.rol }}</td>
+            <td>
+              <div class="custom-control custom-switch">
+                <input
+                  type="checkbox"
+                  class="custom-control-input"
+                  id="estado{{ usuario.id }}"
+                  name="estado_{{ usuario.id }}"
+                  {% if usuario.usuario_activo %}checked{% endif %}
+                  
+                />
+                <label
+                  class="custom-control-label"
+                  for="estado{{ usuario.id }}"
+                ></label>
+              </div>
+            </td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+
+    <button type="submit" class="btn btn-primary">Guardar cambios</button>
+  </form>
+
+  <script>
+    function cambiarEstado(usuarioId, nuevoEstado) {
+      // En lugar de enviar la solicitud AJAX a la vista 'guardar_estado_usuarios',
+      // envíala a una vista diferente, por ejemplo, 'actualizar_estado_usuario'
+      $.ajax({
+        url: "{% url 'guardar_estado_usuarios' %}",
+        type: "POST",
+        data: {
+          usuario_id: usuarioId,
+          estado: nuevoEstado,
+          csrfmiddlewaretoken: "{{ csrf_token }}",
+        },
+        success: function (response) {
+          console.log("Estado actualizado exitosamente");
+        },
+        error: function (error) {
+          console.error("Error al actualizar el estado");
+        },
+      });
+    }
+  </script>
+</div>
 {% endblock %}
