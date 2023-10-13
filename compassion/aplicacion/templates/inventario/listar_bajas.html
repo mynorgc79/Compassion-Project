@@ -1,7 +1,36 @@
-{%extends '../index_master.html'%} {% block content %}
+{% extends '../index_master.html' %} {% block content %}
 
 <div class="right_col" role="main">
-  <h1>Articulos dados de baja</h1>
+  <h1>Listado Bajas</h1>
+
+  <div class="table-responsive">
+    <table class="table table-bordered table-striped">
+      <thead>
+        <tr>
+          <th scope="col">CÓDIGO</th>
+          <th scope="col">DESCRIPCION</th>
+          <th scope="col">FECHA COMPRA</th>
+          <th scope="col">AREA</th>
+          <th scope="col">FECHA MOVIMIENTO</th>
+          <th scope="col">TIPO MOVIMIENTO</th>
+          <th scope="col">DESCRIPCION</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for b in inventarios %}
+        <tr>
+          <th scope="row">{{ b.id_inventario }}</th>
+          <td>{{ b.descripcion_articulo }}</td>
+          <td>{{ b.fecha_compra|date:"d/m/y"}}</td>
+          <td>{{ b.area_id.nombre_area }}</td>
+          <td>{{ b.fecha_movimiento|date:"d/m/y"}}</td>
+          <td>{{ b.tipo_movimiento }}</td>
+          <td>{{ b.descripcion }}</td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
 </div>
 
 {% endblock %}

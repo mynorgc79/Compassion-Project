@@ -484,15 +484,24 @@ def editar_articulo(request):
 
 
 def listar_bajas(request):
-    return render(request, 'inventario/listar_bajas.html')
+    # Filtrar los ítems con estado=0 (dado de baja)
+    inventarios = ItemInventario.objects.filter(estado=False)
+
+    for inventario in inventarios:
+        # Obtener el movimiento asociado a este inventario
+        movimiento = Movimientos.objects.filter(inventario_id=inventario).first()
+        if movimiento:
+            # Actualizar los campos del inventario con información del movimiento
+            inventario.fecha_movimiento = movimiento.fecha_movimiento
+            inventario.tipo_movimiento = movimiento.tipo_movimiento
+            inventario.descripcion = movimiento.descripcion
+
+    return render(request, 'inventario/listar_bajas.html', {'inventarios': inventarios})
+
 
 
 #---------------BAJA ARTICULO------
 
-def convertir_fecha(fecha_dd_mm_aaaa):
-    # Convierte la fecha de "dd/mm/aaaa" a "aaaa-mm-dd"
-    fecha_obj = datetime.strptime(fecha_dd_mm_aaaa, '%d/%m/%Y')
-    return fecha_obj.strftime('%Y-%m-%d')
 
 
 
@@ -502,37 +511,36 @@ def baja_articulo(request):
         fecha_movimiento = request.POST.get('fecha_movimiento')
         tipo_movimiento = request.POST.get('tipo_movimiento')
         descripcion = request.POST.get('descripcion')
-        #fecha_movimiento = convertir_fecha(fecha_movimiento_dd_mm_aaaa)
-      
+
         try:
             inventario = ItemInventario.objects.get(id_inventario=id_inventario)
-
-        except Inventario.DoesNotExist:
+        except ItemInventario.DoesNotExist:  # Corregido aquí
             inventario = None
 
         if inventario:
             inventario.estado = 0  # Cambia el estado del beneficiario a inactivo
             inventario.save()
-             # Crea un objeto de la clase "Movimientos"
-            movimiento = Movimientos(
-            inventario_id=inventario,
-            tipo_movimiento=tipo_movimiento,
-            fecha_movimiento=fecha_movimiento,
-            descripcion=descripcion,
             
-             )
+            # Crea un objeto de la clase "Movimientos"
+            movimiento = Movimientos(
+                inventario_id=inventario,
+                tipo_movimiento=tipo_movimiento,
+                fecha_movimiento=fecha_movimiento,
+                descripcion=descripcion,
+            )
+            
             # Guarda el objeto de "Movimientos" en la base de datos
             movimiento.save()
-            return redirect('listar')
+            
+            return redirect('listar_bajas')
         else:
             # Maneja adecuadamente el caso en el que el beneficiario no existe
-            return render(request, 'crud-beneficiarios/salida_beneficiario.html')
+            return render(request, 'index.html')
 
     inventario = ItemInventario.objects.all()
     datos = {'inventario': inventario}
    
     return render(request, 'crud-beneficiarios/salida_beneficiario.html', datos)
-
 
       
 # -------------------------TERMINA  INVENTARIO-------------------------------
