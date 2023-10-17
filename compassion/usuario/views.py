@@ -111,9 +111,9 @@ def actualizar_usuario(request):
 
             # El campo de checkbox devolverá "on" si está marcado o será None si no está marcado
             if nuevo_estado == 'on':
-                usuario.is_active = True
+                usuario.usuario_activo = True
             else:
-                usuario.is_active = False
+                usuario.usuario_activo = False
 
             usuario.save()
 
@@ -122,6 +122,10 @@ def actualizar_usuario(request):
 
     # Redirige a la página de lista de usuarios (o la que desees)
     return redirect('editar_usuario')
+
+
+
+
 
 def cambiar_contrasena(request):
     if request.method == 'POST':
