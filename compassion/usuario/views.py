@@ -9,6 +9,7 @@ from django.contrib.auth.decorators import login_required
 from django.contrib.auth.decorators import user_passes_test
 from django.core.exceptions import ObjectDoesNotExist
 from django.http import JsonResponse
+from django.contrib.auth.forms import PasswordChangeForm 
 
 
 # Create your views here.
@@ -101,9 +102,9 @@ def editar_usuario(request):
 
 
 #--------------GUARDAR ESTADO---------
+
 def actualizar_usuario(request):
     if request.method == 'POST':
-        # Obtén los datos del formulario
         for usuario in Usuario.objects.all():
             estado_key = f'estado_{usuario.id}'
             nuevo_estado = request.POST.get(estado_key)
@@ -120,4 +121,24 @@ def actualizar_usuario(request):
         messages.success(request, 'Los estados de los usuarios se han actualizado correctamente.')
 
     # Redirige a la página de lista de usuarios (o la que desees)
-    return redirect('registro_usuario')
+    return redirect('usuarios/registro_usuario')
+
+def cambiar_contrasena(request):
+    if request.method == 'POST':
+        usuario_id = request.POST.get('usuario_id')
+        nueva_contrasena = request.POST.get('nueva_contrasena')
+        confirmar_contrasena = request.POST.get('confirmar_contrasena')
+
+        # Tu lógica de validación y cambio de contraseña aquí
+        if nueva_contrasena == confirmar_contrasena:
+            # Cambia la contraseña y guarda el usuario
+            usuario = Usuario.objects.get(id=usuario_id)
+            usuario.set_password(nueva_contrasena)
+            usuario.save()
+            messages.success(request, 'Contraseña cambiada con éxito.')
+        else:
+            messages.error(request, 'No se pudo cambiar la contraseña. Las contraseñas no coinciden.')
+
+        return redirect('registro_usuario')
+
+#---------------------CAMBIO DE CONTRASEÑA----------------

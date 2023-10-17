@@ -3,7 +3,7 @@
 <div class="right_col" role="main">
   <h1>Editar usuarios</h1>
 
-  <form method="post" action="{% url 'actualizar_usuario' %}">
+  <form method="post" action="{% url 'actualizar_usuario' %}" id="form-actualizar-usuario">
     {% csrf_token %}
 
     <div class="table-responsive">
@@ -16,7 +16,7 @@
             <th>APELLIDOS</th>
             <th>ROL</th>
             <th>ESTADO</th>
-            <th>CAMBIAR CONTRASEÑA</th> <!-- Nueva columna para el botón -->
+            <th>CAMBIAR CONTRASEÑA</th>
           </tr>
         </thead>
         <tbody>
@@ -43,12 +43,12 @@
               </div>
             </td>
             <td>
-              <!-- Agregar un botón que despliega la ventana emergente para cambiar la contraseña -->
               <button
                 type="button"
-                class="btn btn-primary"
+                class="btn btn-primary btn-cambiar-contrasena"
                 data-toggle="modal"
                 data-target="#cambiarContrasenaModal{{ usuario.id }}"
+                data-usuario-id="{{ usuario.id }}"
               >
                 Cambiar Contraseña
               </button>
@@ -62,54 +62,69 @@
     <button type="submit" class="btn btn-primary">Guardar cambios</button>
   </form>
 
- <!-- Ventana emergente para cambiar la contraseña -->
-{% for usuario in usuarios %}
-<div class="modal fade" id="cambiarContrasenaModal{{ usuario.id }}" tabindex="-1" role="dialog" aria-labelledby="cambiarContrasenaModalLabel" aria-hidden="true">
-  <div class="modal-dialog" role="document">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title" id="cambiarContrasenaModalLabel">Cambiar Contraseña</h5>
-        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-          <span aria-hidden="true">&times;</span>
-        </button>
+  <div id="mensaje" style="display: none;"></div>
+
+  <div class="modal fade" id="cambiarContrasenaModal" tabindex="-1" role="dialog" aria-labelledby="cambiarContrasenaModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="cambiarContrasenaModalLabel">Cambiar Contraseña</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <form method="post" action="{% url 'cambiar_contrasena' %}">
+            {% csrf_token %}
+            <input type="hidden" id="usuario-id" name="usuario_id" value="{{ usuario.id }}">
+            <div class="form-group">
+              <label for="nuevaContrasena">Nueva Contraseña</label>
+              <input type="password" class="form-control" id="nuevaContrasena" name="nueva_contrasena" required>
+            </div>
+            <div class="form-group">
+              <label for="confirmarContrasena">Confirmar Contraseña</label>
+              <input type="password" class="form-control" id="confirmarContrasena" name="confirmar_contrasena" required>
+            </div>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
+            <button type="submit" class="btn btn-primary">Guardar Contraseña</button>
+          </div>
+        </form>
       </div>
-      <div class="modal-body">
-        <!-- Formulario para cambiar la contraseña -->
-        <form method="post" action="">
-          {% csrf_token %}
-          <input type="hidden" name="usuario_id" value="{{ usuario.id }}">
-          <div class="form-group">
-            <label for="nuevaContrasena">Nueva Contraseña</label>
-            <input type="password" class="form-control" id="nuevaContrasena" name="nueva_contrasena" required>
-          </div>
-          <div class="form-group">
-            <label for="confirmarContrasena">Confirmar Contraseña</label>
-            <input type="password" class="form-control" id="confirmarContrasena" name="confirmar_contrasena" required>
-          </div>
-        </div>
-        <div class="modal-footer">
-          <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
-          <button type="submit" class="btn btn-primary">Guardar Contraseña</button>
-        </div>
-      </form>
     </div>
   </div>
-</div>
-{% endfor %}
-
 
   <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-
   <script>
-    // JavaScript para manejar eventos de cambio de estado y apertura de la ventana emergente
     $(document).ready(function() {
-      $('.custom-control-input').change(function() {
-        // Agregar el código para cambiar el estado del usuario aquí
-        // Puedes utilizar la función cambiarEstado() que proporcionaste anteriormente
-
-        // También, abrir la ventana emergente correspondiente
+      $('.btn-cambiar-contrasena').on('click', function() {
+        $('#mensaje').hide();
         var usuarioId = $(this).data('usuario-id');
-        $('#cambiarContrasenaModal' + usuarioId).modal('show');
+        $('#usuario-id').val(usuarioId);
+        $('#cambiarContrasenaModal').modal('show');
+      });
+
+      $('.form-cambiar-contrasena').on('submit', function(event) {
+        event.preventDefault();
+        var $form = $(this);
+
+        $.ajax({
+          type: 'POST',
+          url: $form.attr('action'),
+          data: $form.serialize(),
+          success: function(data) {
+            var mensajeDiv = $('#mensaje');
+            mensajeDiv.removeClass('alert-danger').addClass('alert-success').text('Contraseña cambiada con éxito.');
+            mensajeDiv.show();
+            $('#cambiarContrasenaModal').modal('hide');
+          },
+          error: function() {
+            var mensajeDiv = $('#mensaje');
+            mensajeDiv.removeClass('alert-success').addClass('alert-danger').text('No se pudo cambiar la contraseña.');
+            mensajeDiv.show();
+          }
+        });
       });
     });
   </script>
