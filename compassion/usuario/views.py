@@ -121,7 +121,7 @@ def actualizar_usuario(request):
         messages.success(request, 'Los estados de los usuarios se han actualizado correctamente.')
 
     # Redirige a la página de lista de usuarios (o la que desees)
-    return redirect('usuarios/registro_usuario')
+    return redirect('editar_usuario')
 
 def cambiar_contrasena(request):
     if request.method == 'POST':
@@ -139,6 +139,6 @@ def cambiar_contrasena(request):
         else:
             messages.error(request, 'No se pudo cambiar la contraseña. Las contraseñas no coinciden.')
 
-        return redirect('registro_usuario')
+        return redirect('editar_usuario')
 
 #---------------------CAMBIO DE CONTRASEÑA----------------

@@ -3,6 +3,9 @@
 <div class="right_col" role="main">
   <h1>Editar usuarios</h1>
 
+ 
+
+
   <form method="post" action="{% url 'actualizar_usuario' %}" id="form-actualizar-usuario">
     {% csrf_token %}
 
@@ -61,6 +64,11 @@
 
     <button type="submit" class="btn btn-primary">Guardar cambios</button>
   </form>
+  <div class="alert{% if messages %} alert-success{% endif %}">
+    {% for message in messages %}
+      {{ message }}
+    {% endfor %}
+  </div>
 
   <div id="mensaje" style="display: none;"></div>
 
@@ -79,12 +87,14 @@
             <input type="hidden" id="usuario-id" name="usuario_id" value="{{ usuario.id }}">
             <div class="form-group">
               <label for="nuevaContrasena">Nueva Contraseña</label>
-              <input type="password" class="form-control" id="nuevaContrasena" name="nueva_contrasena" required>
+              <input type="password" class="form-control" id="nuevaContrasena" name="nueva_contrasena" required data-validation="password" oninput="validatePasswords()">
             </div>
             <div class="form-group">
               <label for="confirmarContrasena">Confirmar Contraseña</label>
-              <input type="password" class="form-control" id="confirmarContrasena" name="confirmar_contrasena" required>
+              <input type="password" class="form-control" id="confirmarContrasena" name="confirmar_contrasena" required data-validation="confirm"  oninput="validatePasswords()">
+              <div id="mensaje-error" class="text-danger" style="display: none;">Las contraseñas no coinciden.</div>
             </div>
+            
           </div>
           <div class="modal-footer">
             <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
@@ -95,6 +105,24 @@
     </div>
   </div>
 
+
+  <script>
+    function validatePasswords() {
+      var nuevaContrasena = document.getElementById('nuevaContrasena').value;
+      var confirmarContrasena = document.getElementById('confirmarContrasena').value;
+      var mensajeError = document.getElementById('mensaje-error');
+      var guardarContrasena = document.getElementById('guardarContrasena');
+  
+      if (nuevaContrasena !== confirmarContrasena) {
+        mensajeError.style.display = 'block';
+        guardarContrasena.disabled = true;
+      } else {
+        mensajeError.style.display = 'none';
+        guardarContrasena.disabled = false;
+      }
+    }
+  </script>
+
   <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
   <script>
     $(document).ready(function() {
@@ -104,11 +132,11 @@
         $('#usuario-id').val(usuarioId);
         $('#cambiarContrasenaModal').modal('show');
       });
-
+  
       $('.form-cambiar-contrasena').on('submit', function(event) {
         event.preventDefault();
         var $form = $(this);
-
+  
         $.ajax({
           type: 'POST',
           url: $form.attr('action'),
@@ -128,5 +156,11 @@
       });
     });
   </script>
+  
+
+
+
+
+
 </div>
 {% endblock %}
