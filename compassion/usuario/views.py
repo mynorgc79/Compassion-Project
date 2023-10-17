@@ -21,28 +21,27 @@ from django.contrib.auth.forms import PasswordChangeForm
 
 def login_view(request):
     if request.method == 'POST':
-        # Obten los datos de inicio de sesión del formulario
         username = request.POST['usuario']
         password = request.POST['contraseña']
-
-        # Autentica al usuario utilizando las credenciales proporcionadas
         user = authenticate(request, username=username, password=password)
 
-        if user is not None:
-            # Si el usuario es autenticado con éxito, inicia la sesión
+        if user is not None and user.usuario_activo:  # Verifica que el usuario esté activo
             login(request, user)
             request.session['user_name'] = user.get_full_name()
             return redirect('inicio')  # Cambia a la página principal después del inicio de sesión
         else:
-            # Si la autenticación falla, muestra un mensaje de error
-            error_message = "Credenciales inválidas. Inténtalo de nuevo."
-            messages.error(request, error_message)
-            return render(request, 'usuarios/login.html')
+            if user is not None:
+                # Usuario autenticado, pero desactivado
+                messages.error(request, 'Tu cuenta está desactivada. Comunícate con el administrador.')
+            else:
+                # Autenticación fallida
+                messages.error(request, 'Credenciales inválidas. Inténtalo de nuevo.')
 
-    # Si la solicitud es GET, simplemente muestra el formulario de inicio de sesión
     return render(request, 'usuarios/login.html')
 
 
+
+#---------------salir o logout-----------------
 def _logout(request):
     logout(request)
     return redirect('login')
