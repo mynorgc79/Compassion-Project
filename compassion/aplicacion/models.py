@@ -98,3 +98,4 @@ class Movimientos(models.Model):
         return f'Salida {self.id_movimiento}'
 
 # ----------------------MODELOS PARA EL INVENTARIO
+

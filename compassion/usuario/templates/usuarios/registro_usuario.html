@@ -79,6 +79,8 @@
                     placeholder="Contraseña"
                     class="form-control"
                     required
+                    oninput="validatePasswords()"
+
                   />
                 </div>
               </div>
@@ -95,6 +97,8 @@
                     placeholder="Confirmar Contraseña"
                     class="form-control"
                     required
+                    oninput="validatePasswords()"
+
                   />
                 </div>
               </div>
@@ -124,6 +128,7 @@
                     type="submit"
                     id="submit"
                     class="btn btn-primary btn-lg"
+                    disabled
                   >
                     Registrar
                   </button>
@@ -131,11 +136,31 @@
               </div>
             </fieldset>
           </form>
-          coc
+
+          <div id="mensaje-error" style="display: none; color: red;">
+            Las contraseñas no coinciden.
+          </div>
         </div>
       </div>
     </div>
   </div>
 </div>
+
+<script>
+  function validatePasswords() {
+    var password = document.getElementById('password').value;
+    var confirm_password = document.getElementById('confirm_password').value;
+    var mensajeError = document.getElementById('mensaje-error');
+    var submitButton = document.getElementById('submit');
+
+    if (password !== confirm_password) {
+      mensajeError.style.display = 'block';
+      submitButton.disabled = true;
+    } else {
+      mensajeError.style.display = 'none';
+      submitButton.disabled = false;
+    }
+  }
+</script>
 
 {% endblock %}

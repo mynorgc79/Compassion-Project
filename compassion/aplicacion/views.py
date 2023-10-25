@@ -31,6 +31,10 @@ from django.contrib.auth.decorators import login_required
 from django.contrib.auth.decorators import user_passes_test
 
 from django.utils import timezone
+from django.db.models.signals import post_save
+from django.dispatch import receiver
+from django.shortcuts import render, redirect, get_object_or_404
+
 
 
 
@@ -172,19 +176,14 @@ def agregar(request):
 
 #-----------------------VERIFICAR CODIGO-----
 
-
-def verificar_codigo(request):
-    try:
-        codigo = request.GET.get('codigo', '')
-        
-        # Realiza la verificación de código aquí
-
-        return JsonResponse({'exists': exists})
-    except Exception as e:
-        # Registra la excepción para diagnóstico
-        print(e)
-        return JsonResponse({'exists': False})
-
+def verificar_codigo_existente(request):
+    if request.method == 'POST':
+        codigo = request.POST.get('codigo')
+        try:
+            beneficiario = Beneficiarios.objects.get(codigo_beneficiario=codigo)
+            return JsonResponse({'existe': True})
+        except Beneficiarios.DoesNotExist:
+            return JsonResponse({'existe': False})
 
 #-------------------END VERIFICAR CODIGO-------
 
@@ -258,6 +257,38 @@ def actualizar(request):
     beneficiarios = Beneficiarios.objects.all()
     datos = {'beneficiarios': beneficiarios}
     return render(request, 'crud-beneficiarios/actualizar.html', datos)
+
+def actualizar_beneficiario(request, codigo_beneficiario):
+    beneficiario = get_object_or_404(Beneficiarios, codigo_beneficiario=codigo_beneficiario)
+
+    if request.method == 'POST':
+        # Procesar los datos del formulario y actualizar el beneficiario
+        nombre = request.POST['nombre_beneficiario']
+        #apellido = request.POST['apellido_beneficiario']
+        fecha_nacimiento = request.POST['fecha_nacimiento']
+        genero = request.POST['genero']
+        nivel = request.POST['nivel']
+        estado = request.POST['estado']
+        observacion = request.POST['observacion']
+
+        # Actualizar los campos del beneficiario
+        beneficiario.nombre = nombre
+        #beneficiario.apellido = apellido
+        beneficiario.fecha_nacimiento = fecha_nacimiento
+        beneficiario.genero = genero
+        beneficiario.nivel = nivel
+        beneficiario.estado = estado
+        beneficiario.observacion = observacion
+        beneficiario.edad=calcular_edad(fecha_nacimiento)
+
+        beneficiario.save()  # Guardar los cambios en la base de datos
+
+        # Redirigir a una página de éxito
+        return redirect('listar')
+
+    return render(request, 'crud-beneficiarios/actualizar.html', {'beneficiario': beneficiario})
+
+
 
 # --------------------------------TERMINA ACTUALIZAR BENEFICIARIO-------------------------------
 
@@ -560,20 +591,17 @@ def baja_articulo(request):
 
 
 
+
+
 def exportar_pdf(request):
-    # Crear un objeto BytesIO para guardar el PDF en memoria
-    buffer = BytesIO()
+    # Recibe los IDs de los beneficiarios seleccionados
+    selected_beneficiarios_ids = request.GET.getlist('seleccionados')
 
-    # Crear un objeto PDF con orientación horizontal (landscape)
-    doc = SimpleDocTemplate(buffer, pagesize=landscape(letter))
-
-    # Crear una lista para almacenar los datos de la tabla
-    data = [["CÓDIGO", "NOMBRE", "APELLIDO", "EDAD",
-             "NIVEL", "FECHA NACIMIENTO", "OBSERVACIONES"]]
-
-    # Filtrar beneficiarios por estado activo y agregarlos a la lista
-    beneficiarios = Beneficiarios.objects.filter(estado=True)
-    for beneficiario in beneficiarios:
+    # Filtra los beneficiarios seleccionados y crea una lista de datos
+    selected_beneficiarios = Beneficiarios.objects.filter(codigo_beneficiario__in=selected_beneficiarios_ids)
+    
+    data = [["CÓDIGO", "NOMBRE", "APELLIDO", "EDAD", "NIVEL", "FECHA NACIMIENTO", "OBSERVACIONES"]]
+    for beneficiario in selected_beneficiarios:
         data.append([
             beneficiario.codigo_beneficiario,
             beneficiario.nombre,
@@ -584,15 +612,19 @@ def exportar_pdf(request):
             beneficiario.observacion,
         ])
 
+    # Crear un objeto BytesIO para guardar el PDF en memoria
+    buffer = BytesIO()
+
+    # Crear un objeto PDF con orientación horizontal (landscape)
+    doc = SimpleDocTemplate(buffer, pagesize=landscape(letter))
+
     # Crear una tabla y definir su estilo
     table = Table(data)
     table.setStyle(TableStyle([
-       ('BACKGROUND', (0, 0), (-1, 0), (0.8, 0.8, 0.8)),
-   #     ('TEXTCOLOR', (0, 0), (-1, 0), (1, 1, 1)),
+        ('BACKGROUND', (0, 0), (-1, 0), (0.8, 0.8, 0.8)),
         ('ALIGN', (0, 0), (-1, -1), 'CENTER'),
         ('FONTNAME', (0, 0), (-1, 0), 'Helvetica-Bold'),
         ('BOTTOMPADDING', (0, 0), (-1, 0), 12),
-       # ('BACKGROUND', (0, 1), (-1, -1), (0.9, 0.9, 0.9)),
         ('GRID', (0, 0), (-1, -1), 1, (0, 0, 0)),
     ]))
 
@@ -601,7 +633,7 @@ def exportar_pdf(request):
     # Establecer el título del documento
     styles = getSampleStyleSheet()
     title_style = styles['Title']
-    elements.append(Paragraph("Lista de Beneficiarios Activos", title_style))
+    elements.append(Paragraph("Lista de Beneficiarios Seleccionados", title_style))
     elements.append(table)
 
     doc.build(elements)
@@ -610,11 +642,16 @@ def exportar_pdf(request):
     buffer.seek(0)
 
     # Devolver el PDF como una respuesta de archivo
-    response = FileResponse(buffer, as_attachment=True,
-                            filename='lista_beneficiarios_activos.pdf')
+    response = HttpResponse(content_type='application/pdf')
+    response['Content-Disposition'] = 'attachment; filename="lista_beneficiarios_seleccionados.pdf"'
+
+    # Cierra el objeto BytesIO para evitar fugas de memoria
+    buffer.close()
+
     return response
+
 # ---------------------------
 
 
 #--------------------------------
-#restriccion de acceso
+

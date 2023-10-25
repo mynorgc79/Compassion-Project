@@ -1,5 +1,5 @@
-{%extends '../index_master.html'%} {% block content %}
-
+{% extends '../index_master.html' %}
+{% block content %}
 <div class="right_col" role="main">
   <h1>lista Beneficiarios = {{ beneficiarios|length }}</h1>
 
@@ -25,60 +25,60 @@
   </div>
 
   {% if beneficiarios %}
-  <div class="table-responsive">
-    <table class="table table-bordered table-striped">
-      <thead class="thead-dark">
-        <tr>
-          <th scope="col">CÓDIGO</th>
-          <th scope="col">NOMBRE</th>
-          <th scope="col">APELLIDO</th>
-          <th scope="col">EDAD</th>
-          <th scope="col">NIVEL</th>
-          <th scope="col">FECHA NACIMIENTO</th>
-          <th scope="col">OBSERVACIONES</th>
-        </tr>
-      </thead>
-      <tbody>
-        {% for b in beneficiarios %}
-        <tr>
-          <th scope="row">{{ b.codigo_beneficiario }}</th>
-          <td>{{ b.nombre }}</td>
-          <td>{{ b.apellido }}</td>
-          <td>{{ b.edad }}</td>
-          <td>{{ b.nivel }}</td>
-          <td>{{ b.fecha_nacimiento }}</td>
-          <td>{{ b.observacion }}</td>
-        </tr>
-        {% endfor %}
-      </tbody>
-    </table>
-  </div>
+  <form method="post" action="{% url 'exportar_pdf' %}">
+    {% csrf_token %}
+    <div class="table-responsive">
+      <table class="table table-bordered table-striped">
+        <thead class="thead-dark">
+          <tr>
+            <th scope="col">CÓDIGO</th>
+            <th scope="col">NOMBRE</th>
+            <th scope="col">APELLIDO</th>
+            <th scope="col">EDAD</th>
+            <th scope="col">NIVEL</th>
+            <th scope="col">FECHA NACIMIENTO</th>
+            <th scope="col">OBSERVACIONES</th>
+            <th scope="col">Editar</th> 
+            <th scope="col">Exportar</th> <!-- Columna para checkboxes -->
+          </tr>
+        </thead>
+        <tbody>
+          {% for b in beneficiarios %}
+          <tr>
+            <th scope="row">{{ b.codigo_beneficiario }}</th>
+            <td>{{ b.nombre }}</td>
+            <td>{{ b.apellido }}</td>
+            <td>{{ b.edad }}</td>
+            <td>{{ b.nivel }}</td>
+            <td>{{ b.fecha_nacimiento|date:"d/m/y"}}</td>
+            <td>{{ b.observacion }}</td>
+            <td>
+              <a href="{% url 'editar_usuario' b.codigo_beneficiario %}" class="btn btn-primary">Editar</a>
+              
+            </td>
+            <td>
+              <input type="checkbox" name="seleccionados" value="{{ b.codigo_beneficiario }}">
+            </td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+
+    <button type="submit" class="btn btn-primary">Exportar a PDF</button>
+  </form>
 
   <script>
-    document
-      .getElementById("imprimir-button")
-      .addEventListener("click", function () {
-        window.print(); // Abre el cuadro de diálogo de impresión del navegador
-      });
-  </script>
-
-  <!-- Agregar un botón para exportar a PDF -->
-  <a href="{% url 'exportar_pdf' %}" class="btn btn-primary">Exportar a PDF</a>
-  <button id="imprimir-button" class="btn btn-info">Imprimir</button>
-  <script>
-    document
-      .getElementById("imprimir-button")
-      .addEventListener("click", function () {
-        window.print(); // Abre el cuadro de diálogo de impresión del navegador
-      });
+    document.getElementById("imprimir-button").addEventListener("click", function () {
+      window.print(); // Abre el cuadro de diálogo de impresión del navegador
+    });
   </script>
   {% else %}
   <p>No se encontró ninguna familia con esos apellidos.</p>
   {% endif %}
   <!-- Mostrar un mensaje de acceso denegado si el usuario no tiene el permiso -->
   <div class="mensaje-acceso-denegado">
-    No tienes permisos para acceder a esta página.
+  
   </div>
 </div>
-
 {% endblock %}

@@ -1,162 +1,76 @@
-{%extends '../index_master.html'%} {% block content %}
-
+{% extends '../index_master.html' %}
+{% block content %}
 <div class="right_col" role="main">
-  <h1>Actualiza Beneficiario</h1>
+  <h1>Actualizar Beneficiario</h1>
 
-  <form action="actualizar" method="POST">
+  <form method="post">
     {% csrf_token %}
 
     <div class="form-group row">
-      <label for="nombre" class="col-4 col-form-label"
-        >Codigo Beneficiario</label
-      >
+      <label for="nombre_beneficiario" class="col-4 col-form-label">Nombres:</label>
       <div class="col-8">
-        <div class="input-group">
-          <div class="input-group-addon">
-            <i class="fa fa-id-badge"></i>
-          </div>
+        <input type="text" id="nombre_beneficiario" name="nombre_beneficiario" value="{{ beneficiario.nombre }}" class="form-control" required="required" placeholder="Nombres">
+      </div>
+    </div>
 
-          <select id="codigo" name="codigo_beneficiario">
-            {% for b in beneficiarios %}
-            <option value="{{ b.codigo_beneficiario }}">
-              {{ b.codigo_beneficiario }} {{' -- '}}{{ b.nombre }}
-            </option>
-            {% endfor %}
-          </select>
-        </div>
+    <!-- <div class="form-group row">
+      <label for="apellido_beneficiario" class="col-4 col-form-label">Apellidos:</label>
+      <div class="col-8">
+        <input type="text" id="apellido_beneficiario" name="apellido_beneficiario" value="{{ beneficiario.apellido }}" class="form-control" required="required" placeholder="Apellidos">
+      </div>
+    </div> -->
+
+    <div class="form-group row">
+      <label for="fecha_nacimiento" class="col-4 col-form-label">Fecha de Nacimiento:</label>
+      <div class="col-8">
+        <input type="date" id="fecha_nacimiento" name="fecha_nacimiento" value="{{ beneficiario.fecha_nacimiento|date:'Y-m-d' }}" class="form-control" required="required">
       </div>
     </div>
 
     <div class="form-group row">
-      <label for="nombre" class="col-4 col-form-label"
-        >Nombres y Apellidos</label
-      >
-      <div class="col-4">
-        <input
-          id="nombre_beneficiario"
-          name="nombre_beneficiario"
-          type="text"
-          class="form-control"
-          required="required"
-          placeholder="Nombres"
-        />
-      </div>
-
-      <div class="col-4">
-        <input
-          id="apellido_beneficiario"
-          name="apellido_beneficiario"
-          type="text"
-          class="form-control"
-          required="required"
-          placeholder="Apellidos"
-        />
-      </div>
-    </div>
-
-    <div class="form-group row">
-      <label for="fecha_nacimiento" class="col-4 col-form"
-        >Fecha de Nacimiento</label
-      >
+      <label for="genero" class="col-4 col-form-label">Género:</label>
       <div class="col-8">
-        <div class="input-group">
-          <div class="input-group-prepend">
-            <div class="input-group-text">
-              <i class="fa fa-calendar"></i>
-            </div>
-          </div>
-          <input
-            type="date"
-            id="fecha_nacimiento"
-            name="fecha_nacimiento"
-            class="form-control"
-            required
-            placeholder="YYYY-MM-DD"
-          />
-        </div>
-      </div>
-    </div>
-
-    <div class="form-group row">
-      <label for="" class="col-4 col-form-label">Género</label>
-      <div class="col-8">
-        <select
-          id="genero"
-          name="genero"
-          required="required"
-          class="custom-select"
-        >
-          <option value="" disabled selected>Seleccione el género</option>
-          <option value="femenino">Femenino</option>
-          <option value="masculino">Masculino</option>
+        <select id="genero" name="genero" required="required" class="custom-select">
+          <option value="femenino" {% if beneficiario.genero == 'femenino' %}selected{% endif %}>Femenino</option>
+          <option value="masculino" {% if beneficiario.genero == 'masculino' %}selected{% endif %}>Masculino</option>
         </select>
       </div>
     </div>
 
     <div class="form-group row">
-      <label for="" class="col-4 col-form-label">Nivel</label>
+      <label for="nivel" class="col-4 col-form-label">Nivel:</label>
       <div class="col-8">
-        <select
-          id="nivel"
-          name="nivel"
-          required="required"
-          class="custom-select"
-        >
-          <option value="" disabled selected>Seleccione el nivel</option>
-          <option value="1">1</option>
-          <option value="2">2</option>
-          <option value="3">3</option>
-          <option value="4">4</option>
+        <select id="nivel" name="nivel" required="required" class="custom-select">
+          <option value="1" {% if beneficiario.nivel == 1 %}selected{% endif %}>1</option>
+          <option value="2" {% if beneficiario.nivel == 2 %}selected{% endif %}>2</option>
+          <option value="3" {% if beneficiario.nivel == 3 %}selected{% endif %}>3</option>
+          <option value="4" {% if beneficiario.nivel == 4 %}selected{% endif %}>4</option>
         </select>
       </div>
     </div>
 
     <div class="form-group row">
-      <label for="" class="col-4 col-form-label">Estado</label>
+      <label for="estado" class="col-4 col-form-label">Estado:</label>
       <div class="col-8">
-        <select
-          id="nivel"
-          name="nivel"
-          required="required"
-          class="custom-select"
-        >
-          <option value="" disabled selected>
-            Seleccione El estado del Beneficiario
-          </option>
-          <option value="1">Activo</option>
-          <option value="0">Inactivo</option>
+        <select id="estado" name="estado" required="required" class="custom-select">
+          <option value="1" {% if beneficiario.estado %}selected{% endif %}>Activo</option>
+          <option value="0" {% if not beneficiario.estado %}selected{% endif %}>Inactivo</option>
         </select>
       </div>
     </div>
 
     <div class="form-group row">
-      <label for="observacion" class="col-4 col-form-label">Observacion</label>
+      <label for="observacion" class="col-4 col-form-label">Observación:</label>
       <div class="col-8">
-        <div class="input-group">
-          <div class="input-group-prepend">
-            <div class="input-group-text">
-              <i class="fa fa-align-justify"></i>
-            </div>
-          </div>
-          <input
-            id="observacion"
-            name="observacion"
-            type="text"
-            class="form-control"
-            required="required"
-          />
-        </div>
+        <input type="text" id="observacion" name="observacion" value="{{ beneficiario.observacion }}" class="form-control">
       </div>
     </div>
 
     <div class="form-group row">
       <div class="offset-4 col-8">
-        <button name="submit" type="submit" class="btn btn-primary">
-          Actualizar Beneficiario
-        </button>
+        <button type="submit" class="btn btn-primary">Actualizar Beneficiario</button>
       </div>
     </div>
   </form>
 </div>
-
 {% endblock %}

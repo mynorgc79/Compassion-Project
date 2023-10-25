@@ -3,7 +3,7 @@
 <div class="right_col" role="main">
   <form action="agregar" method="POST">
     <head>
-      <script src="{% static 'js/verificar_codigo.js' %}"></script>
+      <!-- <script src="{% static 'js/verificar_codigo.js' %}"></script> -->
     </head>
     {% csrf_token %}
 
@@ -128,9 +128,9 @@
             type="number"
             required="required"
             class="form-control"
-            oninput="checkCodigoAvailability(this)"
+            oninput="verificarCodigoExistente(this)"
           />
-          <span id="codigo-error" class="error" style="color: red"></span>
+          
           <span id="codigo-availability" style="color: red"></span>
         </div>
       </div>
@@ -274,37 +274,47 @@
         input.setCustomValidity("");
       }
     }
-    //validar longitud de numero telefonico.
+    // Validar longitud de número telefónico
     function validarLongitud(input, maxLength, errorId) {
-      const valor = input.value.trim();
-      const errorElement = document.getElementById(errorId);
+            const valor = input.value.trim();
+            const errorElement = document.getElementById(errorId);
 
-      if (valor.length > maxLength) {
-        errorElement.textContent = "Solo se permiten 8 dígitos.";
-        input.setCustomValidity("Solo se permiten 8 dígitos.");
-        input.value = valor.substring(0, maxLength); // Recortar a 8 dígitos
-      } else {
-        errorElement.textContent = "";
-        input.setCustomValidity("");
+            if (valor.length > maxLength) {
+                errorElement.textContent = "Solo se permiten 8 dígitos.";
+                input.setCustomValidity("Solo se permiten 8 dígitos.");
+                input.value = valor.substring(0, maxLength); // Recortar a 8 dígitos
+            } else {
+                errorElement.textContent = "";
+                input.setCustomValidity("");
+            }
+        }
+
+
+      function getCookie(name) {
+             let cookieValue = null;
+             if (document.cookie && document.cookie !== '') {
+             const cookies = document.cookie.split(';');
+           for (let i = 0; i < cookies.length; i++) {
+            const cookie = cookies[i].trim();
+            // Buscar el nombre del cookie
+              if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                break;
+              }
+            }
+          }
+        return cookieValue;
       }
-    }
 
-    // Función para validar que el valor solo contenga números
-    // Validación para el campo "codigo" (aceptar solo números)
-    const codigoInput = document.getElementById("codigo");
-    const codigoError = document.getElementById("codigo-error");
 
-    codigoInput.addEventListener("input", function (e) {
-      const codigoValue = e.target.value;
-      if (!/^\d+$/.test(codigoValue)) {
-        codigoError.textContent = "Solo se permiten números.";
-        codigoInput.setCustomValidity("Solo se permiten números.");
-      } else {
-        codigoError.textContent = "";
-        codigoInput.setCustomValidity("");
-      }
-    });
-  </script>
+      
+
+</script>
+<script>
+  var verificarCodigoUrl = "{% url 'verificar_codigo_existente' %}";
+</script>
+<script src="{% static 'js/verificar_codigo.js' %}"></script>
+
 </div>
 
 {% endblock %}
