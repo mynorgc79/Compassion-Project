@@ -43,7 +43,7 @@ urlpatterns = [
     path('listar_bajas', views.listar_bajas, name='listar_bajas'),
     path('baja_articulo', views.baja_articulo, name='baja_articulo'),
 
-    path('exportar-pdf/', views.exportar_pdf, name='exportar_pdf'),
+    path('exportar_pdf/', views.exportar_pdf, name='exportar_pdf'),
 
 
 ]

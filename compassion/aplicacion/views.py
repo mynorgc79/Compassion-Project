@@ -1,40 +1,36 @@
-from reportlab.lib import colors
-from reportlab.platypus import SimpleDocTemplate, Table, TableStyle, PageTemplate
-from reportlab.platypus import Paragraph
-from reportlab.lib.styles import getSampleStyleSheet
-from reportlab.lib.pagesizes import letter, landscape
-from .models import Familias, Beneficiarios
-from django.contrib.auth.decorators import login_required
-from django.contrib.auth.models import User
-from django.http import JsonResponse
-from django.shortcuts import render, redirect
-from django.http import HttpResponse
-from .models import Beneficiarios, Familias, Salidas, Area, ItemInventario, ItemInventario, Movimientos
-from datetime import date
-from datetime import datetime
-from django.contrib.auth.forms import UserCreationForm
-from django.contrib import messages
-from django.db.models import Count
-from django.db import models
-from django.db.models import Q
-from django.contrib.auth.views import LoginView
-from django.http import FileResponse
-from django.shortcuts import render
-from reportlab.pdfgen import canvas
-from io import BytesIO
-from django.views.generic import TemplateView
-from pynotifier import Notification
-from django.contrib import messages
 import re
-from django.db.models import Sum
-from django.contrib.auth.decorators import login_required
-from django.contrib.auth.decorators import user_passes_test
+from datetime import date, datetime
+from io import BytesIO
 
+from django.db import models
+from django.db.models import Q, Count, Sum
+from django.shortcuts import render, redirect, get_object_or_404
 from django.utils import timezone
 from django.db.models.signals import post_save
 from django.dispatch import receiver
-from django.shortcuts import render, redirect, get_object_or_404
+from django.contrib.auth.decorators import login_required, user_passes_test
+from django.http import JsonResponse, HttpResponse, FileResponse
+from django.views.generic import TemplateView
+from django.contrib.auth.views import LoginView
+from django.contrib.auth.decorators import login_required
+from django.contrib.auth.forms import UserCreationForm
+from django.contrib import messages
+from pynotifier import Notification
 
+from .models import Familias, Beneficiarios, Salidas, Area, ItemInventario, Movimientos
+
+from reportlab.lib import colors
+from reportlab.lib.pagesizes import letter, landscape
+from reportlab.lib.styles import getSampleStyleSheet
+from reportlab.platypus import (
+    SimpleDocTemplate,
+    Table,
+    TableStyle,
+    PageTemplate,
+    Paragraph,
+    Spacer,
+)
+from reportlab.pdfgen import canvas
 
 
 
@@ -594,13 +590,17 @@ def baja_articulo(request):
 
 
 def exportar_pdf(request):
-    # Recibe los IDs de los beneficiarios seleccionados
-    selected_beneficiarios_ids = request.GET.getlist('seleccionados')
-
-    # Filtra los beneficiarios seleccionados y crea una lista de datos
+    selected_beneficiarios_ids = request.POST.getlist('seleccionados')
     selected_beneficiarios = Beneficiarios.objects.filter(codigo_beneficiario__in=selected_beneficiarios_ids)
-    
-    data = [["CÓDIGO", "NOMBRE", "APELLIDO", "EDAD", "NIVEL", "FECHA NACIMIENTO", "OBSERVACIONES"]]
+
+    response = HttpResponse(content_type='application/pdf')
+    response['Content-Disposition'] = 'attachment; filename="lista_beneficiarios_seleccionados.pdf"'
+
+    buffer = BytesIO()
+    doc = SimpleDocTemplate(buffer, pagesize=letter)
+
+    data = [['CÓDIGO', 'NOMBRE', 'APELLIDO', 'EDAD', 'NIVEL', 'FECHA NACIMIENTO', 'OBSERVACIONES']]
+
     for beneficiario in selected_beneficiarios:
         data.append([
             beneficiario.codigo_beneficiario,
@@ -608,47 +608,45 @@ def exportar_pdf(request):
             beneficiario.apellido,
             beneficiario.edad,
             beneficiario.nivel,
-            beneficiario.fecha_nacimiento,
+            beneficiario.fecha_nacimiento.strftime('%d/%m/%Y'),
             beneficiario.observacion,
         ])
 
-    # Crear un objeto BytesIO para guardar el PDF en memoria
-    buffer = BytesIO()
-
-    # Crear un objeto PDF con orientación horizontal (landscape)
-    doc = SimpleDocTemplate(buffer, pagesize=landscape(letter))
-
     # Crear una tabla y definir su estilo
     table = Table(data)
-    table.setStyle(TableStyle([
-        ('BACKGROUND', (0, 0), (-1, 0), (0.8, 0.8, 0.8)),
+    style = TableStyle([
+        ('BACKGROUND', (0, 0), (-1, 0), colors.grey),
+        ('TEXTCOLOR', (0, 0), (-1, 0), colors.whitesmoke),
         ('ALIGN', (0, 0), (-1, -1), 'CENTER'),
         ('FONTNAME', (0, 0), (-1, 0), 'Helvetica-Bold'),
         ('BOTTOMPADDING', (0, 0), (-1, 0), 12),
-        ('GRID', (0, 0), (-1, -1), 1, (0, 0, 0)),
-    ]))
+        #('BACKGROUND', (0, 1), (-1, -1), colors.beige),
+        ('GRID', (0, 0), (-1, -1), 1, colors.black),
+    ])
+    table.setStyle(style)
 
-    # Crear el PDF y agregar la tabla
     elements = []
-    # Establecer el título del documento
-    styles = getSampleStyleSheet()
-    title_style = styles['Title']
-    elements.append(Paragraph("Lista de Beneficiarios Seleccionados", title_style))
+
+      # Agregar título al documento
+    #title = "Lista de Beneficiarios"
+    #title_paragraph = Paragraph(title)
+    #elements.append(title_paragraph)
+
     elements.append(table)
+
+      # Agregar la fecha actual al PDF en una esquina
+    fecha_actual = datetime.now().strftime('%d/%m/%Y %H:%M:%S')
+    fecha_paragraph = Paragraph(f'Fecha de creación: {fecha_actual}')
+    elements.append(fecha_paragraph)
 
     doc.build(elements)
 
-    # Configurar el objeto BytesIO para la lectura desde el principio
     buffer.seek(0)
-
-    # Devolver el PDF como una respuesta de archivo
-    response = HttpResponse(content_type='application/pdf')
-    response['Content-Disposition'] = 'attachment; filename="lista_beneficiarios_seleccionados.pdf"'
-
-    # Cierra el objeto BytesIO para evitar fugas de memoria
+    response.write(buffer.read())
     buffer.close()
-
     return response
+
+
 
 # ---------------------------
 
