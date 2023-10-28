@@ -479,7 +479,11 @@ def listar_articulos(request):
     # Filtrar articulo por nombre
     inventario = ItemInventario.objects.filter(
         Q(descripcion_articulo__icontains=descripcion),
-        estado=True
+        estado=True,
+        cantidad__gt=0
+        
+        
+
     )
     # Calcular la suma de los valores de compra
     total_gastado = inventario.aggregate(Sum('valor_compra'))['valor_compra__sum']
@@ -559,10 +563,15 @@ def baja_articulo(request):
         cantidad_a_dar_de_baja = 1  # Cambia esto al valor que desees dar de baja
         if cantidad_a_dar_de_baja > articulo.cantidad:
             messages.error(request, 'No puedes dar de baja más de lo que hay en stock.')
-            return redirect('listar_articulos.html')
+            return redirect('listar_articulos')
 
         # Restar la cantidad dada de baja
         articulo.cantidad -= cantidad_a_dar_de_baja
+
+        # Si la cantidad llega a cero, cambia el estado a False
+        if articulo.cantidad == 0:
+            articulo.estado = False
+
         articulo.save()
 
         # Crear un registro en Movimientos para registrar la salida
@@ -575,9 +584,9 @@ def baja_articulo(request):
         movimiento.save()
 
         messages.success(request, 'Artículo dado de baja exitosamente.')
-        return redirect('listar_bajas.html')
+        return redirect('listar_articulos')
 
-    return render(request, 'listar_articulos.html')
+    return render(request, 'listar_articulos')
 
       
 # -------------------------TERMINA  INVENTARIO-------------------------------

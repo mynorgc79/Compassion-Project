@@ -1,4 +1,6 @@
-{% extends '../index_master.html' %} {% block content %} {% load humanize %}
+{% extends '../index_master.html' %}
+{% block content %}
+{% load humanize %}
 
 <div class="right_col" role="main">
   <h1>Lista de Artículos</h1>
@@ -87,15 +89,14 @@
   </div>
 
   {% for a in inventario %}
-<div
-  class="modal fade"
-  id="modalDarDeBaja{{ a.id_inventario }}"
-  tabindex="-1"
-  role="dialog"
-  aria-labelledby="modalDarDeBajaLabel{{ a.id_inventario }}"
-  aria-hidden="true"
->
-
+  <div
+    class="modal fade"
+    id="modalDarDeBaja{{ a.id_inventario }}"
+    tabindex="-1"
+    role="dialog"
+    aria-labelledby="modalDarDeBajaLabel{{ a.id_inventario }}"
+    aria-hidden="true"
+  >
     <div class="modal-dialog" role="document">
       <div class="modal-content">
         <div class="modal-header">
@@ -167,6 +168,7 @@
               <div class="col-8">
                   <input type="number" id="cantidad_a_dar_de_baja" name="cantidad_a_dar_de_baja" class="form-control" required />
               </div>
+            </div>
 
             <div class="form-group row">
               <label for="descripcion" class="col-4 col-form-label"
@@ -202,19 +204,16 @@
             <button type="submit" class="btn btn-danger">Dar de Baja</button>
           </div>
         </form>
-
         {% if mensaje %}
-    <div class="alert alert-success">
-        {{ mensaje }}
-    </div>
-    {% endif %}
+          <div class="alert alert-success">
+              {{ mensaje }}
+          </div>
+        {% endif %}
       </div>
     </div>
   </div>
   {% endfor %}
   <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-  
-
   <script>
     document.querySelectorAll(".dar-de-baja-articulo").forEach(function (button) {
       button.addEventListener("click", function () {
