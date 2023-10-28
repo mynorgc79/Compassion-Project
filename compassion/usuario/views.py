@@ -11,6 +11,8 @@ from django.core.exceptions import ObjectDoesNotExist
 from django.http import JsonResponse
 from django.contrib.auth.forms import PasswordChangeForm 
 
+from aplicacion.decorators import administrador_required
+
 
 # Create your views here.
 
@@ -49,6 +51,7 @@ def _logout(request):
 
 
 @login_required
+@administrador_required
 def registrar_usuario(request):
     if request.method == 'POST':
         # Obtén los datos del formulario
@@ -93,7 +96,7 @@ def registrar_usuario(request):
 
 
 
-
+@administrador_required
 def editar_usuario(request):
      usuarios = Usuario.objects.all()
      return render(request, 'usuarios/editar_usuario.html', {'usuarios': usuarios})
@@ -101,7 +104,8 @@ def editar_usuario(request):
 
 
 #--------------GUARDAR ESTADO---------
-
+@login_required
+@administrador_required
 def actualizar_usuario(request):
     if request.method == 'POST':
         for usuario in Usuario.objects.all():
@@ -125,7 +129,7 @@ def actualizar_usuario(request):
 
 
 
-
+@login_required
 def cambiar_contrasena(request):
     if request.method == 'POST':
         usuario_id = request.POST.get('usuario_id')

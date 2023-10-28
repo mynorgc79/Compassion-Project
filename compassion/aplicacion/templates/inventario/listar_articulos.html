@@ -87,14 +87,15 @@
   </div>
 
   {% for a in inventario %}
-  <div
-    class="modal fade"
-    id="modalDarDeBaja{{ a.id_inventario }}"
-    tabindex="-1"
-    role="dialog"
-    aria-labelledby="modalDarDeBajaLabel{{ a.id_inventario }}"
-    aria-hidden="true"
-  >
+<div
+  class="modal fade"
+  id="modalDarDeBaja{{ a.id_inventario }}"
+  tabindex="-1"
+  role="dialog"
+  aria-labelledby="modalDarDeBajaLabel{{ a.id_inventario }}"
+  aria-hidden="true"
+>
+
     <div class="modal-dialog" role="document">
       <div class="modal-content">
         <div class="modal-header">
@@ -119,8 +120,7 @@
           />
           <div class="modal-body">
             <p>
-              ¿Estás seguro de que deseas dar de baja el artículo "{{
-              a.descripcion_articulo }}"?
+              ¿Estás seguro de que deseas dar de baja el artículo "{{a.descripcion_articulo }}"?
             </p>
 
             <div class="form-group row">
@@ -163,6 +163,12 @@
             </div>
 
             <div class="form-group row">
+              <label for="cantidad_a_dar_de_baja" class="col-4 col-form-label">Cantidad a dar de baja</label>
+              <div class="col-8">
+                  <input type="number" id="cantidad_a_dar_de_baja" name="cantidad_a_dar_de_baja" class="form-control" required />
+              </div>
+
+            <div class="form-group row">
               <label for="descripcion" class="col-4 col-form-label"
                 >Descripción</label
               >
@@ -196,20 +202,28 @@
             <button type="submit" class="btn btn-danger">Dar de Baja</button>
           </div>
         </form>
+
+        {% if mensaje %}
+    <div class="alert alert-success">
+        {{ mensaje }}
+    </div>
+    {% endif %}
       </div>
     </div>
   </div>
   {% endfor %}
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+  
+
   <script>
-    document
-      .querySelectorAll(".dar-de-baja-articulo")
-      .forEach(function (button) {
-        button.addEventListener("click", function () {
-          const idArticulo = button.getAttribute("data-id-articulo");
-          const modal = document.getElementById("modalDarDeBaja" + idArticulo);
-          $(modal).modal("show");
-        });
+    document.querySelectorAll(".dar-de-baja-articulo").forEach(function (button) {
+      button.addEventListener("click", function () {
+        const idArticulo = button.getAttribute("data-id-articulo");
+        const modal = document.getElementById("modalDarDeBaja" + idArticulo);
+        console.log("Abriendo modal para artículo ID: " + idArticulo);
+        $(modal).modal("show");
       });
+    });
   </script>
   <!-- ... (código de exportar a PDF) ... -->
   {% else %}

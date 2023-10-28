@@ -45,6 +45,7 @@ INSTALLED_APPS = [
     "usuario",
     "aplicacion",
     'django.contrib.humanize',
+    
 
 
 

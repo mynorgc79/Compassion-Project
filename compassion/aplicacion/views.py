@@ -33,6 +33,8 @@ from reportlab.platypus import (
 from reportlab.pdfgen import canvas
 
 
+from .decorators import administrador_required, usuario_beneficiario_required, usuario_inventario_required
+
 
 
 
@@ -117,6 +119,7 @@ def validar_familia(request):
         return nueva_familia.id_familia
 
 @login_required
+@usuario_beneficiario_required
 def agregar(request):
     if request.method == 'POST':
         # Obtener datos del formulario
@@ -186,6 +189,7 @@ def verificar_codigo_existente(request):
 
 
 #--------------------AGREGAR A FAMILIA EISTENTE
+
 def agregar_existente(request):
     if request.method == 'POST':
         # Obtener el ID de la familia desde el formulario
@@ -230,6 +234,7 @@ def agregar_existente(request):
 
 # ----------------------------------LISTAR BENEFICIARIO--------------------------------
 @login_required
+@usuario_beneficiario_required
 #@user_passes_test(es_usuario_beneficiario)
 def listar(request):
     # Obtener el nombre de la solicitud GET
@@ -254,6 +259,7 @@ def actualizar(request):
     datos = {'beneficiarios': beneficiarios}
     return render(request, 'crud-beneficiarios/actualizar.html', datos)
 
+@login_required
 def actualizar_beneficiario(request, codigo_beneficiario):
     beneficiario = get_object_or_404(Beneficiarios, codigo_beneficiario=codigo_beneficiario)
 
@@ -291,6 +297,7 @@ def actualizar_beneficiario(request, codigo_beneficiario):
 
 # --------------------------------DAR SALIDA A  BENEFICIARIO-------------------------------
 @login_required
+@usuario_beneficiario_required
 def salida_beneficiario(request):
 
     if request.method == 'POST':
@@ -332,6 +339,7 @@ def salida_beneficiario(request):
 
 # -----------BENEFICIARIOS RETIRADOS --------
 @login_required
+@usuario_beneficiario_required
 def beneficiarios_retirados(request):
 
     beneficiarios = Beneficiarios.objects.filter(estado=0).all()
@@ -354,6 +362,8 @@ def beneficiarios_retirados(request):
 
 
 # -----------------listar familias --------
+@login_required
+@usuario_beneficiario_required
 def listar_familias(request):
     # Obtener el apellido de la solicitud GET
     apellido = request.GET.get('apellido', '')
@@ -372,6 +382,7 @@ def listar_familias(request):
 
 # ----------------------- INVENTARIO-------------------------------
 @login_required
+@usuario_inventario_required
 def registrar_articulo(request):
     if request.method == 'POST':
         try:
@@ -427,6 +438,7 @@ def registrar_articulo(request):
 # ------------------------------------------------------
 
 @login_required
+@usuario_inventario_required
 def crear_area(request):
     if request.method == 'POST':
         nombre_area = request.POST.get('nombre_area')
@@ -457,6 +469,7 @@ def crear_area(request):
 # ----------------------------------------------------------------
 
 @login_required
+@usuario_inventario_required
 def listar_articulos(request):
     # Obtener el nombre de la solicitud GET
     descripcion = request.GET.get('descripcion', '')
@@ -509,7 +522,8 @@ def buscar_area(request):
 def editar_articulo(request):
     return render(request, 'inventario/editar_articulo.html')
 
-
+@login_required
+@usuario_inventario_required
 def listar_bajas(request):
     # Filtrar los ítems con estado=0 (dado de baja)
     inventarios = ItemInventario.objects.filter(estado=False)
@@ -531,43 +545,39 @@ def listar_bajas(request):
 
 
 
-
+@login_required
 def baja_articulo(request):
     if request.method == 'POST':
-        id_inventario = request.POST.get('id_inventario')
-        fecha_movimiento = request.POST.get('fecha_movimiento')
-        tipo_movimiento = request.POST.get('tipo_movimiento')
-        descripcion = request.POST.get('descripcion')
+        id_inventario = request.POST['id_inventario']
+        fecha_movimiento = request.POST['fecha_movimiento']
+        tipo_movimiento = request.POST['tipo_movimiento']
+        descripcion = request.POST['descripcion']
 
-        try:
-            inventario = ItemInventario.objects.get(id_inventario=id_inventario)
-        except ItemInventario.DoesNotExist:  # Corregido aquí
-            inventario = None
+        articulo = ItemInventario.objects.get(id_inventario=id_inventario)
 
-        if inventario:
-            inventario.estado = 0  # Cambia el estado del beneficiario a inactivo
-            inventario.save()
-            
-            # Crea un objeto de la clase "Movimientos"
-            movimiento = Movimientos(
-                inventario_id=inventario,
-                tipo_movimiento=tipo_movimiento,
-                fecha_movimiento=fecha_movimiento,
-                descripcion=descripcion,
-            )
-            
-            # Guarda el objeto de "Movimientos" en la base de datos
-            movimiento.save()
-            
-            return redirect('listar_bajas')
-        else:
-            # Maneja adecuadamente el caso en el que el beneficiario no existe
-            return render(request, 'index.html')
+        # Verificar que la cantidad a dar de baja no sea mayor que la cantidad en stock
+        cantidad_a_dar_de_baja = 1  # Cambia esto al valor que desees dar de baja
+        if cantidad_a_dar_de_baja > articulo.cantidad:
+            messages.error(request, 'No puedes dar de baja más de lo que hay en stock.')
+            return redirect('listar_articulos.html')
 
-    inventario = ItemInventario.objects.all()
-    datos = {'inventario': inventario}
-   
-    return render(request, 'crud-beneficiarios/salida_beneficiario.html', datos)
+        # Restar la cantidad dada de baja
+        articulo.cantidad -= cantidad_a_dar_de_baja
+        articulo.save()
+
+        # Crear un registro en Movimientos para registrar la salida
+        movimiento = Movimientos(
+            tipo_movimiento=tipo_movimiento,
+            fecha_movimiento=fecha_movimiento,
+            descripcion=descripcion,
+            inventario_id=articulo
+        )
+        movimiento.save()
+
+        messages.success(request, 'Artículo dado de baja exitosamente.')
+        return redirect('listar_bajas.html')
+
+    return render(request, 'listar_articulos.html')
 
       
 # -------------------------TERMINA  INVENTARIO-------------------------------
@@ -649,6 +659,7 @@ def exportar_pdf(request):
 
 
 # ---------------------------
+
 
 
 #--------------------------------
