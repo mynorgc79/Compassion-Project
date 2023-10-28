@@ -1,13 +1,45 @@
-{% extends 'index_master.html' %} {% block content %} {% load static %}
-<!-- Hereda de Index Maste: Muestra contenido -->
-<div class="right_col" role="main">
-  <!-- <h1>BIENVENID, {{ request.session.user_name }}</h1> -->
+{% extends 'index_master.html' %}
+{% load static %}
 
-  <img
-    src='{% static "imagenes/logo.png" %}'
-    alt=""
-    style="width: 100%; height: auto"
-  />
+{% block content %}
+<div class="right_col" role="main">
+    <div id="myCarousel" class="carousel slide" data-ride="carousel">
+        <!-- Indicadores -->
+        <ol class="carousel-indicators">
+            <li data-target="#myCarousel" data-slide-to="0" class="active"></li>
+            <li data-target="#myCarousel" data-slide-to="1"></li>
+        </ol>
+
+        <!-- Contenido del carrusel -->
+        <div class="carousel-inner">
+            <div class="carousel-item active">
+                <img src="{% static 'imagenes/logo.png'%}" alt="Visión" style="width:100%;">
+                <div class="carousel-caption">
+                  <h3 style="color: black; font-size: 24px;">Visión</h3> <!-- Cambiar color y tamaño del texto -->
+                  <p style="color: black; font-size: 23px;">Formar líderes responsables primeramente comprometidos con Dios y al servicio de nuestra sociedad, buscando el desarrollo integral, equipándolos para tener un alto nivel de formación con principios y valores cristianos, logrando tener una intimidad con Dios para poder ser capaces de conquistar el éxito en las diferentes etapas de la  vida.</p>
+                </div>
+            </div>
+
+            <div class="carousel-item">
+                <img src="{% static 'imagenes/logo.png'%}" alt="Misión" style="width:100%;">
+                <div class="carousel-caption">
+                  <h3 style="color: black; font-size: 24px;">Misión</h3> <!-- Cambiar color y tamaño del texto -->
+                  <p style="color: black; font-size: 23px;">Somos un proyecto con fundamentos cristianos, comprometidos al servicio de la niñez dentro de la comunidad, que busca alcanzar el desarrollo integral de los beneficiarios y de esta forma poder transformarlos en agentes de cambio, fomentando en ellos principios espirituales, cognitivos, socio-emocionales y físicos. Fomentar buenos hábitos, relaciones positivas con los elementos en el entorno social para conducir una vida digna, teniendo como base el señorío de Jesucristo ya que es lo principal de todos y tener como fin la vida eterna..</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Controles del carrusel -->
+        <a class="carousel-control-prev" href="#myCarousel" data-slide="prev">
+            <span class="carousel-control-prev-icon"></span>
+        </a>
+        <a class="carousel-control-next" href="#myCarousel" data-slide="next">
+            <span class="carousel-control-next-icon"></span>
+        </a>
+    </div>
+    
 </div>
-<!-- /page content -->
+
+
+
 {% endblock %}
