@@ -52,7 +52,7 @@ __pycache__/
 *.xlsm
 *.xls
 *.pdf
-*.txt
+
 *.ini
 *.conf
 *.log
