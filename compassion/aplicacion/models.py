@@ -78,6 +78,7 @@ class ItemInventario(models.Model):
     proveedor = models.CharField(max_length=75)
     encargado = models.CharField(max_length=100)
     valor_compra = models.DecimalField(max_digits=10, decimal_places=2)
+    precio_unitario  = models.DecimalField(max_digits=10, decimal_places=2)
     numero_acta = models.CharField(max_length=20, blank=True, null=True)
     estado = models.BooleanField(default='True', verbose_name='estado')
     auditado = models.BooleanField(default=False)
@@ -94,6 +95,15 @@ class Movimientos(models.Model):
         max_length=200, null='true', verbose_name='Descripcion')
     inventario_id = models.ForeignKey(
         ItemInventario, on_delete=models.CASCADE)
+
+    valor_dado_de_baja = models.DecimalField(
+        'Valor dado de baja',
+        max_digits=10,
+        decimal_places=2,
+        null=True,
+        blank=True
+    )
+
     def __str__(self):
         return f'Salida {self.id_movimiento}'
 

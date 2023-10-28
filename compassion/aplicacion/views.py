@@ -387,7 +387,7 @@ def registrar_articulo(request):
     if request.method == 'POST':
         try:
             # Capturar los datos del formulario
-            cantidad = request.POST.get('cantidad')
+            cantidad = int(request.POST.get('cantidad'))
             descripcion_articulo = request.POST.get('descripcion_articulo')
             fecha_compra = request.POST.get('fecha_compra')
             area_id = request.POST.get('area')
@@ -396,11 +396,15 @@ def registrar_articulo(request):
             numero_factura = request.POST.get('numero_factura')
             proveedor = request.POST.get('proveedor')
             encargado = request.POST.get('encargado')
-            valor_compra = request.POST.get('valor_compra')
+            valor_compra = float(request.POST.get('valor_compra'))
             numero_acta = request.POST.get('numero_acta')
 
             # Obtener la instancia del modelo Area correspondiente al valor de la variable id_area
             area = Area.objects.get(id_area=area_id)
+
+            # Calcular el precio unitario
+            precio_unitario = valor_compra / cantidad
+
 
             # Crear una instancia del modelo con los datos
             nuevo_articulo = ItemInventario(
@@ -414,6 +418,7 @@ def registrar_articulo(request):
                 proveedor=proveedor,
                 encargado=encargado,
                 valor_compra=valor_compra,
+                precio_unitario = precio_unitario,
                 numero_acta=numero_acta,
                 estado=True,
                 auditado=False
@@ -423,7 +428,7 @@ def registrar_articulo(request):
             nuevo_articulo.save()
 
             # Redirigir a la página de éxito o a donde desees
-            return redirect('listar')
+            return redirect('listar_articulos')
 
         except Exception as e:
             # Captura la excepción y muestra una alerta al usuario
@@ -491,6 +496,13 @@ def listar_articulos(request):
     if valor_compra:
         inventario = inventario.filter(Q(valor_compra__icontains=valor_compra))
 
+    for item in inventario:
+        if item.cantidad > 0:  # Evitar división por cero
+            item.precio_unitario = item.valor_compra / item.cantidad
+        else:
+            item.precio_unitario = 0  # Puedes elegir un valor por defecto en caso de cantidad igual a cero
+        item.save()
+
     datos = {'inventario': inventario, 'total_gastado': total_gastado}
 
     return render(request, 'inventario/listar_articulos.html', datos)
@@ -550,6 +562,8 @@ def listar_bajas(request):
 
 
 @login_required
+
+
 def baja_articulo(request):
     if request.method == 'POST':
         id_inventario = request.POST['id_inventario']
@@ -560,33 +574,38 @@ def baja_articulo(request):
         articulo = ItemInventario.objects.get(id_inventario=id_inventario)
 
         # Verificar que la cantidad a dar de baja no sea mayor que la cantidad en stock
-        cantidad_a_dar_de_baja = 1  # Cambia esto al valor que desees dar de baja
+        cantidad_a_dar_de_baja = int(request.POST['cantidad_a_dar_de_baja'])
         if cantidad_a_dar_de_baja > articulo.cantidad:
             messages.error(request, 'No puedes dar de baja más de lo que hay en stock.')
             return redirect('listar_articulos')
 
+           # Calcular el valor unitario para el artículo
+        valor_unitario = articulo.valor_compra / articulo.cantidad
+
         # Restar la cantidad dada de baja
         articulo.cantidad -= cantidad_a_dar_de_baja
-
-        # Si la cantidad llega a cero, cambia el estado a False
-        if articulo.cantidad == 0:
-            articulo.estado = False
-
+        # Restar el valor del precio unitario del valor de compra
+        articulo.valor_compra -= cantidad_a_dar_de_baja * articulo.precio_unitario
         articulo.save()
+
+        # Calcular el valor total del artículo dado de baja
+        valor_dado_de_baja = cantidad_a_dar_de_baja * valor_unitario
 
         # Crear un registro en Movimientos para registrar la salida
         movimiento = Movimientos(
             tipo_movimiento=tipo_movimiento,
             fecha_movimiento=fecha_movimiento,
             descripcion=descripcion,
-            inventario_id=articulo
+            inventario_id=articulo,
+            valor_dado_de_baja=valor_dado_de_baja  # Guardar el valor dado de baja
         )
         movimiento.save()
 
         messages.success(request, 'Artículo dado de baja exitosamente.')
         return redirect('listar_articulos')
 
-    return render(request, 'listar_articulos')
+    return render(request, 'listar_bajas')
+
 
       
 # -------------------------TERMINA  INVENTARIO-------------------------------
