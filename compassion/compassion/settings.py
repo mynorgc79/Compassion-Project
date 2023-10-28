@@ -13,6 +13,7 @@ https://docs.djangoproject.com/en/4.2/ref/settings/
 import os
 from pathlib import Path
 from django.urls import reverse_lazy
+import dj_database_url
 
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -23,14 +24,25 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/4.2/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = "django-insecure-(%rg12pmpthiy3-&w1suhg6!1r)pm95t#aufcse^_(8!+a4*@d"
+#SECRET_KEY = "django-insecure-(%rg12pmpthiy3-&w1suhg6!1r)pm95t#aufcse^_(8!+a4*@d"
+
+# SECURITY WARNING: keep the secret key used in production secret!
+SECRET_KEY = os.environ.get('SECRET_KEY', default='your secret key') #agregamos esta linea para la db produccion
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+#DEBUG = True
+DEBUG = 'RENDER' not in os.environ
 
-ALLOWED_HOSTS = [#'requests-glucose-helena-cashiers.trycloudflare.com'
+# https://docs.djangoproject.com/en/3.0/ref/settings/#allowed-hosts
+ALLOWED_HOSTS = []
 
-]
+RENDER_EXTERNAL_HOSTNAME = os.environ.get('RENDER_EXTERNAL_HOSTNAME')
+if RENDER_EXTERNAL_HOSTNAME:
+    ALLOWED_HOSTS.append(RENDER_EXTERNAL_HOSTNAME)
+
+#ALLOWED_HOSTS = [#'requests-glucose-helena-cashiers.trycloudflare.com'
+
+#]
 
 
 # Application definition
@@ -85,16 +97,28 @@ WSGI_APPLICATION = "compassion.wsgi.application"
 # Database
 # https://docs.djangoproject.com/en/4.2/ref/settings/#databases
 
+
+
 DATABASES = {
-    "default": {
-        "ENGINE": "django.db.backends.mysql",
-        "NAME": 'compassion',
-        "USER": 'root',
-        "PASSWORD": 'gu-400',
-        "HOST": 'localhost',
-        "PORT": '3306',
-    }
+    'default': dj_database_url.config(
+        # Feel free to alter this value to suit your needs.
+        #default='postgresql://12345:postgres@localhost:5431/compassion',
+        default='postgres://compassion_user:KsgHaSmzE1HMLZnsaClbqi1KYWgHpVxm@dpg-ckud2umb0mos738t7vv0-a.oregon-postgres.render.com/compassion',
+        conn_max_age=600
+    )
 }
+
+
+#DATABASES = {
+#    "default": {
+#        "ENGINE": "django.db.backends.mysql",
+#        "NAME": 'compassion',
+#        "USER": 'root',
+#        "PASSWORD": 'gu-400',
+#        "HOST": 'localhost',
+#        "PORT": '3306',
+#    }
+#}
 
 
 # Password validation
