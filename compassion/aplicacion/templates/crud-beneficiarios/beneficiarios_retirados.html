@@ -21,7 +21,7 @@
           <th scope="row">{{ b.codigo_beneficiario }}</th>
           <td>{{ b.nombre }}</td>
           <td>{{ b.apellido }}</td>
-          <td>{{ b.fecha_salida }}</td>
+          <td>{{ b.fecha_salida|date:"d/m/y" }}</td>
           <td>{{ b.tipo_salida }}</td>
           <td>{{ b.motivo }}</td>
         </tr>

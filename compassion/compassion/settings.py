@@ -99,26 +99,26 @@ WSGI_APPLICATION = "compassion.wsgi.application"
 
 
 
-DATABASES = {
+"""DATABASES = {
     'default': dj_database_url.config(
         # Feel free to alter this value to suit your needs.
         #default='postgresql://12345:postgres@localhost:5431/compassion',
-        default='postgres://compassion_user:KsgHaSmzE1HMLZnsaClbqi1KYWgHpVxm@dpg-ckud2umb0mos738t7vv0-a.oregon-postgres.render.com/compassion',
+        #default='postgres://compassion_user:KsgHaSmzE1HMLZnsaClbqi1KYWgHpVxm@dpg-ckud2umb0mos738t7vv0-a.oregon-postgres.render.com/compassion',
         conn_max_age=600
     )
+}"""
+
+
+DATABASES = {
+    "default": {
+        "ENGINE": "django.db.backends.mysql",
+        "NAME": 'compassion',
+        "USER": 'root',
+        "PASSWORD": 'gu-400',
+        "HOST": 'localhost',
+        "PORT": '3306',
+    }
 }
-
-
-#DATABASES = {
-#    "default": {
-#        "ENGINE": "django.db.backends.mysql",
-#        "NAME": 'compassion',
-#        "USER": 'root',
-#        "PASSWORD": 'gu-400',
-#        "HOST": 'localhost',
-#        "PORT": '3306',
-#    }
-#}
 
 
 # Password validation
@@ -164,6 +164,15 @@ STATICFILES_DIRS = [
     # Directorio donde se encuentran tus archivos estáticos
     os.path.join(BASE_DIR, 'aplicacion/static'),
 ]
+
+
+# Olvide mi contraseña
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_USE_TLS = True
+EMAIL_PORT = 587
+EMAIL_HOST_USER = "mynorguarchaj99@gmail.com"
+EMAIL_HOST_PASSWORD = "enter your password"
 
 
 # Default primary key field type

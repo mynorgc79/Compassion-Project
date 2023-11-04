@@ -12,6 +12,12 @@ from django.http import JsonResponse
 from django.contrib.auth.forms import PasswordChangeForm 
 
 from aplicacion.decorators import administrador_required
+from django.contrib.auth import update_session_auth_hash
+
+from django.urls import reverse_lazy
+from django.contrib.auth.views import PasswordResetView
+from django.contrib.messages.views import SuccessMessageMixin
+
 
 
 # Create your views here.
@@ -149,3 +155,15 @@ def cambiar_contrasena(request):
         return redirect('editar_usuario')
 
 #---------------------CAMBIO DE CONTRASEÑA----------------
+
+
+
+
+class ResetPasswordView(SuccessMessageMixin, PasswordResetView):
+    template_name = 'users/password_reset.html'
+    email_template_name = 'users/password_reset_email.html'
+    subject_template_name = 'users/password_reset_subject'
+    success_message = "Resetear contraseña"
+    success_url = reverse_lazy('users-home')
+
+
