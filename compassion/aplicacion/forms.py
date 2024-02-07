@@ -46,3 +46,9 @@ class BeneficiarioForm(forms.Form):
         choices=(('1', '1'), ('2', '2'), ('3', '3'), ('4', '4')),
     )
     observacion = forms.CharField(label='Observación', required=True)
+
+
+
+
+class ExcelUploadForm(forms.Form):
+    archivo_excel = forms.FileField()

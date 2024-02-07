@@ -2,6 +2,9 @@ import re
 from datetime import date, datetime
 from io import BytesIO
 
+import pandas as pd
+
+
 from django.db import models
 from django.db.models import Q, Count, Sum
 from django.shortcuts import render, redirect, get_object_or_404
@@ -440,6 +443,75 @@ def registrar_articulo(request):
 
 
 
+
+
+
+
+# --------Cargar datos desde EXCEL-----------------------------------------
+
+
+
+
+def cargar_excel(request):
+    if request.method == 'POST' and request.FILES['archivo_excel']:
+        archivo_excel = request.FILES['archivo_excel']
+        try:
+            # Cargar el archivo Excel en un DataFrame de pandas
+            df = pd.read_excel(archivo_excel)
+
+            # Iterar sobre las filas del DataFrame y guardar en la base de datos
+            for index, fila in df.iterrows():
+                cantidad = int(fila['Cantidad'])
+                descripcion_articulo = fila['Descripcion']
+                fecha_compra = fila['FechaCompra']
+                area_nombre = fila['Area']  # Nombre del área en el archivo Excel
+                donacion = fila['Donacion']
+                numero_cheque = fila['NumeroCheque']
+                numero_factura = fila['NumeroFactura']
+                proveedor = fila['Proveedor']
+                encargado = fila['Encargado']
+                valor_compra = float(fila['ValorCompra'])
+                numero_acta = fila['NumeroActa']
+
+                # Obtener o crear la instancia del modelo Area
+                area, created = Area.objects.get_or_create(nombre_area=area_nombre)
+
+                # Calcular el precio unitario
+                precio_unitario = valor_compra / cantidad
+
+                # Crear una instancia del modelo ItemInventario
+                nuevo_articulo = ItemInventario.objects.create(
+                    cantidad=cantidad,
+                    descripcion_articulo=descripcion_articulo,
+                    fecha_compra=fecha_compra,
+                    area_id=area,
+                    donacion=donacion,
+                    numero_cheque=numero_cheque,
+                    numero_factura=numero_factura,
+                    proveedor=proveedor,
+                    encargado=encargado,
+                    valor_compra=valor_compra,
+                    precio_unitario=precio_unitario,
+                    numero_acta=numero_acta,
+                    estado=True, 
+                    auditado=False  
+                )
+
+            # Redirigir a alguna página de éxito
+            messages.success(request, 'Datos cargados exitosamente desde el archivo Excel.')
+            return redirect('listar_articulos')
+
+        except Exception as e:
+            # Manejar errores, por ejemplo, mostrar un mensaje de error
+            messages.error(request, f"Se produjo un error al cargar los datos desde el archivo Excel: {str(e)}")
+
+    return render(request, 'inventario/cargar_excel.html')  # Ajusta la ruta de tu plantilla
+
+
+
+
+
+
 # ------------------------------------------------------
 
 @login_required
@@ -691,4 +763,9 @@ def exportar_pdf(request):
 
 
 #--------------------------------
+
+
+
+
+
 

@@ -44,6 +44,7 @@ urlpatterns = [
     path('baja_articulo', views.baja_articulo, name='baja_articulo'),
 
     path('exportar_pdf/', views.exportar_pdf, name='exportar_pdf'),
+    path('cargar_excel/', views.cargar_excel, name='cargar_excel'),
 
 
 ]

@@ -7,7 +7,18 @@
   <div class="container mt-5">
     <h1 class="mb-4">Registro de Artículo</h1>
 
-   
+   <!-- Formulario de Carga de Archivo Excel -->
+   <form method="post" enctype="multipart/form-data" class="row" action="{% url 'cargar_excel' %}">
+    {% csrf_token %}
+    <!-- Campo de entrada de archivo -->
+    <div class="form-group">
+      <label for="archivo_excel">Selecciona un archivo Excel:</label>
+      <input type="file" class="form-control-file" id="archivo_excel" name="archivo_excel" accept=".xlsx, .xls" required>
+    </div>
+    <!-- Botón de envío -->
+    
+    <button type="submit" class="btn btn-success btn-sm mt-2">Cargar</button>
+  </form>
 
 
     <!-- Formulario de Registro -->
@@ -189,7 +200,6 @@
           </button>
         </div>
       </div>
-  
 
       
       <!-- Resto del formulario aquí -->
@@ -209,6 +219,7 @@ function validateLetters(input, errorId) {
   }
 }
 
+
 //VALIDAR NUMEROS
 function validateNumbers(input, errorId) {
   var numbersRegex = /^[0-9]*$/; // Expresión regular para números
@@ -222,6 +233,8 @@ function validateNumbers(input, errorId) {
     input.setCustomValidity("");
   }
 }
+
+
 
 
 
